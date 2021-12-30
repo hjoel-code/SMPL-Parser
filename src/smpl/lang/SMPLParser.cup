@@ -92,8 +92,7 @@ terminal CAR, CDR, PAIR, LIST, SIZE, PRINT;
 /* Non terminals */
 
 /* *** Logic extensions (in support of IF) *** */
-// terminal String CMP;
-// terminal IF, ELSE;
+terminal IF, ELSE;
 
 // place your extensions here, if you do this problem
 
