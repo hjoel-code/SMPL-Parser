@@ -131,9 +131,6 @@ non terminal CharExp charVar;
 non terminal CompoundExp pairVar;
 
 
-non terminal TupleExp tupleExp;
-
-
 start with program;
 
 program                         ::=     stmtList:seq {:
@@ -157,11 +154,7 @@ stmt                            ::=     VAR:id ASSIGN smplExp:exp SEMI {:
                                             RESULT = new SMPLAssignment(id, exp);
                                         :} |
 
-                                        PRINT smplExp:exp SEMI {: RESULT = new PrintStmt(exp); :} |
-
-                                        paramList:lst ASSIGN tupleExp:tExp {: 
-                                            RESULT = null;
-                                        :};
+                                        PRINT smplExp:exp SEMI {: RESULT = new PrintStmt(exp); :};
 
 
 smplExp                         ::=     VAR:var {: RESULT = new SIRVar(var); :} |
@@ -170,36 +163,30 @@ smplExp                         ::=     VAR:var {: RESULT = new SIRVar(var); :} 
                                         stringExp:sExp {: RESULT = (StringExp) sExp; :} |
                                         charExp:chExp {: RESULT = (CharExp) chExp; :} |
                                         boolExp:bExp {: RESULT = (BoolExp) bExp; :} | 
-                                        tupleExp:tExp {: RESULT = tExp; :} |
 
                                         CAR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CAR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CDR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
                                         CDR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :};
 
-
-tupleExp                        ::=     LPAREN smplExpList RPAREN {:  
-                                            RESULT = null;
-                                        :};
-
-
-
 // Parameter List for Function Definitions
 
 
 paramListE                      ::=     paramList:lst {: RESULT = lst; :} |
+
                                         empty {: RESULT = new ArrayList<>(); :};
 
 
 
-paramList                       ::=     paramList.lst COMMA VAR:id {: 
+paramList                       ::=     paramList:lst COMMA VAR:id {: 
                                             lst.add(id);
                                             RESULT = lst;
                                         :} |
 
                                         VAR:id {: 
-                                            RESULT = new ArrayList<>();
-                                            RESULT.add(id);
+                                            ArrayList<String> lst = new ArrayList<>();
+                                            lst.add(id);
+                                            RESULT = lst;
                                         :};
 
 // Boolean Expressions

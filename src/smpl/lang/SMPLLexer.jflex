@@ -44,6 +44,10 @@ import java_cup.runtime.*;
   return yytext();
     }
 %}
+
+
+
+
       
 nl = [\n\r]
 
@@ -57,6 +61,14 @@ alphanum = ({alpha}|{num})
 binary = [0*1*]*[1*0*]*
 hex = [0-9a-fA-F]
 
+lineTerminator = \r|\n|\r\n
+inputChar = [^\r\n]
+
+lineComment =  "//" {inputChar}* {lineTerminator}?
+commentContent =  ([^*] | \*+ [^\*])*
+blockComment =  "/*" {commentContent}* + "*/" 
+comment =  {lineComment} | {blockComment}
+
 %%
 <YYINITIAL> "."                       { //. on a line by itself is EOF
                                         return new Symbol(sym.EOF);}
@@ -65,10 +77,9 @@ hex = [0-9a-fA-F]
                                         //skip newline, but reset char counter
                                         yychar = 0;
                                       }
-<YYINITIAL>    \//.*{nl}                  { // ignore line comments
-                                      }
 
-<YYINITIAL>    \/*.* \*\/              { // ignore line comments
+
+<YYINITIAL>    {comment}              {
                                       }
 
 
@@ -82,13 +93,6 @@ hex = [0-9a-fA-F]
 <YYINITIAL>    ")"                    { return new Symbol(sym.RPAREN);}
 <YYINITIAL>    "["                    { return new Symbol(sym.LBRACKET);}
 <YYINITIAL>    "]"                    { return new Symbol(sym.RBRACKET);}
-<YYINITIAL>    ":="                    { return new Symbol(sym.ASSIGN); }
-
-<YYINITIAL>    "+"                    { return new Symbol(sym.PLUS); }
-<YYINITIAL>    "-"                    { return new Symbol(sym.MINUS); }
-<YYINITIAL>    "*"                    { return new Symbol(sym.TIMES); }
-<YYINITIAL>    "/"                    { return new Symbol(sym.DIV); }
-<YYINITIAL>    "%"                    { return new Symbol(sym.MOD); }
 
 <YYINITIAL>   "[:"                    { return new Symbol( sym.LBCOLON ); }
 <YYINITIAL>   ":]"                    { return new Symbol( sym.RBCOLON ); }
@@ -96,22 +100,38 @@ hex = [0-9a-fA-F]
 
 
 // Keywords
-<YYINITIAL>   "pair"                  { return new Symbol( sym.PAIR ); }
-<YYINITIAL>   "cdr"                   { return new Symbol( sym.CDR ); }
-<YYINITIAL>   "car"                   { return new Symbol( sym.CAR ); }
-<YYINITIAL>   "list"                  { return new Symbol( sym.LIST ); }
-<YYINITIAL>   "size"                  { return new Symbol( sym.SIZE ); }
-<YYINITIAL>   "print"                 { return new Symbol( sym.PRINT ); }
+<YYINITIAL>   pair|PAIR               { return new Symbol( sym.PAIR ); }
+<YYINITIAL>   cdr|CDR                 { return new Symbol( sym.CDR ); }
+<YYINITIAL>   car|CAR                 { return new Symbol( sym.CAR ); }
+<YYINITIAL>   list|LIST               { return new Symbol( sym.LIST ); }
+<YYINITIAL>   size|SIZE               { return new Symbol( sym.SIZE ); }
+<YYINITIAL>   print|PRINT             { return new Symbol( sym.PRINT ); }
 
-<YYINITIAL>   "<="|">="|"!="|"="|">"|"<" { return new Symbol(sym.RATIONAL, yytext()); }
-<YYINITIAL>   "and"|"or"|"not"        { return new Symbol(sym.LOGIC, yytext()); }
+<YYINITIAL>    if|IF                  { return new Symbol(sym.IF);}
+<YYINITIAL>    else|ELSE              { return new Symbol(sym.ELSE);}
+<YYINITIAL>    def|DEF                { return new Symbol(sym.DEF);}
+<YYINITIAL>    proc|PROC              { return new Symbol(sym.PROC);}
+
+
+<YYINITIAL>    ":="                   { return new Symbol(sym.ASSIGN); }
+<YYINITIAL>    "+"                    { return new Symbol(sym.PLUS); }
+<YYINITIAL>    "-"                    { return new Symbol(sym.MINUS); }
+<YYINITIAL>    "*"                    { return new Symbol(sym.TIMES); }
+<YYINITIAL>    "/"                    { return new Symbol(sym.DIV); }
+<YYINITIAL>    "%"                    { return new Symbol(sym.MOD); }
+
+
+<YYINITIAL>   "<="|">="|"!="|"="|">"|"<"    { return new Symbol(sym.RATIONAL, yytext()); }
+<YYINITIAL>   and|AND|or|OR|not|NOT         { return new Symbol(sym.LOGIC, yytext()); }
+
+
 
 <YYINITIAL>   {alpha}+{alphanum}*     { return new Symbol(sym.VAR, yytext()); }
 <YYINITIAL>   {num}+                  { return new Symbol(sym.INTEGER, Integer.valueOf(yytext())); }
 <YYINITIAL>   {num}+"."{num}+         { return new Symbol( sym.REAL, Double.valueOf(yytext()) ); }
 <YYINITIAL>   "#t" | "#f"             { return new Symbol( sym.BOOL, yytext()); }
 
-<YYINITIAL>   {alpha}+{alphanum}*     { return new Symbol(sym.VAR, yytext()); }
+
 
 <YYINITIAL>   "#b"                    { yybegin(BINARY); }
 <BINARY>      {binary}{1,32}          { 
