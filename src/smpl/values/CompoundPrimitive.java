@@ -1,15 +1,15 @@
 package smpl.values;
 
-public class CompoundPrimitive<T> extends Primitive {
-  T compoundVal;
+public abstract class CompoundPrimitive<T> extends Primitive<T> {
 
-  public CompoundPrimitive(T compoundVal) {
-    this.compoundVal = compoundVal;
-  }
 
-  @Override 
-  public T getPrimitive() {
-    return compoundVal;
-  }
-  
+    public CompoundPrimitive(String type) {
+        super(type);
+    }
+
+    public abstract T getPrimitive();
+
+    @Override
+    public abstract String getOutput();
+    
 }

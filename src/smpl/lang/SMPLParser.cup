@@ -5,186 +5,425 @@ import java_cup.runtime.*;
 import java.io.*;
 import java.util.*;
 
+
+import smpl.lang.*;
+import smpl.lang.arith.*;
+import smpl.lang.bool.*;
+import smpl.lang.chars.*;
+import smpl.lang.compound.*;
+import smpl.lang.statements.*;
+import smpl.lang.string.*;
+
+
 /* Preliminaries to set up and use the scanner.  */
 action code {:          :};
 
 parser code {:
-		SMPLLexer lexer;
+    SMPLLexer lexer;
 
-		public SMPLParser(SMPLLexer l) {
+    public SMPLParser(SMPLLexer l) {
                     super(l);
                     lexer = l;
                 }
 
-		public SMPLParser(String file) throws FileNotFoundException {
-	            this(new SMPLLexer(new FileReader(file)));
-		}
+    public SMPLParser(String file) throws FileNotFoundException {
+              this(new SMPLLexer(new FileReader(file)));
+    }
 
                 public SMPLParser(InputStream is) {
                     this(new SMPLLexer(new InputStreamReader(is)));
                 }
 
-		public void report_error(String message, Object info) {
-		    System.err.println(message + info);
-		}
+    public void report_error(String message, Object info) {
+        System.err.println(message + info);
+    }
 
-		public void syntax_error(Symbol cur_token) {
-		    System.err.print("Line " + lexer.getLine() +
-				     " near char " + lexer.getChar() + ": ");
-		    report_error("Syntax error while reading: ", cur_token);
-		    System.err.println ("Last token read is " +
-					 lexer.getText());
-		}
-	    :};
+    public void syntax_error(Symbol cur_token) {
+        System.err.print("Line " + lexer.getLine() +
+             " near char " + lexer.getChar() + ": ");
+        report_error("Syntax error while reading: ", cur_token);
+        System.err.println ("Last token read is " +
+           lexer.getText());
+    }
+      :};
 
 init with {:
-		// No longer necessary		
-	  :};
+    // No longer necessary    
+    :};
 scan with {:
-		try {
-		    return lexer.next_token();
-		} catch (java.io.IOException ioe) {
-		    System.out.println ("Unrecognised token at line: " + 
+    try {
+        return lexer.next_token();
+    } catch (java.io.IOException ioe) {
+        System.out.println ("Unrecognised token at line: " + 
                                 lexer.getLine() + ", char: " + lexer.getChar());
-		    System.out.println(ioe.getMessage());
-		    throw ioe;
-		}
-	  :};
+        System.out.println(ioe.getMessage());
+        throw ioe;
+    }
+    :};
 
 /* Terminals (tokens returned by the scanner). */
 
 /* Keywords */
-terminal PROC, ASSIGN, DEF;
+terminal ASSIGN;
 
 /* Arithmetic operators */ 
-terminal PLUS, MINUS, TIMES, DIV, MOD, CARET;
-
-/* Bitwise operators */
-terminal AMPERSAND, PIPE, TILDE;
+terminal PLUS, MINUS, TIMES, DIV, MOD;
 
 /* Punctuation */
-terminal LPAREN, RPAREN, LBRACKET, RBRACKET, SEMI, COMMA, COLON, CONCAT;
+terminal LPAREN, RPAREN, LBRACKET, RBRACKET, SEMI, COMMA, COLON;
+terminal LBCOLON, RBCOLON, QUES;
 
 terminal Integer INTEGER;
-terminal Double FRACTION;
 terminal Double REAL;
 terminal String VAR;
 terminal String STRING;
-terminal String BINARYHEX;
+terminal Integer BINARY;
+terminal Integer HEX;
+terminal String UNICODE;
+terminal String CHAR;
+terminal String BOOL;
+terminal String RATIONAL;
+terminal String LOGIC;
+
+
+// Key Words
+terminal CAR, CDR, PAIR, LIST, SIZE, PRINT;
 
 /* Non terminals */
-non terminal SIRProgram program;
-non terminal SIRSequence stmtList;
-non terminal SIRStatement stmt;
 
-non terminal SIRExp smplExp;
-non terminal SIRFunCall funCall;
+/* *** Logic extensions (in support of IF) *** */
+// terminal String CMP;
+// terminal IF, ELSE;
 
-/* *** Logic extensions *** */
-terminal String CMP, TRUE, FALSE, NIL;
-terminal IF, ELSE, AND, OR, NOT, QUESTION;
-non terminal SIRConditionalStmt conditionalStmt;
-non terminal SIRComparator comparator;
+// place your extensions here, if you do this problem
+
 /* *** End of logic extensions *** */
-
-non terminal SIRExp arithExp;
-non terminal SIRExp arithTerm;
-non terminal SIRExp arithConstFactor;
-non terminal SIRExp arithFactor;
-
-non terminal ArrayList<SIRExp> aExpList;  
-non terminal ArrayList<SIRExp> aExpListE; 
-non terminal ArrayList<SIRExp> pExpList;  
-non terminal ArrayList<SIRExp> pExpListE; 
 
 non terminal ArrayList<String> paramList;
 non terminal ArrayList<String> paramListE;
 non terminal empty;
 
-non terminal SIRStatementDef stmtDef;
 
-/* Grammar rules */
+// Non-Terminals
+
+non terminal SIRProgram program;
+non terminal SIRSequence stmtList;
+non terminal SIRStatement stmt;
+non terminal SIRObj smplExp;
+non terminal AIRExp arithExp, arithTerm, arithFactor;
+non terminal StringExp stringExp, stringTerm, stringFactor;
+non terminal CharExp charExp, charTerm, charFactor;
+
+non terminal BoolExp boolExp, boolTerm, boolFactor;
+non terminal PairExp pairExp;
+
+non terminal ArrayList<SIRExp<StringExp>> strExpList, strExpListE;  
+non terminal ArrayList<SIRExp<CharExp>> cExpList, cExpListE;
+non terminal ArrayList<SIRExp<AIRExp>> aExpList, aExpListE;
+non terminal ArrayList<SIRExp<BoolExp>> bExpList, bExpListE;
+non terminal ArrayList<SMPLObject> smplExpList, smplExpListE;
+
+
+non terminal BoolExp boolVar;
+non terminal AIRExp arithVar;
+non terminal StringExp stringVar;
+non terminal CharExp charVar;
+non terminal CompoundExp pairVar;
+
+
+non terminal TupleExp tupleExp;
+
 
 start with program;
 
-program ::= stmtList:seq {: RESULT = new SIRProgram(seq); :};
-
-stmtList ::= stmtList:seq stmt:s SEMI {:
-		  		seq.addStatement(s);
-		  		RESULT = seq; :} |
-	     	 empty {:
-		  	 	RESULT = new SIRSequence(); :};
-
-stmt ::= VAR:id ASSIGN smplExp:e {: RESULT = new SIRAssignment(id, e); :} |
-         stmtDef:s {: RESULT = s; :} |
-         smplExp:e {: RESULT = new SIRStatement(e); :}; // can take this out, just did it for testing
-         // conditionalStmt:cs {: RESULT = cs; :};
-
-stmtDef ::= DEF VAR:id smplExp:e {: RESULT = new SIRStatementDef(id, e); :};
-
-smplExp ::= arithExp:e {: RESULT = e; :}; // todo : add all other expressions allowed
-
-funCall ::= VAR:funName LPAREN aExpListE:aExpLst RPAREN {:
-				RESULT = new SIRFunCall(funName, aExpLst); :};
-	
-
-paramListE ::= paramList:lst {: RESULT = lst; :} |
-	       empty {: RESULT = new ArrayList<>(); :} ;
-
-paramList ::= paramList:lst COMMA VAR:id {:
-		lst.add(id);
-		RESULT = lst; :} |
-	      VAR:id {:
-		RESULT = new ArrayList<>();
-		RESULT.add(id);
-	      :};
-
-aExpList ::= aExpList:lst COMMA arithExp:e {:
-			     lst.add(e);
-				 	RESULT = lst; :} |
-			   arithExp:e {:
-				  RESULT = new ArrayList<>();
-				  RESULT.add(e); :};
-
-aExpListE ::= aExpList:lst {: RESULT = lst; :} |
-			  	empty {: RESULT = new ArrayList<>(); :};
-
-pExpList ::= pExpList:pExpLst COMMA smplExp:pExp {:
-						  pExpLst.add(pExp);
-						  RESULT = pExpLst; :} |
-						 smplExp:pExp {:
-						 	RESULT = new ArrayList<>();
-						 	RESULT.add(pExp); :};
-
-pExpListE ::= pExpList:pExpLst {: RESULT = pExpLst; :} |
-							empty {: RESULT = new ArrayList<>(); :};
+program                         ::=     stmtList:seq {:
+                                            RESULT = new SIRProgram(seq);
+                                        :};
 
 
-/* conditionalStmt ::= IF comparator:pred COLON stmtList:conseq {:
-						   RESULT = new SIRConditionalStmt(pred, conseq); :} |
-						  IF comparator:pred COLON stmtList:conseq ELSE stmtList:alt {:
-						   RESULT = new SIRConditionalStmt(pred, conseq, alt); :}; */
+stmtList                        ::=     stmtList:seq stmt:s {:
+                                            seq.addStatement(s);
+                                            RESULT = seq;
+                                        :} |
 
-comparator ::= arithExp:e1 CMP:cmp arithExp:e2 {: 
-			       RESULT = new SIRComparator(e1, cmp, e2); :};
+                                        stmt:s {:
+                                            SIRSequence seq = new SIRSequence();
+                                            seq.addStatement(s);
+                                            RESULT = seq;
+                                        :};
 
-arithExp ::= arithExp:e PLUS arithTerm:t {:
-			 	RESULT = new SIRBinaryExp("+", e, t); :} |
-			 arithTerm:e MINUS arithTerm:t {: 
-			 	RESULT = new SIRBinaryExp("-", e, t); :} |
-			 arithTerm:t {: RESULT = t; :};
 
-arithTerm ::= arithTerm:t TIMES arithFactor:f {: 
-			  	RESULT = new SIRBinaryExp("*", t, f); :} |
-			  arithTerm:t DIV arithFactor:f {:
-			  	RESULT = new SIRBinaryExp("/", t, f); :} |
-			  arithTerm:t MOD arithFactor:f {: 
-			  	RESULT = new SIRBinaryExp("%", t, f); :} |
-			  arithFactor:f {: RESULT = f; :};
+stmt                            ::=     VAR:id ASSIGN smplExp:exp SEMI {:
+                                            RESULT = new SMPLAssignment(id, exp);
+                                        :} |
 
-arithFactor ::= INTEGER:ilit {: RESULT = new SIRLit(ilit); :} |
-				VAR:v {: RESULT = new SIRVar(v); :} |
-				funCall:f {: RESULT = f; :} |
-				LPAREN arithExp:e RPAREN {: RESULT = e; :};
+                                        PRINT smplExp:exp SEMI {: RESULT = new PrintStmt(exp); :} |
 
-empty ::= ;
+                                        paramList:lst ASSIGN tupleExp:tExp {: 
+                                            RESULT = null;
+                                        :};
+
+
+smplExp                         ::=     VAR:var {: RESULT = new SIRVar(var); :} |
+                                        pairExp:pair {: RESULT = (PairExp) pair; :} |
+                                        arithExp:aExp {: RESULT = (AIRExp) aExp; :} |
+                                        stringExp:sExp {: RESULT = (StringExp) sExp; :} |
+                                        charExp:chExp {: RESULT = (CharExp) chExp; :} |
+                                        boolExp:bExp {: RESULT = (BoolExp) bExp; :} | 
+                                        tupleExp:tExp {: RESULT = tExp; :} |
+
+                                        CAR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
+                                        CAR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
+                                        CDR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
+                                        CDR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :};
+
+
+tupleExp                        ::=     LPAREN smplExpList RPAREN {:  
+                                            RESULT = null;
+                                        :};
+
+
+
+// Parameter List for Function Definitions
+
+
+paramListE                      ::=     paramList:lst {: RESULT = lst; :} |
+                                        empty {: RESULT = new ArrayList<>(); :};
+
+
+
+paramList                       ::=     paramList.lst COMMA VAR:id {: 
+                                            lst.add(id);
+                                            RESULT = lst;
+                                        :} |
+
+                                        VAR:id {: 
+                                            RESULT = new ArrayList<>();
+                                            RESULT.add(id);
+                                        :};
+
+// Boolean Expressions
+
+
+bExpListE                       ::=     bExpList:lst {: 
+                                            RESULT = lst;
+                                        :} |
+                                        empty {: RESULT = new ArrayList<>(); :};
+
+
+bExpList                        ::=     bExpList:lst COMMA boolExp:e {: 
+                                            lst.add(e);
+                                            RESULT = lst;
+                                        :} |
+
+                                        boolExp:e {: 
+                                            RESULT = new ArrayList<>();
+                                            RESULT.add(e);
+                                        :};
+
+
+boolVar                         ::=     VAR:var {: RESULT = new BoolLit(new SIRVar<BoolExp>(var)); :};
+
+
+boolExp                         ::=     boolTerm:bool1 LOGIC:op boolExp:bool2 {: 
+                                            RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, bool1, bool2)); 
+                                        :} |
+
+                                        LOGIC:op boolExp:bool {: 
+                                            RESULT = new BoolCalc(new SIRUnaryExp<BoolExp>(op, bool));
+                                        :} |
+
+                                        boolTerm:bool {: RESULT = bool; :} |
+
+                                        boolVar:bool1 LOGIC:op boolExp:bool2 {: 
+                                            RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, bool1, bool2)); 
+                                        :} |
+
+                                        LOGIC:op boolVar:bool {: 
+                                            RESULT = new BoolCalc(new SIRUnaryExp<BoolExp>(op, bool));
+                                        :};
+
+
+boolTerm                        ::=     arithExp:exp1 RATIONAL:op arithExp:exp2 {: 
+                                            RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, exp1, exp2)); 
+                                        :} |
+
+                                        boolFactor:bool {: RESULT = bool; :};
+
+
+boolFactor                      ::=     BOOL:bool {: 
+                                            if (bool.equals("#t")) {
+                                                RESULT = new BoolLit(true); 
+                                            } else {
+                                                RESULT = new BoolLit(false);
+                                            }
+                                        :} |
+
+                                        LPAREN boolExp:bool RPAREN {: RESULT = bool; :} |
+
+                                        PAIR QUES LPAREN smplExp:exp RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("pair?", exp)); :};
+
+
+
+// Character Expressions
+
+cExpListE                       ::=     cExpList:lst {: 
+                                            RESULT = lst;
+                                        :} |
+                                        empty {: RESULT = new ArrayList<>(); :};
+
+
+cExpList                        ::=     cExpList:lst COMMA charExp:e {: 
+                                            lst.add(e);
+                                            RESULT = lst;
+                                        :} |
+
+                                        charExp:e {: 
+                                            RESULT = new ArrayList<>();
+                                            RESULT.add(e);
+                                        :};
+
+
+charVar                         ::=     VAR:var {: RESULT = new CharLit(new SIRVar<CharExp>(var)); :};
+
+
+charExp                         ::=     charTerm:t {: RESULT = t; :};
+
+
+charTerm                        ::=     charFactor: f {: RESULT = f; :};
+
+
+charFactor                      ::=     CHAR:ch {: RESULT = new CharLit(ch.charAt(0), "#c"); :} |
+                                        UNICODE:uni {: RESULT = new CharLit(uni, "#u"); :};
+
+
+
+// String Expressions
+
+strExpListE                     ::=     strExpListE:lst {: 
+                                            RESULT = lst;
+                                        :} |
+                                        empty {: RESULT = new ArrayList<>(); :};
+
+
+strExpList                      ::=     strExpList:lst COMMA stringExp:e {: 
+                                            lst.add(e);
+                                            RESULT = lst;
+                                        :} |
+
+                                        stringExp:e {: 
+                                            RESULT = new ArrayList<>();
+                                            RESULT.add(e);
+                                        :};
+
+
+stringVar                       ::=     VAR:var {: RESULT = new StringLit(new SIRVar<StringExp>(var)); :};
+
+
+stringExp                       ::=     stringTerm:t {: RESULT = t; :};
+
+
+stringTerm                      ::=     stringFactor:f {: RESULT = f; :};
+
+
+stringFactor                    ::=     STRING:sLit {: RESULT = new StringLit(sLit); :};
+
+
+// Arithmetic Expressions
+
+
+aExpListE                       ::=     aExpList:lst {: 
+                                            RESULT = lst;
+                                        :} |
+                                        empty {: RESULT = new ArrayList<>(); :};
+
+
+aExpList                        ::=     aExpList:lst COMMA arithExp:e {: 
+                                            lst.add(e);
+                                            RESULT = lst;
+                                        :} |
+
+                                        arithExp:e {: 
+                                            RESULT = new ArrayList<>();
+                                            RESULT.add(e);
+                                        :};
+
+
+arithVar                        ::=     VAR:var {: RESULT = new AIRLit(new SIRVar<AIRExp>(var)); :};
+
+
+arithExp                        ::=     arithExp:e PLUS arithTerm:t {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("+", e, t);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithExp:e MINUS arithTerm:t {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("-", e, t);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        
+                                        arithVar:e PLUS arithTerm:t {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("+", e, t);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithVar:e MINUS arithTerm:t {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("-", e, t);
+                                            RESULT = new ArithCalc(calc); :} |
+
+                                        arithExp:e PLUS arithVar:t {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("+", e, t);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithExp:e MINUS arithVar:t {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("-", e, t);
+                                            RESULT = new ArithCalc(calc); :} |
+
+                                        arithTerm:t {: RESULT = t; :};
+
+
+arithTerm                       ::=     arithTerm:t TIMES arithFactor:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("*", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithTerm:t DIV arithFactor:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("/", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithTerm:t MOD arithFactor:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("%", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+
+                                        arithTerm:t TIMES arithVar:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("*", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithTerm:t DIV arithVar:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("/", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithTerm:t MOD arithVar:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("%", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+
+                                        arithVar:t TIMES arithFactor:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("*", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithVar:t DIV arithFactor:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("/", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithVar:t MOD arithFactor:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("%", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+
+                                        arithFactor:f {: RESULT = f; :};
+
+arithFactor                     ::=     INTEGER:alit {: RESULT = new AIRLit(alit, ""); :} |
+                                        REAL:alit {: RESULT = new AIRLit(alit, ""); :} |
+                                        HEX:hex {: RESULT = new AIRLit(hex, "#x"); :} |
+                                        BINARY:bin {: RESULT = new AIRLit(bin, "#b"); :} |
+                                        LPAREN MINUS arithTerm:aExp RPAREN {: 
+                                            SIRUnaryExp<AIRExp> calc = new SIRUnaryExp<AIRExp>("-", aExp);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        LPAREN arithExp:aexp RPAREN {: RESULT = aexp; :};
+
+
+pairVar                         ::=     VAR:var {: RESULT = new PairLit(new SIRVar<CompoundExp>(var)); :};
+
+
+pairExp                         ::=     PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
+                                            RESULT = new PairExp(new SIRFunctionExp("pair", e1, e2) );
+                                        :};
+
+
+empty                           ::=     ;

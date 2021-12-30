@@ -2,16 +2,17 @@ package smpl.lang;
 
 import java.util.*;
 import smpl.sys.*;
-
+import smpl.lang.statements.SIRStatement;
+import smpl.lang.visitors.SIRVisitor;
 /**
- * An instance of the <code>SIRSequence</code> class is a sequence of
- * <code>SIRExp</code> objects.  Each expression representation is
+ * An instance of the <code>StmtSequence</code> class is a sequence of
+ * <code>SMPLExp</code> objects.  Each expression representation is
  * treated as if it were a statement -- even if it yields a result.
  *
- * @author <a href="mailto:newts@uwimona.edu.jm">Daniel Coore</a>
+ * @author </a>
  * @version 1.0
  */
-public class SIRSequence extends SIRExp {
+public class SIRSequence extends SIRExp<SIRProgram> {
 
     protected ArrayList<SIRStatement> sequence;
 
@@ -20,16 +21,17 @@ public class SIRSequence extends SIRExp {
      *
      */
     public SIRSequence() {
-	sequence = new ArrayList<>();
+      sequence = new ArrayList<>();
     }
 
     /**
-     * Creates a new <code>SIRSequence</code> instance.
+     * Creates a new <code>StmtSequence</code> instance.
      *
      * @param seq an <code>ArrayList</code> value
      */
     public SIRSequence(ArrayList<SIRStatement> seq) {
-	sequence = seq;
+      this();
+      sequence = seq;
     }
 
     /**
@@ -38,25 +40,17 @@ public class SIRSequence extends SIRExp {
      * @param stmt the statement to be added.
      */
     public void addStatement(SIRStatement stmt) {
-	sequence.add(stmt);
+      sequence.add(stmt);
     }
 
     public final ArrayList<SIRStatement> getStatements() {
-	return sequence;
+      return sequence;
     }
 
-    /**
-     * Call the visitSIRSequence method within <code>v</code> on this
-     * sequence representation and the given argument.
-     *
-     * @param v a <code>Visitor</code> value
-     * @param state the data to be passed to this sequence's components
-     * @return the result of visiting this sequence
-     * @throws smpl.sys.SMPLException
-     */
     @Override
-    public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
-	return v.visitSIRSequence(this, state);
+    public <S, T> T visit(SIRVisitor<SIRProgram, S, T> v, S state) throws SMPLException {
+        return v.visitStmtSequence(this, state);
     }
-}
+
+  }
 

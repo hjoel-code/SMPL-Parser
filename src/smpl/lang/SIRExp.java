@@ -1,20 +1,23 @@
 package smpl.lang;
 
+
+import smpl.lang.visitors.SIRVisitor;
 import smpl.sys.SMPLException;
 
-/**
- * Abstract representation for Primitive Expressions
- */
-
-public abstract class SIRExp {
+public abstract class SIRExp<E extends SIRExp<E>> extends SIRNode {
     /**
-     * Visit this expression with the given visitor and visitor context.
-     * @param <S> The type of the visitor context
+     * Call the appropriate visit... method in the visitor with this
+     * object and the given argument.  In general, each visitor might
+     * need to use different data to flow up and down the tree.
+     *
+     
+     * @param <S> The type of state that the visitor requires
      * @param <T> The return type of the visitor
-     * @param v The visitor
-     * @param context The context used by the visitor
-     * @return The result of the visit
-     * @throws smpl.sys.SMPLException if something goes wrong while visiting.
+     * @param v The visitor to be used to visit this node (statement)
+     * @param state The state needed by the visitor
+     * @return The return value of the visitor calling its method for visiting
+     * statements.
+     * @throws SMPLException if the visitor encounters an error
      */
-    public abstract <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException;
+    public abstract <S, T> T visit(SIRVisitor<E, S, T> v, S state) throws SMPLException;
 }
