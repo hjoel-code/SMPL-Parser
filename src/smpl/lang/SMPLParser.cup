@@ -87,7 +87,7 @@ terminal String LOGIC;
 
 
 // Key Words
-terminal CAR, CDR, PAIR, LIST, SIZE, PRINT;
+terminal CAR, CDR, PAIR, LIST, SIZE, PRINT, PROC, DEF;
 
 /* Non terminals */
 

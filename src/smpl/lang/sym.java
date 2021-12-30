@@ -24,7 +24,7 @@ public class sym {
   public static final int COMMA = 13;
   public static final int DIV = 6;
   public static final int PLUS = 3;
-  public static final int IF = 35;
+  public static final int IF = 37;
   public static final int ASSIGN = 2;
   public static final int EOF = 0;
   public static final int RBRACKET = 11;
@@ -35,10 +35,12 @@ public class sym {
   public static final int REAL = 19;
   public static final int TIMES = 5;
   public static final int COLON = 14;
-  public static final int ELSE = 36;
+  public static final int ELSE = 38;
   public static final int LIST = 32;
+  public static final int PROC = 35;
   public static final int STRING = 21;
   public static final int BINARY = 22;
+  public static final int DEF = 36;
   public static final int LOGIC = 28;
   public static final int UNICODE = 24;
   public static final int LBCOLON = 15;
@@ -81,6 +83,8 @@ public class sym {
   "LIST",
   "SIZE",
   "PRINT",
+  "PROC",
+  "DEF",
   "IF",
   "ELSE"
   };
