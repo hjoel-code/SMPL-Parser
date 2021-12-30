@@ -47,6 +47,14 @@ cc = [\b\f]|{nl}
 
 ws = ({cc}|[\t" "])
 
+lineTerminator = \r|\n|\r\n
+inputChar = [^\r\n]
+
+lineComment = "//" {inputChar}* {lineTerminator}?
+commentContent = ([^*] | \*+ [^\*])*
+blockComment = "/*" {commentContent}* + "*/" 
+comment = {lineComment} | {blockComment}
+
 num = [0-9]
 alpha = [A-Za-z_]
 symbols = ["!""?""~""+""/""^"".""%""<"">""=""-""*"]
@@ -63,8 +71,10 @@ hex = #[0-9a-fA-F]+
                         //skip newline, but reset char counter
                         yychar = 0;
                       }
-<YYINITIAL>    \#.*  { // ignore line comments
+<YYINITIAL>    {comment}  { // ignore comments
                       }
+
+
 <YYINITIAL>    {ws} { // ignore whitespace
                       }
 
