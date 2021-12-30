@@ -1,0 +1,190 @@
+package smpl.lang;
+
+
+import java_cup.runtime.*;
+import java.io.*;
+import java.util.*;
+
+/* Preliminaries to set up and use the scanner.  */
+action code {:          :};
+
+parser code {:
+		SMPLLexer lexer;
+
+		public SMPLParser(SMPLLexer l) {
+                    super(l);
+                    lexer = l;
+                }
+
+		public SMPLParser(String file) throws FileNotFoundException {
+	            this(new SMPLLexer(new FileReader(file)));
+		}
+
+                public SMPLParser(InputStream is) {
+                    this(new SMPLLexer(new InputStreamReader(is)));
+                }
+
+		public void report_error(String message, Object info) {
+		    System.err.println(message + info);
+		}
+
+		public void syntax_error(Symbol cur_token) {
+		    System.err.print("Line " + lexer.getLine() +
+				     " near char " + lexer.getChar() + ": ");
+		    report_error("Syntax error while reading: ", cur_token);
+		    System.err.println ("Last token read is " +
+					 lexer.getText());
+		}
+	    :};
+
+init with {:
+		// No longer necessary		
+	  :};
+scan with {:
+		try {
+		    return lexer.next_token();
+		} catch (java.io.IOException ioe) {
+		    System.out.println ("Unrecognised token at line: " + 
+                                lexer.getLine() + ", char: " + lexer.getChar());
+		    System.out.println(ioe.getMessage());
+		    throw ioe;
+		}
+	  :};
+
+/* Terminals (tokens returned by the scanner). */
+
+/* Keywords */
+terminal PROC, ASSIGN, DEF;
+
+/* Arithmetic operators */ 
+terminal PLUS, MINUS, TIMES, DIV, MOD, CARET;
+
+/* Bitwise operators */
+terminal AMPERSAND, PIPE, TILDE;
+
+/* Punctuation */
+terminal LPAREN, RPAREN, LBRACKET, RBRACKET, SEMI, COMMA, COLON, CONCAT;
+
+terminal Integer INTEGER;
+terminal Double FRACTION;
+terminal Double REAL;
+terminal String VAR;
+terminal String STRING;
+terminal String BINARYHEX;
+
+/* Non terminals */
+non terminal SIRProgram program;
+non terminal SIRSequence stmtList;
+non terminal SIRStatement stmt;
+
+non terminal SIRExp smplExp;
+non terminal SIRFunCall funCall;
+
+/* *** Logic extensions *** */
+terminal String CMP, TRUE, FALSE, NIL;
+terminal IF, ELSE, AND, OR, NOT, QUESTION;
+non terminal SIRConditionalStmt conditionalStmt;
+non terminal SIRComparator comparator;
+/* *** End of logic extensions *** */
+
+non terminal SIRExp arithExp;
+non terminal SIRExp arithTerm;
+non terminal SIRExp arithConstFactor;
+non terminal SIRExp arithFactor;
+
+non terminal ArrayList<SIRExp> aExpList;  
+non terminal ArrayList<SIRExp> aExpListE; 
+non terminal ArrayList<SIRExp> pExpList;  
+non terminal ArrayList<SIRExp> pExpListE; 
+
+non terminal ArrayList<String> paramList;
+non terminal ArrayList<String> paramListE;
+non terminal empty;
+
+non terminal SIRStatementDef stmtDef;
+
+/* Grammar rules */
+
+start with program;
+
+program ::= stmtList:seq {: RESULT = new SIRProgram(seq); :};
+
+stmtList ::= stmtList:seq stmt:s SEMI {:
+		  		seq.addStatement(s);
+		  		RESULT = seq; :} |
+	     	 empty {:
+		  	 	RESULT = new SIRSequence(); :};
+
+stmt ::= VAR:id ASSIGN smplExp:e {: RESULT = new SIRAssignment(id, e); :} |
+         stmtDef:s {: RESULT = s; :} |
+         smplExp:e {: RESULT = new SIRStatement(e); :}; // can take this out, just did it for testing
+         // conditionalStmt:cs {: RESULT = cs; :};
+
+stmtDef ::= DEF VAR:id smplExp:e {: RESULT = new SIRStatementDef(id, e); :};
+
+smplExp ::= arithExp:e {: RESULT = e; :}; // todo : add all other expressions allowed
+
+funCall ::= VAR:funName LPAREN aExpListE:aExpLst RPAREN {:
+				RESULT = new SIRFunCall(funName, aExpLst); :};
+	
+
+paramListE ::= paramList:lst {: RESULT = lst; :} |
+	       empty {: RESULT = new ArrayList<>(); :} ;
+
+paramList ::= paramList:lst COMMA VAR:id {:
+		lst.add(id);
+		RESULT = lst; :} |
+	      VAR:id {:
+		RESULT = new ArrayList<>();
+		RESULT.add(id);
+	      :};
+
+aExpList ::= aExpList:lst COMMA arithExp:e {:
+			     lst.add(e);
+				 	RESULT = lst; :} |
+			   arithExp:e {:
+				  RESULT = new ArrayList<>();
+				  RESULT.add(e); :};
+
+aExpListE ::= aExpList:lst {: RESULT = lst; :} |
+			  	empty {: RESULT = new ArrayList<>(); :};
+
+pExpList ::= pExpList:pExpLst COMMA smplExp:pExp {:
+						  pExpLst.add(pExp);
+						  RESULT = pExpLst; :} |
+						 smplExp:pExp {:
+						 	RESULT = new ArrayList<>();
+						 	RESULT.add(pExp); :};
+
+pExpListE ::= pExpList:pExpLst {: RESULT = pExpLst; :} |
+							empty {: RESULT = new ArrayList<>(); :};
+
+
+/* conditionalStmt ::= IF comparator:pred COLON stmtList:conseq {:
+						   RESULT = new SIRConditionalStmt(pred, conseq); :} |
+						  IF comparator:pred COLON stmtList:conseq ELSE stmtList:alt {:
+						   RESULT = new SIRConditionalStmt(pred, conseq, alt); :}; */
+
+comparator ::= arithExp:e1 CMP:cmp arithExp:e2 {: 
+			       RESULT = new SIRComparator(e1, cmp, e2); :};
+
+arithExp ::= arithExp:e PLUS arithTerm:t {:
+			 	RESULT = new SIRBinaryExp("+", e, t); :} |
+			 arithTerm:e MINUS arithTerm:t {: 
+			 	RESULT = new SIRBinaryExp("-", e, t); :} |
+			 arithTerm:t {: RESULT = t; :};
+
+arithTerm ::= arithTerm:t TIMES arithFactor:f {: 
+			  	RESULT = new SIRBinaryExp("*", t, f); :} |
+			  arithTerm:t DIV arithFactor:f {:
+			  	RESULT = new SIRBinaryExp("/", t, f); :} |
+			  arithTerm:t MOD arithFactor:f {: 
+			  	RESULT = new SIRBinaryExp("%", t, f); :} |
+			  arithFactor:f {: RESULT = f; :};
+
+arithFactor ::= INTEGER:ilit {: RESULT = new SIRLit(ilit); :} |
+				VAR:v {: RESULT = new SIRVar(v); :} |
+				funCall:f {: RESULT = f; :} |
+				LPAREN arithExp:e RPAREN {: RESULT = e; :};
+
+empty ::= ;
