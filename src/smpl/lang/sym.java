@@ -8,41 +8,43 @@ package smpl.lang;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int TIMES = 5;
-  public static final int MOD = 7;
-  public static final int BINARY = 22;
-  public static final int PLUS = 3;
-  public static final int RPAREN = 9;
-  public static final int LIST = 32;
-  public static final int CHAR = 25;
-  public static final int SEMI = 12;
-  public static final int LOGIC = 28;
-  public static final int LPAREN = 8;
-  public static final int LBRACKET = 10;
-  public static final int COLON = 14;
-  public static final int RBRACKET = 11;
-  public static final int CAR = 29;
-  public static final int HEX = 23;
-  public static final int CDR = 30;
-  public static final int STRING = 21;
-  public static final int RBCOLON = 16;
-  public static final int COMMA = 13;
-  public static final int EOF = 0;
-  public static final int DIV = 6;
-  public static final int MINUS = 4;
-  public static final int PRINT = 34;
-  public static final int error = 1;
-  public static final int ASSIGN = 2;
-  public static final int BOOL = 26;
   public static final int QUES = 17;
-  public static final int UNICODE = 24;
+  public static final int LBRACKET = 10;
+  public static final int CHAR = 25;
+  public static final int CAR = 29;
   public static final int INTEGER = 18;
-  public static final int LBCOLON = 15;
-  public static final int REAL = 19;
-  public static final int SIZE = 33;
+  public static final int CDR = 30;
+  public static final int LPAREN = 8;
+  public static final int SEMI = 12;
+  public static final int HEX = 23;
+  public static final int MINUS = 4;
+  public static final int RPAREN = 9;
   public static final int RATIONAL = 27;
-  public static final int VAR = 20;
+  public static final int BOOL = 26;
+  public static final int COMMA = 13;
+  public static final int DIV = 6;
+  public static final int PLUS = 3;
+  public static final int IF = 35;
+  public static final int ASSIGN = 2;
+  public static final int EOF = 0;
+  public static final int RBRACKET = 11;
+  public static final int SIZE = 33;
+  public static final int error = 1;
+  public static final int MOD = 7;
   public static final int PAIR = 31;
+  public static final int REAL = 19;
+  public static final int TIMES = 5;
+  public static final int COLON = 14;
+  public static final int ELSE = 36;
+  public static final int LIST = 32;
+  public static final int STRING = 21;
+  public static final int BINARY = 22;
+  public static final int LOGIC = 28;
+  public static final int UNICODE = 24;
+  public static final int LBCOLON = 15;
+  public static final int RBCOLON = 16;
+  public static final int VAR = 20;
+  public static final int PRINT = 34;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -78,7 +80,9 @@ public class sym {
   "PAIR",
   "LIST",
   "SIZE",
-  "PRINT"
+  "PRINT",
+  "IF",
+  "ELSE"
   };
 }
 
