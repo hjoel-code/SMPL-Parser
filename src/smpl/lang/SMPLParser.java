@@ -1461,7 +1461,7 @@ class CUP$SMPLParser$actions {
 		int alitleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()).left;
 		int alitright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()).right;
 		Double alit = (Double)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.peek()).value;
-		 RESULT = new AIRLit(alit, ""); 
+		 RESULT = new AIRLit(alit, "#r"); 
               CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("arithFactor",9, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
             }
           return CUP$SMPLParser$result;

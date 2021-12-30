@@ -395,7 +395,7 @@ arithTerm                       ::=     arithTerm:t TIMES arithFactor:f {:
                                         arithFactor:f {: RESULT = f; :};
 
 arithFactor                     ::=     INTEGER:alit {: RESULT = new AIRLit(alit, ""); :} |
-                                        REAL:alit {: RESULT = new AIRLit(alit, ""); :} |
+                                        REAL:alit {: RESULT = new AIRLit(alit, "#r"); :} |
                                         HEX:hex {: RESULT = new AIRLit(hex, "#x"); :} |
                                         BINARY:bin {: RESULT = new AIRLit(bin, "#b"); :} |
                                         LPAREN MINUS arithTerm:aExp RPAREN {: 

@@ -40,6 +40,8 @@ public class SMPLArith extends SimplePrimitive<Double>{
             return Integer.toBinaryString(val.intValue());
         } else if ( getRep().equals("#x") ) {
             return Integer.toHexString(val.intValue());
+        } else if ( getRep().equals("#r")) {
+            return String.valueOf(val);
         } else {
             return String.valueOf(val.intValue());
         }
