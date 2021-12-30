@@ -1,12 +1,23 @@
 package smpl.values;
 
-/* 
-* Primitive variable implementation, made to be dynamic to any type. 
-* PT: Type of the variable
-*/
+import smpl.values.type.simple.SMPLString;
 
-public abstract class Primitive<PT> {
-    public static final Primitive DEFAULT = new SimplePrimitive<String>("DEFAULT");
+public abstract class Primitive<T> {
+    
+    private final String type;
 
-    public abstract PT getPrimitive();
+    public static final Primitive DEFAULT = new SMPLString("DEFAULT");
+
+    public Primitive(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public abstract T getPrimitive();
+
+    public abstract String getOutput();
+
 }

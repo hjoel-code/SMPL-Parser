@@ -1,15 +1,13 @@
 package smpl.values;
 
-public class SimplePrimitive<T> extends Primitive {
-  T simpleVal;
+public abstract class SimplePrimitive<T> extends Primitive<T> {
 
-  public SimplePrimitive(T simpleVal) {
-    this.simpleVal = simpleVal;
-  }
 
-  @Override 
-  public T getPrimitive() {
-    return simpleVal;
-  }
-  
+    public SimplePrimitive(String type) {
+        super(type);
+    }
+    
+    @Override
+    public abstract T getPrimitive();
+    
 }

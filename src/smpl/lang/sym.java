@@ -8,59 +8,50 @@ package smpl.lang;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int LBRACKET = 16;
-  public static final int CONCAT = 21;
-  public static final int INTEGER = 22;
-  public static final int LPAREN = 14;
-  public static final int SEMI = 18;
-  public static final int MINUS = 6;
-  public static final int TILDE = 13;
-  public static final int CMP = 28;
-  public static final int RPAREN = 15;
-  public static final int NOT = 36;
-  public static final int AND = 34;
-  public static final int FRACTION = 23;
-  public static final int NIL = 31;
-  public static final int OR = 35;
-  public static final int COMMA = 19;
-  public static final int DIV = 8;
-  public static final int PLUS = 5;
-  public static final int ASSIGN = 3;
-  public static final int IF = 32;
-  public static final int AMPERSAND = 11;
-  public static final int CARET = 10;
+  public static final int TIMES = 5;
+  public static final int MOD = 7;
+  public static final int BINARY = 22;
+  public static final int PLUS = 3;
+  public static final int RPAREN = 9;
+  public static final int LIST = 32;
+  public static final int CHAR = 25;
+  public static final int SEMI = 12;
+  public static final int LOGIC = 28;
+  public static final int LPAREN = 8;
+  public static final int LBRACKET = 10;
+  public static final int COLON = 14;
+  public static final int RBRACKET = 11;
+  public static final int CAR = 29;
+  public static final int HEX = 23;
+  public static final int CDR = 30;
+  public static final int STRING = 21;
+  public static final int RBCOLON = 16;
+  public static final int COMMA = 13;
   public static final int EOF = 0;
-  public static final int RBRACKET = 17;
-  public static final int TRUE = 29;
+  public static final int DIV = 6;
+  public static final int MINUS = 4;
+  public static final int PRINT = 34;
   public static final int error = 1;
-  public static final int PIPE = 12;
-  public static final int MOD = 9;
-  public static final int REAL = 24;
-  public static final int TIMES = 7;
-  public static final int COLON = 20;
-  public static final int ELSE = 33;
-  public static final int QUESTION = 37;
-  public static final int PROC = 2;
-  public static final int STRING = 26;
-  public static final int DEF = 4;
-  public static final int BINARYHEX = 27;
-  public static final int FALSE = 30;
-  public static final int VAR = 25;
+  public static final int ASSIGN = 2;
+  public static final int BOOL = 26;
+  public static final int QUES = 17;
+  public static final int UNICODE = 24;
+  public static final int INTEGER = 18;
+  public static final int LBCOLON = 15;
+  public static final int REAL = 19;
+  public static final int SIZE = 33;
+  public static final int RATIONAL = 27;
+  public static final int VAR = 20;
+  public static final int PAIR = 31;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "PROC",
   "ASSIGN",
-  "DEF",
   "PLUS",
   "MINUS",
   "TIMES",
   "DIV",
   "MOD",
-  "CARET",
-  "AMPERSAND",
-  "PIPE",
-  "TILDE",
   "LPAREN",
   "RPAREN",
   "LBRACKET",
@@ -68,23 +59,26 @@ public class sym {
   "SEMI",
   "COMMA",
   "COLON",
-  "CONCAT",
+  "LBCOLON",
+  "RBCOLON",
+  "QUES",
   "INTEGER",
-  "FRACTION",
   "REAL",
   "VAR",
   "STRING",
-  "BINARYHEX",
-  "CMP",
-  "TRUE",
-  "FALSE",
-  "NIL",
-  "IF",
-  "ELSE",
-  "AND",
-  "OR",
-  "NOT",
-  "QUESTION"
+  "BINARY",
+  "HEX",
+  "UNICODE",
+  "CHAR",
+  "BOOL",
+  "RATIONAL",
+  "LOGIC",
+  "CAR",
+  "CDR",
+  "PAIR",
+  "LIST",
+  "SIZE",
+  "PRINT"
   };
 }
 

@@ -7,22 +7,22 @@ public class SMPLException extends Exception {
     SMPLException cause;
 
     public SMPLException() {
-	super();
+      super();
     }
 
     public SMPLException(String s) {
-	super(s);
+      super(s);
     }
 
     public SMPLException(String s, SMPLException smple) {
-	super(s);
-	cause = smple;
+      super(s);
+      cause = smple;
     }
 
     public String report() {
-	if (cause == null)
-	    return getMessage();
-	else
-	    return getMessage() + " caused by " + cause.report();
+      if (cause == null)
+        return getMessage();
+      else
+        return getMessage() + " caused by " + cause.report();
     }
 }
