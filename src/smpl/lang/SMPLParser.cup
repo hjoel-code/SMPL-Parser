@@ -172,7 +172,9 @@ literals                        ::=     pairExp:pair {: RESULT = (PairExp) pair;
                                         CAR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CAR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CDR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
-                                        CDR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :};
+                                        CDR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
+                                        SUBSTR LPAREN stringExp:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :};
 
 // IF Statement
 
@@ -385,7 +387,7 @@ strExpList                      ::=     strExpList:lst COMMA stringExp:e {:
 stringVar                       ::=     VAR:var {: RESULT = new StringLit(new SIRVar<StringExp>(var)); :};
 
 
-stringExp                       ::=     stringTerm:t {: RESULT = t; :};
+stringExp                       ::=     stringTerm:t {: RESULT = t; :};                    
 
 
 stringTerm                      ::=     stringFactor:f {: RESULT = f; :};
