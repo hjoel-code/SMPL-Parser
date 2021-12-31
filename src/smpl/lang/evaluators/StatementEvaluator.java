@@ -9,6 +9,7 @@ import smpl.lang.SIRSequence;
 import smpl.lang.statements.PrintStmt;
 import smpl.lang.statements.SMPLAssignment;
 import smpl.lang.statements.SIRStatement;
+import smpl.lang.statements.SIRSingleStmt;
 import smpl.lang.visitors.StatementVisitor;
 import smpl.sys.SMPLContext;
 import smpl.sys.SMPLException;
@@ -52,6 +53,11 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
     @Override
     public String visitPrintStmt(PrintStmt printStmt, SMPLContext state) throws SMPLException {
         return printStmt.getExp().eval(state, eval.getObjectEvaluator()).getOutput();
+    }
+
+    @Override
+    public String visitSIRSingleStmt(SIRSingleStmt singleStmt, SMPLContext state) throws SMPLException {
+        return singleStmt.getExp().eval(state, eval.getObjectEvaluator()).getOutput();
     }
 
     @Override

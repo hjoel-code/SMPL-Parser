@@ -137,23 +137,25 @@ program                         ::=     stmtList:seq {:
                                         :};
 
 
-stmtList                        ::=     stmtList:seq stmt:s {:
+stmtList                        ::=     stmtList:seq stmt:s SEMI {:
                                             seq.addStatement(s);
                                             RESULT = seq;
                                         :} |
 
-                                        stmt:s {:
+                                        stmt:s SEMI {:
                                             SIRSequence seq = new SIRSequence();
                                             seq.addStatement(s);
                                             RESULT = seq;
                                         :};
 
 
-stmt                            ::=     VAR:id ASSIGN smplExp:exp SEMI {:
+stmt                            ::=     VAR:id ASSIGN smplExp:exp  {:
                                             RESULT = new SMPLAssignment(id, exp);
                                         :} |
 
-                                        PRINT smplExp:exp SEMI {: RESULT = new PrintStmt(exp); :};
+                                        PRINT smplExp:exp {: RESULT = new PrintStmt(exp); :} |
+                                        smplExp:exp {: RESULT = new SIRSingleStmt(exp); :} |
+                                        DEF VAR:id smplExp:exp {: RESULT = new SMPLAssignment(id, exp); :};
 
 
 smplExp                         ::=     VAR:var {: RESULT = new SIRVar(var); :} |

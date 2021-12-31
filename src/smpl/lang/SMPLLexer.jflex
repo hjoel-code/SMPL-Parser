@@ -127,8 +127,8 @@ comment =  {lineComment} | {blockComment}
 
 
 <YYINITIAL>   {alpha}+{alphanum}*     { return new Symbol(sym.VAR, yytext()); }
-<YYINITIAL>   {num}+                  { return new Symbol(sym.INTEGER, Integer.valueOf(yytext())); }
-<YYINITIAL>   {num}+"."{num}+         { return new Symbol( sym.REAL, Double.valueOf(yytext()) ); }
+<YYINITIAL>   ("+"|"-")?{num}+                  { return new Symbol(sym.INTEGER, Integer.valueOf(yytext())); }
+<YYINITIAL>   ("+"|"-")?{num}+"."{num}+         { return new Symbol( sym.REAL, Double.valueOf(yytext()) ); }
 <YYINITIAL>   "#t" | "#f"             { return new Symbol( sym.BOOL, yytext()); }
 
 
