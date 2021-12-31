@@ -178,7 +178,7 @@ expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
 
 
 literals                        ::=     VAR:id {: RESULT = new SIRVar(id); :} |
-                                        VAR:id LPAREN smplExp:exp RPAREN {: RESULT = new SIRFunctionExp("call", new SIRVar(id), exp); :};
+                                        VAR:id LPAREN smplExpListE:exp RPAREN {: RESULT = new SIRFunctionExp("call", new SIRVar(id), exp); :};
 
 
 // IF Statement
@@ -206,7 +206,7 @@ assignment                      ::=     VAR:id ASSIGN smplExp:exp {:
                                             RESULT = new TupleAssignment(lst, new TupleExp(new SIRVar<CompoundExp>(id)));
                                         :} |
                                         DEF VAR:id smplExp:exp {: RESULT = new SMPLAssignment(id, exp); :} |
-                                        DEF VAR:id procDefn ;
+                                        DEF VAR:id procDefn:proc {: RESULT = new SMPLAssignment(id, proc); :};
 
 tupleExpList                    ::=     tupleExpList:lst COMMA smplExp:exp {: 
                                             lst.add(exp);

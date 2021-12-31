@@ -101,7 +101,7 @@ public class CompoundEvaluator
 
     @Override
     public CompoundPrimitive visitProcExp(ProcExp proc, Environment<Primitive> state) throws SMPLException {
-        return new SMPLProc(proc.getParams(), proc.getBody(), state.getContext());
+        return new SMPLProc(proc.getParams(), proc.getBody(), state.getContext().extendEnvironment());
     }
 
 }

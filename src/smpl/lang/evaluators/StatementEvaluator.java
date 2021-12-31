@@ -20,8 +20,9 @@ import smpl.sys.SMPLContext;
 import smpl.sys.SMPLException;
 import smpl.values.Primitive;
 import smpl.values.type.compound.SMPLTuple;
+import smpl.values.type.simple.SMPLString;
 
-public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLContext, String> {
+public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLContext, Primitive> {
 
     private SMPLEvaluator eval;
 
@@ -30,10 +31,10 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
     }
 
     @Override
-    public String visitSMPLAssignment(SMPLAssignment assignment, SMPLContext state) throws SMPLException {
+    public Primitive visitSMPLAssignment(SMPLAssignment assignment, SMPLContext state) throws SMPLException {
         String type = assignment.getExp().getType();
 
-        if (type.equals("cdr") | type.equals("car")) {
+        if (type.equals("cdr") | type.equals("car") | type.equals("call")) {
             Primitive priv = assignment.getExp().eval(state, eval.getObjectEvaluator());
             state.getVariableEnvironment().put(assignment.getVar(), priv.getType());
             state.getVariableEnvironment().print();
@@ -47,63 +48,27 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
             state.getVariableEnvironment().print();
 
             state.getGlobalEnvironment().put(assignment.getVar(),
-                    assignment.getExp().eval(state, eval.getObjectEvaluator()));
+            assignment.getExp().eval(state, eval.getObjectEvaluator()));
             state.getGlobalEnvironment().print();
 
         }
 
-        return new String("");
+        return Primitive.DEFAULT;
     }
 
     @Override
-    public String visitPrintStmt(PrintStmt printStmt, SMPLContext state) throws SMPLException {
-        return printStmt.getNewLine() ? printStmt.getExp().eval(state, eval.getObjectEvaluator()).getOutput() + " \n"
-                : printStmt.getExp().eval(state, eval.getObjectEvaluator()).getOutput();
+    public Primitive visitPrintStmt(PrintStmt printStmt, SMPLContext state) throws SMPLException {
+        return printStmt.getNewLine() ? new SMPLString(printStmt.getExp().eval(state, eval.getObjectEvaluator()).getOutput() + " \n")
+                : new SMPLString(printStmt.getExp().eval(state, eval.getObjectEvaluator()).getOutput());
     }
 
     @Override
-    public String visitASTVar(SIRVar<SIRStatement> var, SMPLContext state) throws SMPLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Primitive visitStatement(Statement stmt, SMPLContext state) throws SMPLException {
+        return stmt.getExp().eval(state, eval.getObjectEvaluator());
     }
 
     @Override
-    public String visitSMPLProgram(SIRProgram sp, SMPLContext arg) throws SMPLException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String visitStmtSequence(SIRSequence seq, SMPLContext state) throws SMPLException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String visitASTBinaryExp(SIRBinaryExp biExp, SMPLContext state) throws SMPLException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String visitASTUnaryExp(SIRUnaryExp urExp, SMPLContext state) throws SMPLException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String visitSIRFunction(SIRFunctionExp<SIRStatement> func, SMPLContext state) throws SMPLException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String visitStatement(Statement stmt, SMPLContext state) throws SMPLException {
-        return stmt.getExp().eval(state, eval.getObjectEvaluator()).getOutput();
-    }
-
-    @Override
-    public String visitConditionalStmt(ConditionalStatement stmt, SMPLContext state) throws SMPLException {
+    public Primitive visitConditionalStmt(ConditionalStatement stmt, SMPLContext state) throws SMPLException {
         Boolean pred = stmt.getPredicate().visit(eval.getBoolEval(), state.getGlobalEnvironment()).getPrimitive();
 
         if (stmt.getStmtFalse() == null) {
@@ -118,11 +83,11 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
             }
         }
 
-        return "";
+        return Primitive.DEFAULT;
     }
 
     @Override
-    public String visitTupleAssignment(TupleAssignment assignT, SMPLContext state) throws SMPLException {
+    public Primitive visitTupleAssignment(TupleAssignment assignT, SMPLContext state) throws SMPLException {
 
         if (assignT.getTuple().isVariable()) {
 
@@ -141,7 +106,7 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
                         state.getGlobalEnvironment().put(assignT.getIds().get(i), tuple.getPrimitive().get(i));
                     }
 
-                    return "";
+                    return Primitive.DEFAULT;
                 }
 
             } else {
@@ -159,11 +124,47 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
                     assign.visit(this, state);
                 }
 
-                return "";
+                return Primitive.DEFAULT;
             }
         }
 
         throw new SMPLException("Number of variables and values must match");
+    }
+
+    @Override
+    public Primitive visitSMPLProgram(SIRProgram sp, SMPLContext arg) throws SMPLException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Primitive visitStmtSequence(SIRSequence seq, SMPLContext state) throws SMPLException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Primitive visitASTVar(SIRVar<SIRStatement> var, SMPLContext state) throws SMPLException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Primitive visitASTBinaryExp(SIRBinaryExp<SIRStatement> biExp, SMPLContext state) throws SMPLException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Primitive visitASTUnaryExp(SIRUnaryExp<SIRStatement> urExp, SMPLContext state) throws SMPLException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Primitive visitSIRFunction(SIRFunctionExp<SIRStatement> func, SMPLContext state) throws SMPLException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

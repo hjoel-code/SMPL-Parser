@@ -1,7 +1,9 @@
 package smpl.lang.builtins;
 
 import smpl.lang.SIRFunctionExp;
+import smpl.lang.SIRObj;
 import smpl.lang.evaluators.SMPLEvaluator;
+import smpl.lang.statements.SMPLAssignment;
 import smpl.sys.Environment;
 import smpl.sys.SMPLException;
 import smpl.values.type.compound.*;
@@ -155,10 +157,27 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             if (priv.getType().equals("proc")) {
                 SMPLProc proc = (SMPLProc) priv;
                 int paramslen, arglen;
+                paramslen = proc.getParams().size();
+                arglen = exp.getParams().size();
+
+                if (paramslen > arglen) {
+                    throw new SMPLException("Expected "+String.valueOf(paramslen) +" "+String.valueOf(arglen)+" was given.");
+                } else {
+                    int diff = arglen - paramslen;
+                    if (diff == 0) {
+                        for (int i = 0; i < arglen; i++) {
+                            SMPLAssignment assign = new SMPLAssignment(proc.getParams().get(i), (SIRObj) exp.getParams().get(i));
+                            assign.visit(eval.getStmtEval(), proc.getContext());
+                        }
+
+                        return proc.getBody().visit(eval, proc.getContext()).getPrimitive();
+                    } else {
+                        throw new SMPLException("Waiting on list implementation");
+                    }
+                }
             } else {
                 throw new SMPLException("Expected a procedure, but " + priv.getType() + " was given.");
             }
-            return null;
         }
 
     };

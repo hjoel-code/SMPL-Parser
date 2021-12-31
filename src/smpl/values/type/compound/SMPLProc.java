@@ -10,16 +10,16 @@ public class SMPLProc extends CompoundPrimitive<SMPLProc>{
 
     private SIRProgram body;
     private ArrayList<String> params;
-    private SIRProgram context;
+    private SMPLContext context;
 
     public SMPLProc(ArrayList<String> params, SIRProgram body, SMPLContext context) {
         super("proc");
         this.params = params;
         this.body = body;
-        this.context = body;
+        this.context = context;
     }
 
-    public SIRProgram getContext() {
+    public SMPLContext getContext() {
         return context;
     }
 
