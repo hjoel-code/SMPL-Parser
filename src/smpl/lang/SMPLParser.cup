@@ -174,8 +174,6 @@ literals                        ::=     pairExp:pair {: RESULT = (PairExp) pair;
                                         CDR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
                                         CDR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :};
 
-
-
 // IF Statement
 
 IFCond                          ::=     IF boolExp:bool THEN stmt:s1 ELSE stmt:s2 {:

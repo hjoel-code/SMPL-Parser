@@ -15,7 +15,6 @@ import smpl.lang.statements.SMPLAssignment;
 import smpl.lang.statements.Statement;
 import smpl.lang.statements.TupleAssignment;
 import smpl.lang.statements.SIRStatement;
-import smpl.lang.statements.SIRSingleStmt;
 import smpl.lang.visitors.StatementVisitor;
 import smpl.sys.SMPLContext;
 import smpl.sys.SMPLException;

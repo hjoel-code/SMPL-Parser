@@ -144,9 +144,7 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
         public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) {
             return Primitive.DEFAULT;
         }
-    },
-
-    ;
+    };
 
     String symbol;
 
