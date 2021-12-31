@@ -45,8 +45,7 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             SMPLPair pair = (SMPLPair) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
             return pair.getArg2();
         }
-    }
-    ;
+    };
 
 
     String symbol;
