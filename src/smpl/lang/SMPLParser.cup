@@ -64,7 +64,7 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 /* Keywords */
-terminal ASSIGN, SIZE, PRINT, PROC;
+terminal ASSIGN, SIZE, PRINT, PROC, CALL;
 terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN;
 
 /* Arithmetic operators */ 
@@ -72,7 +72,7 @@ terminal PLUS, MINUS, TIMES, DIV, MOD;
 
 /* Punctuation */
 terminal LPAREN, RPAREN, LBRACKET, RBRACKET, SEMI, COMMA, COLON;
-terminal LBCOLON, RBCOLON, QUES, NOT;
+terminal LBCOLON, RBCOLON, QUES, NOT, LCURL, RCURL;
 
 terminal Integer INTEGER;
 terminal Double REAL;
@@ -107,7 +107,7 @@ non terminal empty;
 non terminal SIRProgram program;
 non terminal SIRSequence stmtList;
 non terminal SIRStatement stmt, assignment;
-non terminal SIRObj smplExp, literals;
+non terminal SIRObj smplExp, expressions, procDefn, literals;
 non terminal AIRExp arithExp, arithTerm, arithFactor;
 non terminal StringExp stringExp, stringTerm, stringFactor;
 non terminal CharExp charExp, charTerm, charFactor;
@@ -128,7 +128,6 @@ non terminal AIRExp arithVar;
 non terminal StringExp stringVar;
 non terminal CharExp charVar;
 non terminal CompoundExp pairVar;
-
 non terminal TupleExp tupleExp;
 
 
@@ -162,17 +161,23 @@ stmt                            ::=     assignment:assign {:
                                         smplExp:exp {: RESULT = new Statement(exp); :};
 
 
-literals                        ::=     pairExp:pair {: RESULT = (PairExp) pair; :} |
-                                        arithExp:aExp {: RESULT = (AIRExp) aExp; :} |
-                                        stringExp:sExp {: RESULT = (StringExp) sExp; :} |
-                                        charExp:chExp {: RESULT = (CharExp) chExp; :} |
-                                        boolExp:bExp {: RESULT = (BoolExp) bExp; :} | 
+expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
+                                        arithExp:aExp {: RESULT = aExp; :} |
+                                        stringExp:sExp {: RESULT = sExp; :} |
+                                        charExp:chExp {: RESULT = chExp; :} |
+                                        boolExp:bExp {: RESULT = bExp; :} | 
                                         tupleExp:tuple {: RESULT = tuple; :} |
 
                                         CAR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CAR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CDR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
                                         CDR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :};
+
+
+
+literals                        ::=     VAR:id {: RESULT = new SIRVar(id); :} |
+                                        VAR:id LPAREN smplExp:exp RPAREN {: RESULT = new SIRFunctionExp("call", new SIRVar(id), exp); :};
+
 
 // IF Statement
 
@@ -198,7 +203,8 @@ assignment                      ::=     VAR:id ASSIGN smplExp:exp {:
                                         ids:lst ASSIGN VAR:id {:  
                                             RESULT = new TupleAssignment(lst, new TupleExp(new SIRVar<CompoundExp>(id)));
                                         :} |
-                                        DEF VAR:id smplExp:exp {: RESULT = new SMPLAssignment(id, exp); :}; 
+                                        DEF VAR:id smplExp:exp {: RESULT = new SMPLAssignment(id, exp); :} |
+                                        DEF VAR:id procDefn ;
 
 tupleExpList                    ::=     tupleExpList:lst COMMA smplExp:exp {: 
                                             lst.add(exp);
@@ -230,8 +236,13 @@ smplExpList                       ::=   smplExpList:lst COMMA smplExp:exp {:
                                             RESULT = lst;
                                         :};
 
-smplExp                         ::=     VAR:var {: RESULT = new SIRVar(var); :} |
-                                        literals:lit {: RESULT = lit; :};
+
+smplExp                         ::=     literals:lit {: RESULT = lit; :} |
+                                        expressions:expr {: RESULT = expr; :};
+
+
+procDefn                        ::=     PROC LPAREN paramListE:params RPAREN LCURL program:body RCURL {: RESULT = new ProcExp(params, body); :} |
+                                        PROC VAR:id LCURL program:body RCURL {: RESULT = new ProcExp(id, body); :}; 
 
 // Parameter List for Function Definitions
 
@@ -308,6 +319,14 @@ boolExp                         ::=     boolTerm:bool1 LOGIC:op boolExp:bool2 {:
 
 
 boolTerm                        ::=     arithExp:exp1 RATIONAL:op arithExp:exp2 {: 
+                                            RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, exp1, exp2)); 
+                                        :} |
+
+                                        arithVar:exp1 RATIONAL:op arithExp:exp2 {: 
+                                            RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, exp1, exp2)); 
+                                        :} |
+
+                                        arithExp:exp1 RATIONAL:op arithVar:exp2 {: 
                                             RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, exp1, exp2)); 
                                         :} |
 
@@ -477,6 +496,9 @@ arithFactor                     ::=     INTEGER:alit {: RESULT = new AIRLit(alit
                                         BINARY:bin {: RESULT = new AIRLit(bin, "#b"); :} |
                                         LPAREN MINUS arithTerm:aExp RPAREN {: 
                                             SIRUnaryExp<AIRExp> calc = new SIRUnaryExp<AIRExp>("-", aExp);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        LPAREN MINUS arithVar:aVar RPAREN {: 
+                                            SIRUnaryExp<AIRExp> calc = new SIRUnaryExp<AIRExp>("-", aVar);
                                             RESULT = new ArithCalc(calc); :} |
                                         LPAREN arithExp:aexp RPAREN {: RESULT = aexp; :};
 

@@ -79,12 +79,12 @@ public class SMPLEvaluator implements SIRVisitor<SIRProgram, SMPLContext, Primit
             throws SMPLException {
 
         ArrayList<SIRStatement> stmts = seq.getStatements();
-        SMPLString result = (SMPLString) lastResult;
+        SMPLString result = new SMPLString("");
 
 
         for (SIRStatement stmt : stmts) {
             String str = stmt.visit(getStmtEval(), state).toString();
-            result = new SMPLString(str);
+            result = new SMPLString(result.getPrimitive() + str);
         }
 
         lastResult = result;

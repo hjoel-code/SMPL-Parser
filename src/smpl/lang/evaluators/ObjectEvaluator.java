@@ -17,6 +17,7 @@ import smpl.lang.chars.CharExp;
 import smpl.lang.chars.CharLit;
 import smpl.lang.compound.CompoundExp;
 import smpl.lang.compound.PairLit;
+import smpl.lang.compound.ProcExp;
 import smpl.lang.compound.TupleExp;
 import smpl.lang.string.StringExp;
 import smpl.sys.SMPLContext;
@@ -64,6 +65,9 @@ public class ObjectEvaluator {
         } else if (type.equals("tuple")) {
             TupleExp exp = (TupleExp) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        }  else if (type.equals("proc")) {
+            ProcExp exp = (ProcExp) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         } else {
             throw new SMPLException("Failed to Evaluate input");
         }
@@ -104,6 +108,11 @@ public class ObjectEvaluator {
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         
+        } else if (type.equals("proc")) {
+
+            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+
         } else {
             throw new SMPLException("Unbound Variable: " + obj.getVar());
         }

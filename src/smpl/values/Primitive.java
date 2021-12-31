@@ -6,7 +6,7 @@ public abstract class Primitive<T> {
     
     private final String type;
 
-    public static final Primitive DEFAULT = new SMPLString("DEFAULT");
+    public static final Primitive DEFAULT = new SMPLString("");
 
     public Primitive(String type) {
         this.type = type;

@@ -6,6 +6,7 @@ import smpl.sys.Environment;
 import smpl.sys.SMPLException;
 import smpl.values.Primitive;
 import smpl.values.type.compound.SMPLPair;
+import smpl.values.type.compound.SMPLProc;
 import smpl.values.type.simple.SMPLBool;
 
 public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Environment<Primitive>> {
@@ -77,6 +78,24 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
         public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) {
             return Primitive.DEFAULT;
         }
+    },
+
+    CALL("call") {
+
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            Primitive priv = exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+
+            if (priv.getType().equals("proc")) {
+                SMPLProc proc = (SMPLProc) priv;
+                int paramslen, arglen;
+            } else {
+                throw new SMPLException("Expected a procedure, but " + priv.getType() + " was given.");
+            }
+            return null;
+        }
+
     };
 
     String symbol;

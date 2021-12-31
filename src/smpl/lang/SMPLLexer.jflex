@@ -89,6 +89,9 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>    ,                      { return new Symbol(sym.COMMA);}
 <YYINITIAL>    ;                      { return new Symbol(sym.SEMI);}
 <YYINITIAL>    :                      { return new Symbol(sym.COLON);}
+
+<YYINITIAL>    "{"                    { return new Symbol(sym.LCURL);}
+<YYINITIAL>    "}"                    { return new Symbol(sym.RCURL);}
 <YYINITIAL>    "("                    { return new Symbol(sym.LPAREN);}
 <YYINITIAL>    ")"                    { return new Symbol(sym.RPAREN);}
 <YYINITIAL>    "["                    { return new Symbol(sym.LBRACKET);}
@@ -100,6 +103,7 @@ comment =  {lineComment} | {blockComment}
 
 
 // Keywords
+<YYINITIAL>   call              { return new Symbol( sym.CALL ); }
 <YYINITIAL>   pair               { return new Symbol( sym.PAIR ); }
 <YYINITIAL>   cdr                 { return new Symbol( sym.CDR ); }
 <YYINITIAL>   car                 { return new Symbol( sym.CAR ); }
