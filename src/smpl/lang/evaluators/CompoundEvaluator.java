@@ -1,16 +1,11 @@
 package smpl.lang.evaluators;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import smpl.lang.SIRBinaryExp;
-import smpl.lang.SIRFunctionExp;
-import smpl.lang.SIRUnaryExp;
-import smpl.lang.SIRVar;
+import smpl.lang.*;
 import smpl.lang.builtins.SMPLFunctions;
-import smpl.lang.SIRProgram;
-import smpl.lang.SIRSequence;
-import smpl.lang.compound.CompoundExp;
-import smpl.lang.compound.PairLit;
+import smpl.lang.compound.*;
 import smpl.lang.visitors.CompoundVisitor;
 import smpl.sys.Environment;
 import smpl.sys.SMPLException;
@@ -90,6 +85,18 @@ public class CompoundEvaluator
         String symbol = func.getSymbol();
         SMPLFunctions cont = functions.get(symbol);
         return (CompoundPrimitive) cont.apply(eval, state, func);
+    }
+
+    @Override
+    public CompoundPrimitive visitTupleExp(TupleExp tuple, Environment<Primitive> state) throws SMPLException {
+        ArrayList<SIRObj> tupleExp = tuple.getTuple();
+        ArrayList<Primitive> tupleVal = new ArrayList<>();
+
+        for (SIRObj exp : tupleExp) {
+            tupleVal.add(exp.eval(state.getContext(), eval.getObjectEvaluator()));
+        }
+        
+        return new SMPLTuple(tupleVal);
     }
 
 }

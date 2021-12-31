@@ -61,6 +61,9 @@ public class ObjectEvaluator {
         } else if (type.equals("pair")) {
             PairLit exp = (PairLit) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        } else if (type.equals("tuple")) {
+            TupleExp exp = (TupleExp) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         } else {
             throw new SMPLException("Failed to Evaluate input");
         }
@@ -92,6 +95,11 @@ public class ObjectEvaluator {
             return exp.visit(eval.getCharEval(), state.getGlobalEnvironment());
 
         } else if (type.equals("pair")) {
+
+            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        
+        } else if (type.equals("tuple")) {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
