@@ -2,8 +2,6 @@ package smpl.lang.evaluators;
 
 import java.util.ArrayList;
 
-import javax.lang.model.type.PrimitiveType;
-
 import smpl.lang.*;
 import smpl.lang.statements.SIRStatement;
 import smpl.lang.visitors.SIRVisitor;

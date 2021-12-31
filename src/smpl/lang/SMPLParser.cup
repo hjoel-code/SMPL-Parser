@@ -64,14 +64,15 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 /* Keywords */
-terminal ASSIGN;
+terminal ASSIGN, SIZE, PRINT, PROC;
+terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN;
 
 /* Arithmetic operators */ 
 terminal PLUS, MINUS, TIMES, DIV, MOD;
 
 /* Punctuation */
 terminal LPAREN, RPAREN, LBRACKET, RBRACKET, SEMI, COMMA, COLON;
-terminal LBCOLON, RBCOLON, QUES;
+terminal LBCOLON, RBCOLON, QUES, NOT;
 
 terminal Integer INTEGER;
 terminal Double REAL;
@@ -86,19 +87,17 @@ terminal String RATIONAL;
 terminal String LOGIC;
 
 
-// Key Words
-terminal CAR, CDR, PAIR, LIST, SIZE, PRINT, PROC, DEF;
 
 /* Non terminals */
 
 /* *** Logic extensions (in support of IF) *** */
-terminal IF, ELSE;
+terminal IF, ELSE, THEN;
 
 // place your extensions here, if you do this problem
 
 /* *** End of logic extensions *** */
 
-non terminal ArrayList<String> paramList;
+non terminal ArrayList<String> paramList, ids;
 non terminal ArrayList<String> paramListE;
 non terminal empty;
 
@@ -107,8 +106,8 @@ non terminal empty;
 
 non terminal SIRProgram program;
 non terminal SIRSequence stmtList;
-non terminal SIRStatement stmt;
-non terminal SIRObj smplExp;
+non terminal SIRStatement stmt, assignment;
+non terminal SIRObj smplExp, literals;
 non terminal AIRExp arithExp, arithTerm, arithFactor;
 non terminal StringExp stringExp, stringTerm, stringFactor;
 non terminal CharExp charExp, charTerm, charFactor;
@@ -120,14 +119,17 @@ non terminal ArrayList<SIRExp<StringExp>> strExpList, strExpListE;
 non terminal ArrayList<SIRExp<CharExp>> cExpList, cExpListE;
 non terminal ArrayList<SIRExp<AIRExp>> aExpList, aExpListE;
 non terminal ArrayList<SIRExp<BoolExp>> bExpList, bExpListE;
-non terminal ArrayList<SMPLObject> smplExpList, smplExpListE;
+non terminal ArrayList<SIRObj> smplExpList, smplExpListE, tupleExpList;
 
 
-non terminal BoolExp boolVar;
+non terminal ConditionalStatement IFCond;
+non terminal BoolExp boolVar, predicate;
 non terminal AIRExp arithVar;
 non terminal StringExp stringVar;
 non terminal CharExp charVar;
 non terminal CompoundExp pairVar;
+
+non terminal TupleExp tupleExp;
 
 
 start with program;
@@ -149,28 +151,104 @@ stmtList                        ::=     stmtList:seq stmt:s SEMI {:
                                         :};
 
 
-stmt                            ::=     VAR:id ASSIGN smplExp:exp  {:
-                                            RESULT = new SMPLAssignment(id, exp);
+stmt                            ::=     assignment:assign {:  
+                                            RESULT = assign;
                                         :} |
+                                        IFCond:cond {: 
+                                            RESULT = cond;
+                                        :} |
+                                        PRINT LPAREN smplExp:exp RPAREN SEMI {: RESULT = new PrintStmt(exp); :} |
+                                        PRINTLN LPAREN smplExp:exp RPAREN SEMI {: RESULT = new PrintStmt(exp, true); :} |
+                                        literals:exp {: RESULT = new Statement(exp); :};
 
-                                        PRINT smplExp:exp {: RESULT = new PrintStmt(exp); :} |
-                                        smplExp:exp {: RESULT = new SIRSingleStmt(exp); :} |
-                                        DEF VAR:id smplExp:exp {: RESULT = new SMPLAssignment(id, exp); :};
 
-
-smplExp                         ::=     VAR:var {: RESULT = new SIRVar(var); :} |
-                                        pairExp:pair {: RESULT = (PairExp) pair; :} |
+literals                        ::=     pairExp:pair {: RESULT = (PairExp) pair; :} |
                                         arithExp:aExp {: RESULT = (AIRExp) aExp; :} |
                                         stringExp:sExp {: RESULT = (StringExp) sExp; :} |
                                         charExp:chExp {: RESULT = (CharExp) chExp; :} |
                                         boolExp:bExp {: RESULT = (BoolExp) bExp; :} | 
+                                        tupleExp:tuple {: RESULT = tuple; :} |
 
                                         CAR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CAR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CDR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
                                         CDR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :};
 
+
+
+// IF Statement
+
+IFCond                          ::=     IF boolExp:bool THEN stmt:s1 ELSE stmt:s2 {:
+                                            RESULT = new ConditionalStatement(bool, s1, s2);
+                                        :} | 
+                                        IF boolExp:bool THEN stmt:s SEMI {:
+                                            RESULT = new ConditionalStatement(bool, s);
+                                        :}; 
+                                        
+                                    
+
+
+tupleExp                        ::=     LPAREN tupleExpList:lst RPAREN {:  
+                                            RESULT = new TupleExp(lst);
+                                        :};
+
+
+assignment                      ::=     VAR:id ASSIGN smplExp:exp SEMI {:
+                                            RESULT = new SMPLAssignment(id, exp);
+                                        :} |
+
+                                        ids:lst ASSIGN tupleExp:tuple SEMI {: RESULT = new TupleAssignment(lst, tuple); :} |
+
+                                        ids:lst ASSIGN VAR:id {:  
+                                            RESULT = new TupleAssignment(lst, new TupleExp(new SIRVar<CompoundExp>(id)));
+                                        :};  
+
+tupleExpList                    ::=     tupleExpList:lst COMMA smplExp:exp {: 
+                                            lst.add(exp);
+                                            RESULT = lst;
+                                        :} |
+
+                                        smplExp:exp  COMMA smplExp:exp1 {: 
+                                            ArrayList<SIRObj> lst = new ArrayList<>();
+                                            lst.add(exp);
+                                            lst.add(exp1);
+                                            RESULT = lst;
+                                        :};
+
+
+smplExpListE                      ::=   smplExpList:lst {: RESULT = lst; :} |
+
+                                        empty {: RESULT = new ArrayList<>(); :};
+
+
+
+smplExpList                       ::=   smplExpList:lst COMMA smplExp:exp {: 
+                                            lst.add(exp);
+                                            RESULT = lst;
+                                        :} |
+
+                                        smplExp:exp {: 
+                                            ArrayList<SIRObj> lst = new ArrayList<>();
+                                            lst.add(exp);
+                                            RESULT = lst;
+                                        :};
+
+smplExp                         ::=     VAR:var {: RESULT = new SIRVar(var); :} |
+                                        literals:lit {: RESULT = lit; :};
+
 // Parameter List for Function Definitions
+
+ids                             ::=     ids:lst COMMA VAR:id {: 
+                                            lst.add(id);
+                                            RESULT = lst;
+                                        :} |
+
+                                        VAR:id COMMA VAR:id1 {: 
+                                            ArrayList<String> lst = new ArrayList<>();
+                                            lst.add(id);
+                                            lst.add(id1);
+                                            RESULT = lst;
+                                        :};
 
 
 paramListE                      ::=     paramList:lst {: RESULT = lst; :} |
@@ -217,19 +295,19 @@ boolExp                         ::=     boolTerm:bool1 LOGIC:op boolExp:bool2 {:
                                             RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, bool1, bool2)); 
                                         :} |
 
-                                        LOGIC:op boolExp:bool {: 
-                                            RESULT = new BoolCalc(new SIRUnaryExp<BoolExp>(op, bool));
+                                        NOT boolExp:bool {: 
+                                            RESULT = new BoolCalc(new SIRUnaryExp<BoolExp>("not", bool));
                                         :} |
-
-                                        boolTerm:bool {: RESULT = bool; :} |
 
                                         boolVar:bool1 LOGIC:op boolExp:bool2 {: 
                                             RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, bool1, bool2)); 
                                         :} |
 
-                                        LOGIC:op boolVar:bool {: 
-                                            RESULT = new BoolCalc(new SIRUnaryExp<BoolExp>(op, bool));
-                                        :};
+                                        NOT boolVar:bool {: 
+                                            RESULT = new BoolCalc(new SIRUnaryExp<BoolExp>("not", bool));
+                                        :} |
+
+                                        boolTerm:bool {: RESULT = bool; :};
 
 
 boolTerm                        ::=     arithExp:exp1 RATIONAL:op arithExp:exp2 {: 

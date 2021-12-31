@@ -100,17 +100,19 @@ comment =  {lineComment} | {blockComment}
 
 
 // Keywords
-<YYINITIAL>   pair|PAIR               { return new Symbol( sym.PAIR ); }
-<YYINITIAL>   cdr|CDR                 { return new Symbol( sym.CDR ); }
-<YYINITIAL>   car|CAR                 { return new Symbol( sym.CAR ); }
-<YYINITIAL>   list|LIST               { return new Symbol( sym.LIST ); }
-<YYINITIAL>   size|SIZE               { return new Symbol( sym.SIZE ); }
-<YYINITIAL>   print|PRINT             { return new Symbol( sym.PRINT ); }
+<YYINITIAL>   pair               { return new Symbol( sym.PAIR ); }
+<YYINITIAL>   cdr                 { return new Symbol( sym.CDR ); }
+<YYINITIAL>   car                 { return new Symbol( sym.CAR ); }
+<YYINITIAL>   list               { return new Symbol( sym.LIST ); }
+<YYINITIAL>   size               { return new Symbol( sym.SIZE ); }
+<YYINITIAL>   print             { return new Symbol( sym.PRINT ); }
+<YYINITIAL>   println           { return new Symbol( sym.PRINTLN ); }
 
-<YYINITIAL>    if|IF                  { return new Symbol(sym.IF);}
-<YYINITIAL>    else|ELSE              { return new Symbol(sym.ELSE);}
-<YYINITIAL>    def|DEF                { return new Symbol(sym.DEF);}
-<YYINITIAL>    proc|PROC              { return new Symbol(sym.PROC);}
+<YYINITIAL>    if                  { return new Symbol(sym.IF);}
+<YYINITIAL>    then              { return new Symbol(sym.THEN);}
+<YYINITIAL>    else              { return new Symbol(sym.ELSE);}
+<YYINITIAL>    def                { return new Symbol(sym.DEF);}
+<YYINITIAL>    proc              { return new Symbol(sym.PROC);}
 
 
 <YYINITIAL>    ":="                   { return new Symbol(sym.ASSIGN); }
@@ -122,7 +124,9 @@ comment =  {lineComment} | {blockComment}
 
 
 <YYINITIAL>   "<="|">="|"!="|"="|">"|"<"    { return new Symbol(sym.RATIONAL, yytext()); }
-<YYINITIAL>   and|AND|or|OR|not|NOT         { return new Symbol(sym.LOGIC, yytext()); }
+<YYINITIAL>   and|or                 { return new Symbol(sym.LOGIC, yytext()); }
+
+<YYINITIAL>   not                       { return new Symbol(sym.NOT); }
 
 
 

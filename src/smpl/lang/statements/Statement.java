@@ -4,11 +4,13 @@ import smpl.lang.SIRObj;
 import smpl.lang.visitors.StatementVisitor;
 import smpl.sys.SMPLException;
 
-public class SIRSingleStmt extends SIRStatement {
+public class Statement extends SIRStatement {
+
+
     private SIRObj exp;
 
-    public SIRSingleStmt(SIRObj exp) {
-        this.exp = exp;
+    public Statement(SIRObj obj) {
+        this.exp = obj;
     }
 
     public SIRObj getExp() {
@@ -17,6 +19,7 @@ public class SIRSingleStmt extends SIRStatement {
 
     @Override
     public <S, T> T visit(StatementVisitor<SIRStatement, S, T> v, S state) throws SMPLException {
-        return v.visitSIRSingleStmt(this, state);
-    }    
+        return v.visitStatement(this, state);
+    }
+    
 }
