@@ -157,9 +157,9 @@ stmt                            ::=     assignment:assign {:
                                         IFCond:cond {: 
                                             RESULT = cond;
                                         :} |
-                                        PRINT LPAREN smplExp:exp RPAREN SEMI {: RESULT = new PrintStmt(exp); :} |
-                                        PRINTLN LPAREN smplExp:exp RPAREN SEMI {: RESULT = new PrintStmt(exp, true); :} |
-                                        literals:exp {: RESULT = new Statement(exp); :};
+                                        PRINT LPAREN smplExp:exp RPAREN {: RESULT = new PrintStmt(exp); :} |
+                                        PRINTLN LPAREN smplExp:exp RPAREN {: RESULT = new PrintStmt(exp, true); :} |
+                                        smplExp:exp {: RESULT = new Statement(exp); :};
 
 
 literals                        ::=     pairExp:pair {: RESULT = (PairExp) pair; :} |
@@ -185,23 +185,22 @@ IFCond                          ::=     IF boolExp:bool THEN stmt:s1 ELSE stmt:s
                                             RESULT = new ConditionalStatement(bool, s);
                                         :}; 
                                         
-                                    
-
 
 tupleExp                        ::=     LPAREN tupleExpList:lst RPAREN {:  
                                             RESULT = new TupleExp(lst);
                                         :};
 
 
-assignment                      ::=     VAR:id ASSIGN smplExp:exp SEMI {:
+assignment                      ::=     VAR:id ASSIGN smplExp:exp {:
                                             RESULT = new SMPLAssignment(id, exp);
                                         :} |
 
-                                        ids:lst ASSIGN tupleExp:tuple SEMI {: RESULT = new TupleAssignment(lst, tuple); :} |
+                                        ids:lst ASSIGN tupleExp:tuple {: RESULT = new TupleAssignment(lst, tuple); :} |
 
                                         ids:lst ASSIGN VAR:id {:  
                                             RESULT = new TupleAssignment(lst, new TupleExp(new SIRVar<CompoundExp>(id)));
-                                        :};  
+                                        :} |
+                                        DEF VAR:id smplExp:exp {: RESULT = new SMPLAssignment(id, exp); :}; 
 
 tupleExpList                    ::=     tupleExpList:lst COMMA smplExp:exp {: 
                                             lst.add(exp);
