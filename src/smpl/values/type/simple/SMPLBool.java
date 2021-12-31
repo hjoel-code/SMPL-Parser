@@ -17,6 +17,11 @@ public class SMPLBool extends SimplePrimitive<Boolean>{
         return val;
     }
 
+    @Override 
+    public String getRep() {
+        return "bool";
+    }
+
     @Override
     public String getOutput() {
         if (val) {

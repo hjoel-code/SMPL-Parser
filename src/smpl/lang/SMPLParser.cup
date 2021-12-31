@@ -65,7 +65,7 @@ scan with {:
 
 /* Keywords */
 terminal ASSIGN, SIZE, PRINT, PROC;
-terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN;
+terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN, EQV, EQUAL, SUBSTR;
 
 /* Arithmetic operators */ 
 terminal PLUS, MINUS, TIMES, DIV, MOD;
@@ -326,7 +326,9 @@ boolFactor                      ::=     BOOL:bool {:
 
                                         LPAREN boolExp:bool RPAREN {: RESULT = bool; :} |
 
-                                        PAIR QUES LPAREN smplExp:exp RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("pair?", exp)); :};
+                                        PAIR QUES LPAREN smplExp:exp RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("pair?", exp)); :} |
+                                        EQV QUES LPAREN smplExp:exp1 COMMA smplExp:exp2 RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("eqv?", exp1, exp2)); :} |
+                                        EQUAL QUES LPAREN smplExp:exp1 COMMA smplExp:exp2 RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("equal?", exp1, exp2)); :};
 
 
 

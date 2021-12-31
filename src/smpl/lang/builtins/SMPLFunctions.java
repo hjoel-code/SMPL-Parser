@@ -4,9 +4,11 @@ import smpl.lang.SIRFunctionExp;
 import smpl.lang.evaluators.SMPLEvaluator;
 import smpl.sys.Environment;
 import smpl.sys.SMPLException;
-import smpl.values.Primitive;
-import smpl.values.type.compound.SMPLPair;
-import smpl.values.type.simple.SMPLBool;
+import smpl.values.type.compound.*;
+import smpl.values.type.simple.*;
+import smpl.values.*;
+import java.util.ArrayList;
+
 
 public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Environment<Primitive>> {
     
@@ -56,11 +58,27 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             }
     },
 
+    /* 
+    * Evaluates if exps are both SimplePrimitive and of same value
+    * and if both exps are aliases of same compound object.
+    */
     ISEQV("eqv?") {
         @Override
         public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
             throws SMPLException {
-                return Primitive.DEFAULT;
+                Primitive val1 = exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+                Primitive val2 = exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
+
+                if (val1 instanceof SimplePrimitive & val2 instanceof SimplePrimitive) {
+                    SimplePrimitive sp1 = (SimplePrimitive) val1;
+                    SimplePrimitive sp2 = (SimplePrimitive) val2;
+
+                    if (sp1.getRep() == sp2.getRep()) {
+                        return new SMPLBool(val1.getPrimitive().equals(val2.getPrimitive()));
+                    }
+                }
+
+                return new SMPLBool(val1 == val2);
             }
     },
 
@@ -68,7 +86,56 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
         @Override
         public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
             throws SMPLException {
-                return Primitive.DEFAULT;
+                Boolean result = false;
+
+                Primitive val1 = exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+                Primitive val2 = exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
+
+                // is simple, so just return if they are of the same value
+                if (val1 instanceof SimplePrimitive & val2 instanceof SimplePrimitive) {
+                    SimplePrimitive sp1 = (SimplePrimitive) val1;
+                    SimplePrimitive sp2 = (SimplePrimitive) val2;
+
+                    if (sp1.getRep() == sp2.getRep()) {
+                        return new SMPLBool(val1.getPrimitive().equals(val2.getPrimitive()));
+                    }
+                } 
+
+                // is compound and check everything elemtents inside compound are structually equivalent
+
+                else if (val1 instanceof SMPLPair & val2 instanceof SMPLPair) { // pair
+                    SMPLPair pair1 = (SMPLPair) val1.getPrimitive();
+                    SMPLPair pair2 = (SMPLPair) val2.getPrimitive();
+                    
+                    result = (pair1.getArg1().getPrimitive().equals(pair2.getArg1().getPrimitive()));   
+                    result = (pair1.getArg2().getPrimitive().equals(pair2.getArg2().getPrimitive()));   
+
+                    return new SMPLBool(result);
+                }
+
+                else if (val1 instanceof SMPLTuple & val2 instanceof SMPLTuple) { // tuple
+                    result = false;
+
+                    SMPLTuple tuple1 = (SMPLTuple) val1;
+                    SMPLTuple tuple2 = (SMPLTuple) val2;
+
+                    ArrayList<Primitive> tupleVals1 = tuple1.getPrimitive();
+                    ArrayList<Primitive> tupleVals2 = tuple2.getPrimitive();
+
+                    if (tupleVals1.size() == tupleVals2.size()) {
+                        for (int i = 0; i < tupleVals1.size(); i++) {
+                            result = tupleVals1.get(i).getPrimitive().equals(tupleVals2.get(i).getPrimitive());
+                        }
+                    }
+
+                    return new SMPLBool(result);
+                } 
+
+                else if (val1 instanceof SMPLVector & val2 instanceof SMPLVector) { // vector
+                    // Waiting for vector support
+                } 
+
+                return new SMPLBool(false);
             }
     },
 

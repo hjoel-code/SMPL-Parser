@@ -25,6 +25,11 @@ public class SMPLList extends SimplePrimitive<ArrayList<Primitive>> {
     }
 
     @Override
+    public String getRep() {
+        return  "list";
+    }
+
+    @Override
     public String getOutput() {
         String opt = "[ ";
         

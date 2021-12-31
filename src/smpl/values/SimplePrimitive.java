@@ -9,5 +9,7 @@ public abstract class SimplePrimitive<T> extends Primitive<T> {
     
     @Override
     public abstract T getPrimitive();
+
+    public abstract String getRep();
     
 }
