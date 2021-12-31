@@ -21,7 +21,7 @@ public enum BinOpBool implements BinaryOp<Double, Boolean> {
     EQ("=") {
         @Override
         public Boolean apply(Double arg1, Double arg2) {
-            return arg1 == arg2;
+            return arg1.equals(arg2);
         }
     }, 
 

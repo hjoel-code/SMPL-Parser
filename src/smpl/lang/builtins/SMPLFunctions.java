@@ -45,8 +45,39 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             SMPLPair pair = (SMPLPair) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
             return pair.getArg2();
         }
-    };
+    },
 
+    SIZE("size") {
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
+            throws SMPLException {
+                // TODO: Finish implementation
+                return Primitive.DEFAULT;
+            }
+    },
+
+    ISEQV("eqv?") {
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
+            throws SMPLException {
+                return Primitive.DEFAULT;
+            }
+    },
+
+    ISEQUAL("equal?") {
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
+            throws SMPLException {
+                return Primitive.DEFAULT;
+            }
+    },
+
+    SUBSTR("substr") {
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) {
+            return Primitive.DEFAULT;
+        }
+    };
 
     String symbol;
 
@@ -58,8 +89,4 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
     public String getSymbol() {
         return symbol;
     }
-    
-    
-
-
 }
