@@ -146,6 +146,8 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   "#t" | "#f"             { return new Symbol( sym.BOOL, yytext()); }
 
 
+<YYINITIAL>   "#e"             	{ return new Symbol( sym.EMPTY, yytext()); }
+
 
 <YYINITIAL>   "#b"                    { yybegin(BINARY); }
 <BINARY>      {binary}{1,32}          { 

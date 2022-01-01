@@ -11,6 +11,7 @@ import smpl.values.type.compound.*;
 import smpl.values.type.simple.*;
 import smpl.values.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Environment<Primitive>> {
     
@@ -204,9 +205,32 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
             StringLit i = new StringLit(exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator()).getOutput());
             Primitive[] arr = vec.getVector();
-            Primitive ele = arr[Integer.valueOf(i.getStr())];
-            return ele;
+            Integer index = Integer.valueOf(i.getStr());
+            if(index > arr.length){
+                throw new SMPLException("Index out of bounds");
+            } else {
+                Primitive ele = arr[index];
+                return ele;
+            }
         }
+    },
+    
+    LIST("list"){
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
+            ArrayList<SIRObj> vals = exp.getParams();
+            Primitive eVal = vals.get(0).eval(state.getContext(), eval.getObjectEvaluator());
+            int len = vals.size();
+            if(len > 1){
+                vals.remove(0);
+                SIRFunctionExp newExp = new SIRFunctionExp(exp.getSymbol(), vals);
+                return new SMPLPair(eVal, this.apply(eval, state, newExp));
+            }
+            else{
+                return new SMPLPair(eVal, new SMPLEmptyList(Collections.emptyList()));
+            }
+        }
+
     };
 
     String symbol;

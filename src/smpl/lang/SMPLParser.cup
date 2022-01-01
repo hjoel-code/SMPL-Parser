@@ -86,6 +86,7 @@ terminal String CHAR;
 terminal String BOOL;
 terminal String RATIONAL;
 terminal String LOGIC;
+terminal String EMPTY;
 
 
 
@@ -181,7 +182,9 @@ expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         vectorExp:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
                                         vectorVar:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
                                         SIZE LPAREN vectorExp:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
-                                        SIZE LPAREN vectorVar:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :};
+                                        SIZE LPAREN vectorVar:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
+                                        LIST LPAREN smplExpListE:lst RPAREN {: RESULT = new SIRFunctionExp("list", lst); :} | 
+                                        LBRACKET smplExpListE:lst RBRACKET {: RESULT = new SIRFunctionExp("list", lst); :};
 
 
 

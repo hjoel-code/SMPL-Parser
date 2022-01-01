@@ -12,6 +12,7 @@ public class sym {
   public static final int LBRACKET = 24;
   public static final int CHAR = 42;
   public static final int CONCAT = 16;
+  public static final int EMPTY = 46;
   public static final int CAR = 7;
   public static final int INTEGER = 35;
   public static final int CDR = 8;
@@ -29,7 +30,7 @@ public class sym {
   public static final int CALL = 6;
   public static final int DIV = 20;
   public static final int PLUS = 17;
-  public static final int IF = 46;
+  public static final int IF = 47;
   public static final int ASSIGN = 2;
   public static final int EOF = 0;
   public static final int RBRACKET = 25;
@@ -43,10 +44,10 @@ public class sym {
   public static final int EQV = 13;
   public static final int TIMES = 19;
   public static final int COLON = 28;
-  public static final int ELSE = 47;
+  public static final int ELSE = 48;
   public static final int LIST = 10;
   public static final int SUBSTR = 15;
-  public static final int THEN = 48;
+  public static final int THEN = 49;
   public static final int BINARY = 39;
   public static final int STRING = 38;
   public static final int PROC = 5;
@@ -104,6 +105,7 @@ public class sym {
   "BOOL",
   "RATIONAL",
   "LOGIC",
+  "EMPTY",
   "IF",
   "ELSE",
   "THEN"

@@ -15,6 +15,7 @@ public class SMPLEvaluator implements SIRVisitor<SIRProgram, SMPLContext, SMPLRe
     private ArithEvaluator arithEval;
     private BoolEvaluator boolEval;
     private StringEvaluator strEval;
+    private EmptyListEvaluator emptyListEval;
     private CompoundEvaluator compoundEval;
     private StatementEvaluator stmtEval;
     private ObjectEvaluator objEval;
@@ -26,6 +27,7 @@ public class SMPLEvaluator implements SIRVisitor<SIRProgram, SMPLContext, SMPLRe
         arithEval = new ArithEvaluator(this);
         boolEval = new BoolEvaluator(this);
         strEval = new StringEvaluator(this);
+        emptyListEval = new EmptyListEvaluator(this);
         compoundEval = new CompoundEvaluator(this);
         stmtEval = new StatementEvaluator(this);
         objEval = new ObjectEvaluator(this);
@@ -44,6 +46,10 @@ public class SMPLEvaluator implements SIRVisitor<SIRProgram, SMPLContext, SMPLRe
 
     public StringEvaluator getStrEval() {
         return strEval;
+    }
+
+    public EmptyListEvaluator getEmptyListEval() {
+        return emptyListEval;
     }
 
     public CompoundEvaluator getCompoundEval() {

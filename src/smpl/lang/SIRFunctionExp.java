@@ -56,6 +56,11 @@ public class SIRFunctionExp<E extends SIRExp<E>> extends SIRExp<E> implements SI
         this.symbol = symbol;
     }
 
+    public SIRFunctionExp(String symbol, ArrayList<SIRObj> params){
+        this.params = params;
+        this.symbol = symbol;
+    }
+
     public SIRObj getParam1() {
         return param1;
     }

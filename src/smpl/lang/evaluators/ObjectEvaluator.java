@@ -15,6 +15,8 @@ import smpl.lang.bool.BoolExp;
 import smpl.lang.builtins.SMPLFunctions;
 import smpl.lang.chars.CharExp;
 import smpl.lang.chars.CharLit;
+import smpl.lang.emptyList.EmptyListExp;
+import smpl.lang.emptyList.EmptyListLit;
 import smpl.lang.compound.CompoundExp;
 import smpl.lang.compound.PairLit;
 import smpl.lang.compound.VectorLit;
@@ -60,6 +62,9 @@ public class ObjectEvaluator {
         } else if (type.equals("char")) {
             CharLit exp = (CharLit) obj;
             return exp.visit(eval.getCharEval(), state.getGlobalEnvironment());
+        } else if (type.equals("elist")) {
+            EmptyListLit exp = (EmptyListLit) obj;
+            return exp.visit(eval.getEmptyListEval(), state.getGlobalEnvironment());
         } else if (type.equals("pair")) {
             PairLit exp = (PairLit) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
@@ -101,6 +106,11 @@ public class ObjectEvaluator {
 
             SIRVar<CharExp> exp = (SIRVar<CharExp>) obj;
             return exp.visit(eval.getCharEval(), state.getGlobalEnvironment());
+
+        } else if (type.equals("elist")) {
+
+            SIRVar<EmptyListExp> exp = (SIRVar<EmptyListExp>) obj;
+            return exp.visit(eval.getEmptyListEval(), state.getGlobalEnvironment());
 
         } else if (type.equals("pair")) {
 
