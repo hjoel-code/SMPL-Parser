@@ -17,6 +17,7 @@ import smpl.lang.chars.CharExp;
 import smpl.lang.chars.CharLit;
 import smpl.lang.compound.CompoundExp;
 import smpl.lang.compound.PairLit;
+import smpl.lang.compound.VectorLit;
 import smpl.lang.compound.ProcExp;
 import smpl.lang.compound.TupleExp;
 import smpl.lang.string.StringExp;
@@ -62,6 +63,9 @@ public class ObjectEvaluator {
         } else if (type.equals("pair")) {
             PairLit exp = (PairLit) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        } else if (type.equals("vector")) {
+            VectorLit exp = (VectorLit) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         } else if (type.equals("tuple")) {
             TupleExp exp = (TupleExp) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
@@ -99,6 +103,11 @@ public class ObjectEvaluator {
             return exp.visit(eval.getCharEval(), state.getGlobalEnvironment());
 
         } else if (type.equals("pair")) {
+
+            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        
+        } else if (type.equals("vector")) {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());

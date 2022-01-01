@@ -114,6 +114,7 @@ non terminal CharExp charExp, charTerm, charFactor;
 
 non terminal BoolExp boolExp, boolTerm, boolFactor;
 non terminal PairExp pairExp;
+non terminal VectorExp vectorExp;
 
 non terminal ArrayList<SIRExp<StringExp>> strExpList, strExpListE;  
 non terminal ArrayList<SIRExp<CharExp>> cExpList, cExpListE;
@@ -128,6 +129,7 @@ non terminal AIRExp arithVar;
 non terminal StringExp stringVar;
 non terminal CharExp charVar;
 non terminal CompoundExp pairVar;
+non terminal CompoundExp vectorVar;
 non terminal TupleExp tupleExp;
 
 
@@ -163,6 +165,7 @@ stmt                            ::=     assignment:assign {:
 
 expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         arithExp:aExp {: RESULT = aExp; :} |
+                                        vectorExp:vector {: RESULT = (VectorExp) vector; :} |
                                         stringExp:sExp {: RESULT = sExp; :} |
                                         charExp:chExp {: RESULT = chExp; :} |
                                         boolExp:bExp {: RESULT = bExp; :} | 
@@ -509,10 +512,15 @@ arithFactor                     ::=     INTEGER:alit {: RESULT = new AIRLit(alit
 
 pairVar                         ::=     VAR:var {: RESULT = new PairLit(new SIRVar<CompoundExp>(var)); :};
 
+vectorVar                         ::=     VAR:var {: RESULT = new VectorLit(new SIRVar<CompoundExp>(var)); :};
+
 
 pairExp                         ::=     PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
                                             RESULT = new PairExp(new SIRFunctionExp("pair", e1, e2) );
                                         :};
-
+vectorExp			::=	LBCOLON smplExpListE:lst RBCOLON {:
+						SIRObj[] result = new SIRObj[lst.size()];
+						result = lst.toArray(result);
+						RESULT = new VectorExp(new SIRFunctionExp("vector", result)); :};
 
 empty                           ::=     ;

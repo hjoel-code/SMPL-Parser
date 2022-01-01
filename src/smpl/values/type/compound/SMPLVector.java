@@ -2,25 +2,40 @@ package smpl.values.type.compound;
 
 import smpl.values.CompoundPrimitive;
 
+import smpl.values.Primitive;
+
 public class SMPLVector extends CompoundPrimitive<SMPLVector>  {
 
+    private Primitive[] arr;
 
-    public SMPLVector() {
+    public SMPLVector(Primitive[] arr) {
         super("vector");
+        this.arr = arr;
     }
 
 
+    public Primitive[] getVector(){
+        return arr;
+    }
     @Override
     public SMPLVector getPrimitive() {
         return this;
     }
     
-
     @Override
     public String getOutput() {
-        // Structure how vector will be shown when printed on terminal screen
+        String opt = "[ ";
+        
+        for (int i = 0; i < arr.length; i++) {
 
-        return null;
+            opt += arr[i].getOutput();
+            opt += i == (arr.length-1) ? " " : " ";
+        }
+
+        opt += "]";
+
+
+        return opt;
     }
     
 }

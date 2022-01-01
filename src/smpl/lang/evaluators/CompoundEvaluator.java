@@ -80,6 +80,23 @@ public class CompoundEvaluator
     }
 
     @Override
+    public CompoundPrimitive visitVectorExp(VectorLit vector, Environment<Primitive> state)
+            throws SMPLException {
+
+        if (vector.getContext().equals("var")) {
+            return vector.getVarExp().visit(this, state);
+        } else {
+            SIRObj[] arr = vector.getVector();
+            Primitive[] vecArr = new Primitive[arr.length];
+            for(int i = 0; i < arr.length; i++){
+                Primitive eleEval = arr[i].eval(state.getContext(), eval.getObjectEvaluator());
+                vecArr[i] = eleEval;
+            }
+            return new SMPLVector(vecArr);
+        }
+    }
+
+    @Override
     public CompoundPrimitive visitSIRFunction(SIRFunctionExp<CompoundExp> func, Environment<Primitive> state)
             throws SMPLException {
         String symbol = func.getSymbol();

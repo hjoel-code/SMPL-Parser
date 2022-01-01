@@ -49,6 +49,19 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             return pair.getArg2();
         }
     },
+    
+    VECTOR("vector") {
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
+            SIRObj[] arr = exp.getParamArr();
+            Primitive[] vecArr = new Primitive[arr.length];
+            for(int i = 0; i < arr.length; i++){
+                Primitive eleEval = arr[i].eval(state.getContext(), eval.getObjectEvaluator());
+                vecArr[i] = eleEval;
+            }
+            return new SMPLVector(vecArr);
+        }
+    },
 
     SIZE("size") {
         @Override
