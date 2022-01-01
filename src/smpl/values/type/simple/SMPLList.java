@@ -5,22 +5,22 @@ import java.util.*;
 import smpl.values.Primitive;
 import smpl.values.SimplePrimitive;
 
-public class SMPLList extends SimplePrimitive<ArrayList<Primitive>> {
+public class SMPLList extends SimplePrimitive<LinkedList<SMPLPair>> {
     
 
-    private ArrayList<Primitive> lst;
+    private LinkedList<SMPLPair> lst;
 
     public SMPLList() {
         super("list");
     }
 
-    public SMPLList(ArrayList<Primitive>  lst) {
+    public SMPLList(LinkedList<SMPLPair>  lst) {
         this();
         this.lst =lst;
     }
 
     @Override
-    public ArrayList<Primitive> getPrimitive() {
+    public LinkedList<SMPLPair> getPrimitive() {
         return lst;
     }
 

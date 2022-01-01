@@ -4,6 +4,7 @@ import smpl.lang.SIRFunctionExp;
 import smpl.lang.SIRObj;
 import smpl.lang.evaluators.SMPLEvaluator;
 import smpl.lang.statements.SMPLAssignment;
+import smpl.lang.string.StringLit;
 import smpl.sys.Environment;
 import smpl.sys.SMPLException;
 import smpl.values.type.compound.*;
@@ -193,6 +194,17 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             }
         }
 
+    },
+
+    NTHELEMENT("ele") {
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
+            SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+            StringLit i = new StringLit(exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator()).getOutput());
+            Primitive[] arr = vec.getVector();
+            Primitive ele = arr[Integer.valueOf(i.getStr())];
+            return ele;
+        }
     };
 
     String symbol;

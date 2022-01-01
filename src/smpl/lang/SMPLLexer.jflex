@@ -100,6 +100,7 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   "[:"                    { return new Symbol( sym.LBCOLON ); }
 <YYINITIAL>   ":]"                    { return new Symbol( sym.RBCOLON ); }
 <YYINITIAL>   "?"                     { return new Symbol( sym.QUES ); }
+<YYINITIAL>   "@"                     { return new Symbol( sym.CONCAT ); }
 
 
 // Keywords
