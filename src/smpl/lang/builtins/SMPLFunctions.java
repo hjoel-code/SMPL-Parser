@@ -68,8 +68,10 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
         @Override
         public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
             throws SMPLException {
-                // TODO: Finish implementation
-                return Primitive.DEFAULT;
+                SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+                Primitive[] arr = vec.getVector();
+                SMPLArith size = new SMPLArith(Double.valueOf(arr.length));
+                return size;
             }
     },
 

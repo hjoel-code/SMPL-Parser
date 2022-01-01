@@ -179,7 +179,9 @@ expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         SUBSTR LPAREN stringExp:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
                                         SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
                                         vectorExp:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
-                                        vectorVar:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :};
+                                        vectorVar:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
+                                        SIZE LPAREN vectorExp:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
+                                        SIZE LPAREN vectorVar:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :};
 
 
 
