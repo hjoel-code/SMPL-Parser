@@ -17,6 +17,11 @@ public class SMPLVector extends CompoundPrimitive<SMPLVector>  {
     public Primitive[] getVector(){
         return arr;
     }
+
+    public Primitive getElement(int index){
+        return arr[index];
+    }
+
     @Override
     public SMPLVector getPrimitive() {
         return this;

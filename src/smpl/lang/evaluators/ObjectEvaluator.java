@@ -22,6 +22,7 @@ import smpl.lang.compound.PairLit;
 import smpl.lang.compound.VectorLit;
 import smpl.lang.compound.ProcExp;
 import smpl.lang.compound.TupleExp;
+import smpl.lang.compound.SubvectorLit;
 import smpl.lang.string.StringExp;
 import smpl.sys.SMPLContext;
 import smpl.sys.SMPLException;
@@ -77,6 +78,9 @@ public class ObjectEvaluator {
         }  else if (type.equals("proc")) {
             ProcExp exp = (ProcExp) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        }  else if (type.equals("subvector")) {
+            SubvectorLit exp = (SubvectorLit) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         } else {
             throw new SMPLException("Failed to Evaluate input");
         }
@@ -117,6 +121,11 @@ public class ObjectEvaluator {
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         
+        } else if (type.equals("list")) {
+
+            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        
         } else if (type.equals("vector")) {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
@@ -128,6 +137,11 @@ public class ObjectEvaluator {
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         
         } else if (type.equals("proc")) {
+
+            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+
+        } else if (type.equals("subvector")) {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());

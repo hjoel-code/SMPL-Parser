@@ -2,6 +2,7 @@ package smpl.lang.builtins;
 
 import smpl.lang.SIRFunctionExp;
 import smpl.lang.SIRObj;
+import smpl.lang.arith.AIRLit;
 import smpl.lang.evaluators.SMPLEvaluator;
 import smpl.lang.statements.SMPLAssignment;
 import smpl.lang.string.StringLit;
@@ -56,11 +57,22 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
         @Override
         public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
             SIRObj[] arr = exp.getParamArr();
-            Primitive[] vecArr = new Primitive[arr.length];
+            ArrayList<Primitive> vecLst = new ArrayList<>();
             for(int i = 0; i < arr.length; i++){
                 Primitive eleEval = arr[i].eval(state.getContext(), eval.getObjectEvaluator());
-                vecArr[i] = eleEval;
+                if(eleEval.getType() == "subvector"){
+                    SMPLSubvector subv = (SMPLSubvector) eleEval;
+                    ArrayList<Primitive> l = subv.getPrimitive();
+                    for(Primitive e: l){
+                        vecLst.add(e);
+                    }
+                } else {
+                    vecLst.add(eleEval);
+                }
+                
             }
+            Primitive[] vecArr = new Primitive[vecLst.size()];
+            vecArr = vecLst.toArray(vecArr);
             return new SMPLVector(vecArr);
         }
     },
@@ -71,7 +83,7 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             throws SMPLException {
                 SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
                 Primitive[] arr = vec.getVector();
-                SMPLArith size = new SMPLArith(Double.valueOf(arr.length));
+                SMPLArith size =(SMPLArith) new SMPLArith(Double.valueOf(arr.length));
                 return size;
             }
     },
@@ -199,17 +211,38 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
 
     },
 
+    SUBVECTOR("subvector") {
+
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            StringLit i = new StringLit(exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator()).getOutput());
+            Integer length = Integer.valueOf(i.getStr());
+            Primitive priv = exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
+            SMPLProc proc = (SMPLProc) priv;
+            ArrayList<Primitive> subLst = new ArrayList<>();
+            for (int x = 0; x < length; x++) {
+                AIRLit val = new AIRLit(Double.valueOf(x), proc.getParams().get(0));
+                SMPLAssignment assign = new SMPLAssignment(proc.getParams().get(0), val);
+                assign.visit(eval.getStmtEval(), proc.getContext());
+                subLst.add(proc.getBody().visit(eval, proc.getContext()).getPrimitive());
+            }
+
+            return new SMPLSubvector(subLst);
+            }
+    },
+
     NTHELEMENT("ele") {
         @Override
         public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
             SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
             StringLit i = new StringLit(exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator()).getOutput());
-            Primitive[] arr = vec.getVector();
             Integer index = Integer.valueOf(i.getStr());
-            if(index > arr.length){
+            int len = vec.getVector().length;
+            if(index >= len){
                 throw new SMPLException("Index out of bounds");
             } else {
-                Primitive ele = arr[index];
+                Primitive ele = (Primitive) vec.getElement(index);
                 return ele;
             }
         }

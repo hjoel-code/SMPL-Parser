@@ -5,12 +5,14 @@ import smpl.values.type.simple.SMPLArith;
 import smpl.lang.SIRVar;
 import smpl.lang.evaluators.ObjectEvaluator;
 import smpl.lang.visitors.*;
+import smpl.lang.SIRFunctionExp;
 
 public class AIRLit extends AIRExp {
 
     double value;
     String context;
     String rep;
+    private SIRFunctionExp<AIRExp> func;
 
     SIRVar<AIRExp> varExp;
 
@@ -32,6 +34,13 @@ public class AIRLit extends AIRExp {
       super();
       this.context = "var";
       this.varExp = v;
+    }
+
+
+    public AIRLit(SIRFunctionExp<AIRExp> func) {
+      super();
+      this.func = func;
+      this.context = "";
     }
 
 

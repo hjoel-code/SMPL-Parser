@@ -132,7 +132,9 @@ non terminal StringExp stringVar;
 non terminal CharExp charVar;
 non terminal CompoundExp pairVar;
 non terminal CompoundExp vectorVar;
+non terminal CompoundExp subvectorVar;
 non terminal TupleExp tupleExp;
+non terminal SubvectorExp subvecExp;
 
 
 start with program;
@@ -167,11 +169,12 @@ stmt                            ::=     assignment:assign {:
 
 expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         arithExp:aExp {: RESULT = aExp; :} |
-                                        vectorExp:vector {: RESULT = (VectorExp) vector; :} |
+                                        vectorExp:vector {: RESULT = vector; :} |
                                         stringExp:sExp {: RESULT = sExp; :} |
                                         charExp:chExp {: RESULT = chExp; :} |
                                         boolExp:bExp {: RESULT = bExp; :} | 
                                         tupleExp:tuple {: RESULT = tuple; :} |
+                                        subvecExp:svExp {: RESULT = svExp; :} |
 
                                         CAR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CAR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
@@ -181,10 +184,8 @@ expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
                                         vectorExp:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
                                         vectorVar:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
-                                        SIZE LPAREN vectorExp:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
-                                        SIZE LPAREN vectorVar:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
-                                        LIST LPAREN smplExpListE:lst RPAREN {: RESULT = new SIRFunctionExp("list", lst); :} | 
-                                        LBRACKET smplExpListE:lst RBRACKET {: RESULT = new SIRFunctionExp("list", lst); :};
+                                        vectorExp:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
+                                        vectorVar:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :};
 
 
 
@@ -255,7 +256,12 @@ smplExp                         ::=     literals:lit {: RESULT = lit; :} |
 
 
 procDefn                        ::=     PROC LPAREN paramListE:params RPAREN LCURL program:body RCURL {: RESULT = new ProcExp(params, body); :} |
-                                        PROC VAR:id LCURL program:body RCURL {: RESULT = new ProcExp(id, body); :}; 
+                                        PROC VAR:id LCURL program:body RCURL {: RESULT = new ProcExp(id, body); :};
+
+
+subvecExp			::= arithExp:exp COLON procDefn:proc {:
+					RESULT = new SubvectorExp(new SIRFunctionExp("subvector", exp, proc)); :};
+
 
 // Parameter List for Function Definitions
 
@@ -470,7 +476,9 @@ arithExp                        ::=     arithExp:e PLUS arithTerm:t {:
                                             SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("-", e, t);
                                             RESULT = new ArithCalc(calc); :} |
 
-                                        arithTerm:t {: RESULT = t; :};
+                                        arithTerm:t {: RESULT = t; :} |
+                                        SIZE LPAREN vectorExp:vector RPAREN {: RESULT = new AIRFunction(new SIRFunctionExp("size", vector)); :} |
+                                        SIZE LPAREN vectorVar:vector RPAREN {: RESULT = new AIRFunction(new SIRFunctionExp("size", vector)); :};
 
 
 arithTerm                       ::=     arithTerm:t TIMES arithFactor:f {: 
@@ -522,10 +530,15 @@ pairVar                         ::=     VAR:var {: RESULT = new PairLit(new SIRV
 
 vectorVar                         ::=     VAR:var {: RESULT = new VectorLit(new SIRVar<CompoundExp>(var)); :};
 
+subvectorVar                         ::=     VAR:var {: RESULT = new SubvectorLit(new SIRVar<CompoundExp>(var)); :};
+
 
 pairExp                         ::=     PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
                                             RESULT = new PairExp(new SIRFunctionExp("pair", e1, e2) );
-                                        :};
+                                        :} |
+                                        LIST LPAREN smplExpListE:lst RPAREN {: RESULT = new PairExp(new SIRFunctionExp("list", lst)); :} | 
+                                        LBRACKET smplExpListE:lst RBRACKET {: RESULT = new PairExp(new SIRFunctionExp("list", lst)); :};
+                                        
 vectorExp			::=	LBCOLON smplExpListE:lst RBCOLON {:
 						SIRObj[] result = new SIRObj[lst.size()];
 						result = lst.toArray(result);

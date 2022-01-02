@@ -87,13 +87,35 @@ public class CompoundEvaluator
             return vector.getVarExp().visit(this, state);
         } else {
             SIRObj[] arr = vector.getVector();
-            Primitive[] vecArr = new Primitive[arr.length];
+            ArrayList<Primitive> vecLst = new ArrayList<>();
             for(int i = 0; i < arr.length; i++){
                 Primitive eleEval = arr[i].eval(state.getContext(), eval.getObjectEvaluator());
-                vecArr[i] = eleEval;
+                if(eleEval.getType() == "subvector"){
+                    SMPLSubvector subv = (SMPLSubvector) eleEval;
+                    ArrayList<Primitive> l = subv.getPrimitive();
+                    for(Primitive e: l){
+                        vecLst.add(e);
+                    }
+                } else {
+                    vecLst.add(eleEval);
+                }
             }
+            Primitive[] vecArr = new Primitive[vecLst.size()];
+            vecArr = vecLst.toArray(vecArr);
             return new SMPLVector(vecArr);
         }
+    }
+
+    @Override
+    public CompoundPrimitive visitSubvectorExp(SubvectorLit subvector, Environment<Primitive> state)
+            throws SMPLException {
+        ArrayList<SIRObj> arr = subvector.getSubvector();
+        ArrayList<Primitive> vecArr = new ArrayList<>();
+        for(int i = 0; i < arr.size(); i++){
+            Primitive eleEval = arr.get(i).eval(state.getContext(), eval.getObjectEvaluator());
+            vecArr.add(eleEval);
+        }
+        return new SMPLSubvector(vecArr);
     }
 
     @Override
