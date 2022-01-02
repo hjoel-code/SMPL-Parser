@@ -66,6 +66,7 @@ scan with {:
 /* Keywords */
 terminal ASSIGN, SIZE, PRINT, PROC, CALL, LAZY, REF;
 terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN, EQV, EQUAL, SUBSTR;
+terminal CONCAT;
 
 /* Arithmetic operators */ 
 terminal PLUS, MINUS, TIMES, DIV, MOD;
@@ -85,6 +86,7 @@ terminal String CHAR;
 terminal String BOOL;
 terminal String RATIONAL;
 terminal String LOGIC;
+terminal String EMPTY;
 
 
 
@@ -116,6 +118,7 @@ non terminal CharExp charExp, charTerm, charFactor;
 
 non terminal BoolExp boolExp, boolTerm, boolFactor;
 non terminal PairExp pairExp;
+non terminal VectorExp vectorExp;
 
 non terminal ArrayList<SIRExp<StringExp>> strExpList, strExpListE;  
 non terminal ArrayList<SIRExp<CharExp>> cExpList, cExpListE;
@@ -130,6 +133,7 @@ non terminal AIRExp arithVar;
 non terminal StringExp stringVar;
 non terminal CharExp charVar;
 non terminal CompoundExp pairVar;
+non terminal CompoundExp vectorVar;
 non terminal TupleExp tupleExp;
 
 
@@ -165,6 +169,7 @@ stmt                            ::=     assignment:assign {:
 
 expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         arithExp:aExp {: RESULT = aExp; :} |
+                                        vectorExp:vector {: RESULT = (VectorExp) vector; :} |
                                         stringExp:sExp {: RESULT = sExp; :} |
                                         charExp:chExp {: RESULT = chExp; :} |
                                         boolExp:bExp {: RESULT = bExp; :} | 
@@ -175,7 +180,13 @@ expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         CDR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
                                         CDR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
                                         SUBSTR LPAREN stringExp:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
-                                        SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :};
+                                        SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        vectorExp:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
+                                        vectorVar:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
+                                        SIZE LPAREN vectorExp:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
+                                        SIZE LPAREN vectorVar:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
+                                        LIST LPAREN smplExpListE:lst RPAREN {: RESULT = new SIRFunctionExp("list", lst); :} | 
+                                        LBRACKET smplExpListE:lst RBRACKET {: RESULT = new SIRFunctionExp("list", lst); :};
 
 
 
@@ -532,10 +543,15 @@ arithFactor                     ::=     INTEGER:alit {: RESULT = new AIRLit(alit
 
 pairVar                         ::=     VAR:var {: RESULT = new PairLit(new SIRVar<CompoundExp>(var)); :};
 
+vectorVar                         ::=     VAR:var {: RESULT = new VectorLit(new SIRVar<CompoundExp>(var)); :};
+
 
 pairExp                         ::=     PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
                                             RESULT = new PairExp(new SIRFunctionExp("pair", e1, e2) );
                                         :};
-
+vectorExp			::=	LBCOLON smplExpListE:lst RBCOLON {:
+						SIRObj[] result = new SIRObj[lst.size()];
+						result = lst.toArray(result);
+						RESULT = new VectorExp(new SIRFunctionExp("vector", result)); :};
 
 empty                           ::=     ;

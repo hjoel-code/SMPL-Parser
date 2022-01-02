@@ -17,6 +17,7 @@ public class SIRFunctionExp<E extends SIRExp<E>> extends SIRExp<E> implements SI
     private SIRObj param1;
     private SIRObj param2;
     private SIRObj param3;
+    private SIRObj[] paramArr;
 
 
     private ArrayList<SIRObj> params;
@@ -50,6 +51,16 @@ public class SIRFunctionExp<E extends SIRExp<E>> extends SIRExp<E> implements SI
         this.symbol = symbol;
     }
 
+    public SIRFunctionExp(String symbol, SIRObj[] paramArr){
+        this.paramArr = paramArr;
+        this.symbol = symbol;
+    }
+
+    public SIRFunctionExp(String symbol, ArrayList<SIRObj> params){
+        this.params = params;
+        this.symbol = symbol;
+    }
+
     public SIRObj getParam1() {
         return param1;
     }
@@ -68,6 +79,10 @@ public class SIRFunctionExp<E extends SIRExp<E>> extends SIRExp<E> implements SI
 
     public ArrayList<SIRObj> getParams() {
         return params;
+    }
+
+    public SIRObj[] getParamArr() {
+        return paramArr;
     }
 
 

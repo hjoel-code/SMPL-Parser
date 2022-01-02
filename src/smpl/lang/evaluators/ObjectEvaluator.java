@@ -10,13 +10,15 @@ import smpl.lang.SIRLazy;
 import smpl.lang.SIRObj;
 import smpl.lang.SIRRef;
 import smpl.lang.arith.AIRExp;
-import smpl.lang.arith.AIRLit;
 import smpl.lang.bool.BoolExp;
 import smpl.lang.builtins.SMPLFunctions;
 import smpl.lang.chars.CharExp;
 import smpl.lang.chars.CharLit;
+import smpl.lang.emptyList.EmptyListExp;
+import smpl.lang.emptyList.EmptyListLit;
 import smpl.lang.compound.CompoundExp;
 import smpl.lang.compound.PairLit;
+import smpl.lang.compound.VectorLit;
 import smpl.lang.compound.ProcExp;
 import smpl.lang.compound.TupleExp;
 import smpl.lang.string.StringExp;
@@ -61,8 +63,14 @@ public class ObjectEvaluator {
         } else if (type.equals("char")) {
             CharLit exp = (CharLit) obj;
             return exp.visit(eval.getCharEval(), state.getGlobalEnvironment());
+        } else if (type.equals("elist")) {
+            EmptyListLit exp = (EmptyListLit) obj;
+            return exp.visit(eval.getEmptyListEval(), state.getGlobalEnvironment());
         } else if (type.equals("pair")) {
             PairLit exp = (PairLit) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        } else if (type.equals("vector")) {
+            VectorLit exp = (VectorLit) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         } else if (type.equals("tuple")) {
             TupleExp exp = (TupleExp) obj;
@@ -103,11 +111,21 @@ public class ObjectEvaluator {
             SIRVar<CharExp> exp = (SIRVar<CharExp>) obj;
             return exp.visit(eval.getCharEval(), state.getGlobalEnvironment());
 
+        } else if (type.equals("elist")) {
+
+            SIRVar<EmptyListExp> exp = (SIRVar<EmptyListExp>) obj;
+            return exp.visit(eval.getEmptyListEval(), state.getGlobalEnvironment());
+
         } else if (type.equals("pair")) {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        
+        } else if (type.equals("vector")) {
 
+            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        
         } else if (type.equals("tuple")) {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;

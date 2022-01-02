@@ -101,6 +101,7 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   "[:"                    { return new Symbol( sym.LBCOLON ); }
 <YYINITIAL>   ":]"                    { return new Symbol( sym.RBCOLON ); }
 <YYINITIAL>   "?"                     { return new Symbol( sym.QUES ); }
+<YYINITIAL>   "@"                     { return new Symbol( sym.CONCAT ); }
 
 
 // Keywords
@@ -144,6 +145,8 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   ("+"|"-")?{num}+"."{num}+         { return new Symbol( sym.REAL, Double.valueOf(yytext()) ); }
 <YYINITIAL>   "#t" | "#f"             { return new Symbol( sym.BOOL, yytext()); }
 
+
+<YYINITIAL>   "#e"             	{ return new Symbol( sym.EMPTY, yytext()); }
 
 
 <YYINITIAL>   "#b"                    { yybegin(BINARY); }
