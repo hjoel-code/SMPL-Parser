@@ -57,7 +57,8 @@ ws = ({cc}|[\t" "])
 
 num = [0-9]
 alpha = [A-Za-z_]
-alphanum = ({alpha}|{num})
+symbols = ["#""+""/""-""?""!""."]
+alphanum = ({alpha}|{num}|{symbols})
 binary = [0*1*]*[1*0*]*
 hex = [0-9a-fA-F]
 
@@ -139,8 +140,6 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   not                       { return new Symbol(sym.NOT); }
 
 
-
-<YYINITIAL>   {alpha}+{alphanum}*     { return new Symbol(sym.VAR, yytext()); }
 <YYINITIAL>   ("+"|"-")?{num}+                  { return new Symbol(sym.INTEGER, Integer.valueOf(yytext())); }
 <YYINITIAL>   ("+"|"-")?{num}+"."{num}+         { return new Symbol( sym.REAL, Double.valueOf(yytext()) ); }
 <YYINITIAL>   "#t" | "#f"             { return new Symbol( sym.BOOL, yytext()); }
@@ -161,7 +160,7 @@ comment =  {lineComment} | {blockComment}
 
           
 
-<YYINITIAL>   {alpha}+{alphanum}*     { return new Symbol(sym.VAR, yytext()); }
+<YYINITIAL>   {num}+{alpha}{alphanum}*|{alpha}{alphanum}*     { return new Symbol(sym.VAR, yytext()); }
 
 
 <YYINITIAL>    "#c"                   { yybegin(CHAR); }
@@ -180,7 +179,5 @@ comment =  {lineComment} | {blockComment}
 
 <YYINITIAL>    \"                     { yybegin(STRING); }
 <YYINITIAL>     .                     { throw new java.io.IOException("Unrecognised character: " + yytext()); }
-<STRING>       [^\"]*                 { return new Symbol(sym.STRING, yytext()); }
 <STRING>       \"                     { yybegin(YYINITIAL); }
-
-
+<STRING>       [^\"]*                 { return new Symbol(sym.STRING, yytext()); }

@@ -465,6 +465,13 @@ arithExp                        ::=     arithExp:e PLUS arithTerm:t {:
                                             SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("-", e, t);
                                             RESULT = new ArithCalc(calc); :} |
 
+                                        arithVar:e PLUS arithVar:t {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("+", e, t);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithVar:e MINUS arithVar:t {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("-", e, t);
+                                            RESULT = new ArithCalc(calc); :} |
+
                                         arithTerm:t {: RESULT = t; :};
 
 
@@ -495,6 +502,16 @@ arithTerm                       ::=     arithTerm:t TIMES arithFactor:f {:
                                             SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("/", t, f);
                                             RESULT = new ArithCalc(calc); :} |
                                         arithVar:t MOD arithFactor:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("%", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+
+                                        arithVar:t TIMES arithVar:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("*", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithVar:t DIV arithVar:f {: 
+                                            SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("/", t, f);
+                                            RESULT = new ArithCalc(calc); :} |
+                                        arithVar:t MOD arithVar:f {: 
                                             SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("%", t, f);
                                             RESULT = new ArithCalc(calc); :} |
 
