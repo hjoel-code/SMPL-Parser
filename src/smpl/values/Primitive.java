@@ -1,5 +1,6 @@
 package smpl.values;
 
+import smpl.sys.SMPLException;
 import smpl.values.type.simple.SMPLString;
 
 public abstract class Primitive<T> {

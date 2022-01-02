@@ -2,6 +2,7 @@ package smpl.values.type.compound;
 
 import java.util.ArrayList;
 
+import smpl.lang.SIRParam;
 import smpl.lang.SIRProgram;
 import smpl.sys.SMPLContext;
 import smpl.values.CompoundPrimitive;
@@ -9,10 +10,10 @@ import smpl.values.CompoundPrimitive;
 public class SMPLProc extends CompoundPrimitive<SMPLProc>{
 
     private SIRProgram body;
-    private ArrayList<String> params;
+    private ArrayList<SIRParam> params;
     private SMPLContext context;
 
-    public SMPLProc(ArrayList<String> params, SIRProgram body, SMPLContext context) {
+    public SMPLProc(ArrayList<SIRParam> params, SIRProgram body, SMPLContext context) {
         super("proc");
         this.params = params;
         this.body = body;
@@ -23,7 +24,7 @@ public class SMPLProc extends CompoundPrimitive<SMPLProc>{
         return context;
     }
 
-    public ArrayList<String> getParams() {
+    public ArrayList<SIRParam> getParams() {
         return params;
     }
 

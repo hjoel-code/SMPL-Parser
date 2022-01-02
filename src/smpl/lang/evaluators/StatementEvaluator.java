@@ -2,25 +2,14 @@ package smpl.lang.evaluators;
 
 import java.util.ArrayList;
 
-import smpl.lang.SIRBinaryExp;
-import smpl.lang.SIRFunctionExp;
-import smpl.lang.SIRObj;
-import smpl.lang.SIRUnaryExp;
-import smpl.lang.SIRVar;
-import smpl.lang.SIRProgram;
-import smpl.lang.SIRSequence;
-import smpl.lang.statements.ConditionalStatement;
-import smpl.lang.statements.PrintStmt;
-import smpl.lang.statements.SMPLAssignment;
-import smpl.lang.statements.Statement;
-import smpl.lang.statements.TupleAssignment;
-import smpl.lang.statements.SIRStatement;
+import smpl.lang.*;
+import smpl.lang.statements.*;
 import smpl.lang.visitors.StatementVisitor;
 import smpl.sys.SMPLContext;
 import smpl.sys.SMPLException;
 import smpl.values.Primitive;
 import smpl.values.type.compound.SMPLTuple;
-import smpl.values.type.simple.SMPLString;
+import smpl.values.type.simple.*;
 
 public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLContext, Primitive> {
 
@@ -32,33 +21,59 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
 
     @Override
     public Primitive visitSMPLAssignment(SMPLAssignment assignment, SMPLContext state) throws SMPLException {
+
         String type = assignment.getExp().getType();
 
-        if (type.equals("cdr") | type.equals("car") | type.equals("call")) {
-            Primitive priv = assignment.getExp().eval(state, eval.getObjectEvaluator());
-            state.getVariableEnvironment().put(assignment.getVar(), priv.getType());
-            state.getVariableEnvironment().print();
+        if (type.equals("cdr") | type.equals("car") | type.equals("call") | type.equals("var")) {
+            try {
+                String priv = state.getVariableEnvironment().get(assignment.getVar());
+                
+                if (priv.equals("ref")) {
+                    SMPLRef ref = (SMPLRef) state.getGlobalEnvironment().get(assignment.getVar());
+                    Primitive data = assignment.getExp().eval(state, eval.getObjectEvaluator());
+                    ref.putReference(data);
+                } else {
+                    throw new Exception();
+                }
 
-            state.getGlobalEnvironment().put(assignment.getVar(), priv);
-            state.getGlobalEnvironment().print();
+            } catch (Exception e) {
+                Primitive priv = assignment.getExp().eval(state, eval.getObjectEvaluator());
+                state.getVariableEnvironment().put(assignment.getVar(), priv.getType());
+                state.getVariableEnvironment().print();
+                state.getGlobalEnvironment().put(assignment.getVar(), priv);
+                state.getGlobalEnvironment().print();
+            }
 
         } else {
+            try {
+                String priv = state.getVariableEnvironment().get(assignment.getVar());
+                if (priv.equals("ref")) {
+                    SMPLRef ref = (SMPLRef) state.getGlobalEnvironment().get(assignment.getVar());
+                    Primitive data = assignment.getExp().eval(state, eval.getObjectEvaluator());
+                    
+                    ref.putReference(data);
+                } else {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
 
-            state.getVariableEnvironment().put(assignment.getVar(), type);
-            state.getVariableEnvironment().print();
+                Primitive priv = assignment.getExp().eval(state, eval.getObjectEvaluator());
 
-            state.getGlobalEnvironment().put(assignment.getVar(),
-            assignment.getExp().eval(state, eval.getObjectEvaluator()));
-            state.getGlobalEnvironment().print();
+                state.getVariableEnvironment().put(assignment.getVar(), priv.getType());
+                state.getVariableEnvironment().print();
 
+                state.getGlobalEnvironment().put(assignment.getVar(), priv);
+                state.getGlobalEnvironment().print();
+
+            }
         }
-
         return Primitive.DEFAULT;
     }
 
     @Override
     public Primitive visitPrintStmt(PrintStmt printStmt, SMPLContext state) throws SMPLException {
-        return printStmt.getNewLine() ? new SMPLString(printStmt.getExp().eval(state, eval.getObjectEvaluator()).getOutput() + " \n")
+        return printStmt.getNewLine()
+                ? new SMPLString(printStmt.getExp().eval(state, eval.getObjectEvaluator()).getOutput() + " \n")
                 : new SMPLString(printStmt.getExp().eval(state, eval.getObjectEvaluator()).getOutput());
     }
 

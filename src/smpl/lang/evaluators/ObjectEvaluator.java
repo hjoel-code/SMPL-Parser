@@ -1,7 +1,4 @@
 
-
-
-
 package smpl.lang.evaluators;
 
 import smpl.lang.SIRVar;
@@ -9,8 +6,11 @@ import smpl.lang.SIRVar;
 import java.util.HashMap;
 
 import smpl.lang.SIRFunctionExp;
+import smpl.lang.SIRLazy;
 import smpl.lang.SIRObj;
+import smpl.lang.SIRRef;
 import smpl.lang.arith.AIRExp;
+import smpl.lang.arith.AIRLit;
 import smpl.lang.bool.BoolExp;
 import smpl.lang.builtins.SMPLFunctions;
 import smpl.lang.chars.CharExp;
@@ -23,6 +23,8 @@ import smpl.lang.string.StringExp;
 import smpl.sys.SMPLContext;
 import smpl.sys.SMPLException;
 import smpl.values.Primitive;
+import smpl.values.type.simple.SMPLLazy;
+import smpl.values.type.simple.SMPLRef;
 
 public class ObjectEvaluator {
 
@@ -42,10 +44,10 @@ public class ObjectEvaluator {
         return eval;
     }
 
+    public Primitive eval(SMPLContext state, SIRObj obj) throws SMPLException {
 
-    public Primitive eval(SMPLContext state, SIRObj obj) throws SMPLException    {
-        
         String type = obj.getType();
+        System.out.println("EVAL: " + type);
 
         if (type.equals("arith")) {
             AIRExp exp = (AIRExp) obj;
@@ -65,18 +67,21 @@ public class ObjectEvaluator {
         } else if (type.equals("tuple")) {
             TupleExp exp = (TupleExp) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
-        }  else if (type.equals("proc")) {
+        } else if (type.equals("proc")) {
             ProcExp exp = (ProcExp) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        } else if (type.equals("lazy")) {
+            SIRLazy lazy = (SIRLazy) obj;
+            return new SMPLLazy(lazy.getObj(), lazy.getState());
         } else {
             throw new SMPLException("Failed to Evaluate input");
         }
     }
 
-
     public Primitive evalVar(SMPLContext state, SIRVar obj) throws SMPLException {
 
         String type = state.getVariableEnvironment().get(obj.getVar());
+        System.out.println("VAR: " + type);
 
         if (type.equals("arith")) {
 
@@ -102,22 +107,31 @@ public class ObjectEvaluator {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
-        
+
         } else if (type.equals("tuple")) {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
-        
+
         } else if (type.equals("proc")) {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
 
+        } else if (type.equals("ref")) {
+
+            SMPLRef ref = (SMPLRef) state.getGlobalEnvironment().get(obj.getVar());
+            return ref.getReference();
+
+        } else if (type.equals("lazy")) {
+
+            SMPLLazy lazy = (SMPLLazy) state.getGlobalEnvironment().get(obj.getVar());
+            return lazy.getVal(this);
+
         } else {
             throw new SMPLException("Unbound Variable: " + obj.getVar());
         }
     }
-
 
     public Primitive evalSIRFunction(SMPLContext state, SIRFunctionExp obj) throws SMPLException {
         String symbol = obj.getSymbol();
@@ -125,15 +139,8 @@ public class ObjectEvaluator {
         return cont.apply(eval, state.getGlobalEnvironment(), obj);
     }
 
-
-    public Primitive evalTuple(SMPLContext state, TupleExp tuple) {
-        
-        return null;
+    public Primitive evalParamRef(SMPLContext state, SIRRef ref) throws SMPLException {
+        SIRVar var = (SIRVar) ref.getObj();
+        return new SMPLRef(var.getVar(), ref.getState());
     }
 }
-
-
-
-
-
-

@@ -67,25 +67,21 @@ public class BoolEvaluator implements BoolVisitor<BoolExp, Environment<Primitive
             String opName = biExp.getOperator();
             BinOpBool op = boolOps.get(opName);
 
-            AIRExp leftExp = (AIRExp) biExp.getExp1();
-            AIRExp rightExp = (AIRExp) biExp.getExp2();
-
-            double leftArg = leftExp.visit(eval.getArithEval(), state).getPrimitive();
-            double rightArg = rightExp.visit(eval.getArithEval(), state).getPrimitive();
+            double leftArg = (double) biExp.getExp1().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
+            double rightArg = (double) biExp.getExp2().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
 
             return new SMPLBool(op.apply(leftArg, rightArg));
+
+            
 
         } else {
 
             String opName = biExp.getOperator();
             BinOpLogic op = logicOps.get(opName);
 
-            BoolExp leftExp = (BoolExp) biExp.getExp1();
-            BoolExp rightExp = (BoolExp) biExp.getExp2();
-
-            boolean leftArg = leftExp.visit(this, state).getPrimitive();
-            boolean rightArg = rightExp.visit(this, state).getPrimitive();
-
+            boolean leftArg = (boolean) biExp.getExp1().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
+            boolean rightArg = (boolean) biExp.getExp2().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
+            
             return new SMPLBool(op.apply(leftArg, rightArg));
         }
     }

@@ -64,7 +64,7 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 /* Keywords */
-terminal ASSIGN, SIZE, PRINT, PROC, CALL;
+terminal ASSIGN, SIZE, PRINT, PROC, CALL, LAZY, REF;
 terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN, EQV, EQUAL, SUBSTR;
 
 /* Arithmetic operators */ 
@@ -97,8 +97,10 @@ terminal IF, ELSE, THEN;
 
 /* *** End of logic extensions *** */
 
-non terminal ArrayList<String> paramList, ids;
-non terminal ArrayList<String> paramListE;
+non terminal ArrayList<SIRParam> paramList;
+non terminal ArrayList<String> ids;
+non terminal ArrayList<SIRParam> paramListE;
+non terminal SIRParam paramExp;
 non terminal empty;
 
 
@@ -208,6 +210,8 @@ assignment                      ::=     VAR:id ASSIGN smplExp:exp {:
                                         DEF VAR:id smplExp:exp {: RESULT = new SMPLAssignment(id, exp); :} |
                                         DEF VAR:id procDefn:proc {: RESULT = new SMPLAssignment(id, proc); :};
 
+
+
 tupleExpList                    ::=     tupleExpList:lst COMMA smplExp:exp {: 
                                             lst.add(exp);
                                             RESULT = lst;
@@ -244,7 +248,7 @@ smplExp                         ::=     literals:lit {: RESULT = lit; :} |
 
 
 procDefn                        ::=     PROC LPAREN paramListE:params RPAREN LCURL program:body RCURL {: RESULT = new ProcExp(params, body); :} |
-                                        PROC VAR:id LCURL program:body RCURL {: RESULT = new ProcExp(id, body); :}; 
+                                        PROC paramExp:param LCURL program:body RCURL {: RESULT = new ProcExp(param, body); :}; 
 
 // Parameter List for Function Definitions
 
@@ -265,16 +269,18 @@ paramListE                      ::=     paramList:lst {: RESULT = lst; :} |
 
                                         empty {: RESULT = new ArrayList<>(); :};
 
+paramExp                        ::=     LAZY VAR:id {: RESULT = new SIRParam(id, "lazy"); :} | 
+                                        REF VAR:id {: RESULT = new SIRParam(id, "ref"); :} |
+                                        VAR:id {: RESULT = new SIRParam(id, ""); :} ;
 
-
-paramList                       ::=     paramList:lst COMMA VAR:id {: 
-                                            lst.add(id);
+paramList                       ::=     paramList:lst COMMA paramExp:param {: 
+                                            lst.add(param);
                                             RESULT = lst;
                                         :} |
 
-                                        VAR:id {: 
-                                            ArrayList<String> lst = new ArrayList<>();
-                                            lst.add(id);
+                                        paramExp:param {: 
+                                            ArrayList<SIRParam> lst = new ArrayList<>();
+                                            lst.add(param);
                                             RESULT = lst;
                                         :};
 

@@ -18,8 +18,7 @@ import smpl.lang.ops.UnOpArith;
  */
 
 public class ArithEvaluator implements AIRVisitor<AIRExp, Environment<Primitive>, SMPLArith> {
-    
-    
+
     HashMap<String, UnOpArith> unOpsMap;
     HashMap<String, BinOpArith> binOpsMap;
 
@@ -45,7 +44,11 @@ public class ArithEvaluator implements AIRVisitor<AIRExp, Environment<Primitive>
     @Override
     public SMPLArith visitAIRExpInt(AIRLit exp, Environment<Primitive> state)
             throws SMPLException {
-        return exp.getContext().equals("var") ? exp.getVarExp().visit(this, state) : new SMPLArith(exp.getVal(), exp.getRep());
+        if (exp.getContext().equals("var")) {
+            return visitASTVar(exp.getVarExp(), state);
+        } else {
+            return new SMPLArith(exp.getVal(), exp.getRep());
+        }
     }
 
     @Override
@@ -54,13 +57,11 @@ public class ArithEvaluator implements AIRVisitor<AIRExp, Environment<Primitive>
         String opName = exp.getOperator();
         BinOpArith op = binOpsMap.get(opName);
 
-        AIRExp leftExp = (AIRExp) exp.getExp1();
-        AIRExp rightExp = (AIRExp) exp.getExp2();
-
-        double leftArg = leftExp.visit(this, state).getPrimitive();
-        double rightArg = rightExp.visit(this, state).getPrimitive();
+        double leftArg = (double) exp.getExp1().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
+        double rightArg = (double) exp.getExp2().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
 
         return new SMPLArith(op.apply(leftArg, rightArg));
+
     }
 
     @Override
@@ -68,7 +69,7 @@ public class ArithEvaluator implements AIRVisitor<AIRExp, Environment<Primitive>
             throws SMPLException {
         String opName = exp.getOperator();
         UnOpArith op = unOpsMap.get(opName);
-        AIRExp argExp =  (AIRExp) exp.getExp();
+        AIRExp argExp = (AIRExp) exp.getExp();
         double arg = argExp.visit(this, state).getPrimitive();
         return new SMPLArith(op.apply(arg));
     }
@@ -76,6 +77,7 @@ public class ArithEvaluator implements AIRVisitor<AIRExp, Environment<Primitive>
     @Override
     public SMPLArith visitASTVar(SIRVar<AIRExp> var, Environment<Primitive> state)
             throws SMPLException {
+                
         return (SMPLArith) state.get(var.getVar());
     }
 

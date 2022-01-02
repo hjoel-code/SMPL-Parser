@@ -54,6 +54,7 @@ public class Environment<T> {
     }
 
     public void print() {
+        System.out.println("\n\nTHIS IS AN ISTANCE OF THE ENVIRONMENT\n");
         for (String key: dictionary.keySet()){  
 			System.out.println(key+ " = " + dictionary.get(key));
 		} 

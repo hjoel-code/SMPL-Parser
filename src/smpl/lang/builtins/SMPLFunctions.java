@@ -1,10 +1,14 @@
 package smpl.lang.builtins;
 
 import smpl.lang.SIRFunctionExp;
+import smpl.lang.SIRLazy;
 import smpl.lang.SIRObj;
+import smpl.lang.SIRParam;
+import smpl.lang.SIRRef;
 import smpl.lang.evaluators.SMPLEvaluator;
 import smpl.lang.statements.SMPLAssignment;
 import smpl.sys.Environment;
+import smpl.sys.SMPLContext;
 import smpl.sys.SMPLException;
 import smpl.values.type.compound.*;
 import smpl.values.type.simple.*;
@@ -156,25 +160,50 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
 
             if (priv.getType().equals("proc")) {
                 SMPLProc proc = (SMPLProc) priv;
-                int paramslen, arglen;
-                paramslen = proc.getParams().size();
-                arglen = exp.getParams().size();
+                int lenParams = proc.getParams().size();
+                int lenArgs = exp.getParams().size();
 
-                if (paramslen > arglen) {
-                    throw new SMPLException("Expected "+String.valueOf(paramslen) +" "+String.valueOf(arglen)+" was given.");
+
+                if (lenParams > lenArgs) {
+                    throw new SMPLException("Expected more arguments");
+                } else if (lenArgs > lenParams) {
+                    throw new SMPLException("Waiting on list Implementation");
                 } else {
-                    int diff = arglen - paramslen;
-                    if (diff == 0) {
-                        for (int i = 0; i < arglen; i++) {
-                            SMPLAssignment assign = new SMPLAssignment(proc.getParams().get(i), (SIRObj) exp.getParams().get(i));
-                            assign.visit(eval.getStmtEval(), proc.getContext());
-                        }
+                    SMPLContext context = proc.getContext().extendEnvironment();
 
-                        return proc.getBody().visit(eval, proc.getContext()).getPrimitive();
-                    } else {
-                        throw new SMPLException("Waiting on list implementation");
+                    for (int index = 0; index < lenParams; index++) {
+                        SIRParam param = proc.getParams().get(index);
+                        SIRObj arg = (SIRObj) exp.getParams().get(index);
+                        System.out.println(param.getType());
+                        if (param.getType().equals("lazy")) {
+
+                            SMPLAssignment assign = new SMPLAssignment(param.getParam(), new SIRLazy(arg, state.getContext()));
+                            assign.visit(eval.getStmtEval(), context);
+                        
+                        } else if (param.getType().equals("ref")) {
+
+                            if (arg.getType().equals("var")) {
+                                SMPLAssignment assign = new SMPLAssignment(param.getParam(), new SIRRef(arg, state.getContext()));
+                                assign.visit(eval.getStmtEval(), context);
+                            } else {
+                                throw new SMPLException("Expected a variable reference; " + arg.getType() + " was given.");
+                            }
+                            
+
+                        } else {
+
+                            SMPLAssignment assign = new SMPLAssignment(param.getParam(), arg);
+                            assign.visit(eval.getStmtEval(), context);
+                        
+                        }
                     }
+
+
+                    return proc.getBody().visit(eval, context).getPrimitive();
                 }
+
+
+
             } else {
                 throw new SMPLException("Expected a procedure, but " + priv.getType() + " was given.");
             }

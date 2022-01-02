@@ -2,6 +2,7 @@ package smpl.lang.compound;
 
 import java.util.ArrayList;
 
+import smpl.lang.SIRParam;
 import smpl.lang.SIRProgram;
 import smpl.lang.evaluators.ObjectEvaluator;
 import smpl.lang.visitors.CompoundVisitor;
@@ -13,16 +14,16 @@ public class ProcExp extends CompoundExp {
 
     private String type;
     private SIRProgram body;
-    private ArrayList<String> params;
+    private ArrayList<SIRParam> params;
 
-    public ProcExp(ArrayList<String> params, SIRProgram body) {
+    public ProcExp(ArrayList<SIRParam> params, SIRProgram body) {
         this.type = "proc";
         this.params = params;
         this.body = body;
     }
 
 
-    public ProcExp(String param, SIRProgram body) {
+    public ProcExp(SIRParam param, SIRProgram body) {
         this.type = "proc";
         this.params = new ArrayList<>();
         this.params.add(param);
@@ -33,7 +34,7 @@ public class ProcExp extends CompoundExp {
         return body;
     }
 
-    public ArrayList<String> getParams() {
+    public ArrayList<SIRParam> getParams() {
         return params;
     }
 
