@@ -118,9 +118,7 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
                     SimplePrimitive sp1 = (SimplePrimitive) val1;
                     SimplePrimitive sp2 = (SimplePrimitive) val2;
 
-                    if (sp1.getRep() == sp2.getRep()) {
-                        return new SMPLBool(val1.getPrimitive().equals(val2.getPrimitive()));
-                    }
+                    return new SMPLBool(val1.getPrimitive().equals(val2.getPrimitive()));
                 } 
 
                 // is compound and check everything elemtents inside compound are structually equivalent
@@ -154,18 +152,24 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
                 } 
 
                 else if (val1 instanceof SMPLVector & val2 instanceof SMPLVector) { // vector
-                    // Waiting for vector support
+                    result = false;
+                    SMPLVector vec1 = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+                    SMPLVector vec2 = (SMPLVector) exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
+                    Primitive[] arr1 = vec1.getVector();
+                    Primitive[] arr2 = vec2.getVector();
+                    
+                    if (arr1.length == arr2.length) {
+                        for(int i = 0; i < arr1.length; i++){
+                            result = arr1[i].getPrimitive().equals(arr2[i].getPrimitive());
+                        }
+                    }
+
+                    return new SMPLBool(result);
+
                 } 
 
                 return new SMPLBool(false);
             }
-    },
-
-    SUBSTR("substr") {
-        @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) {
-            return Primitive.DEFAULT;
-        }
     },
 
     CALL("call") {

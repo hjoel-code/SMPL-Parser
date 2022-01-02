@@ -179,10 +179,20 @@ expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         CAR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CDR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
                                         CDR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
+                                        
                                         SUBSTR LPAREN stringExp:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringExp:string COMMA arithVar:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringExp:string COMMA arithExp:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringExp:string COMMA arithVar:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+
                                         SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringVar:string COMMA arithVar:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringVar:string COMMA arithVar:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        
                                         vectorExp:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
                                         vectorVar:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
+                                        
                                         SIZE LPAREN vectorExp:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
                                         SIZE LPAREN vectorVar:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
                                         LIST LPAREN smplExpListE:lst RPAREN {: RESULT = new SIRFunctionExp("list", lst); :} | 
