@@ -60,6 +60,12 @@ public class StringEvaluator implements StringVisitor<StringExp, Environment<Pri
     }
 
     @Override
+    public SMPLString visitStringConcat(StringConcat strconcat, Environment<Primitive> state) 
+        throws SMPLException {
+        return new SMPLString(strconcat.getArg1().visit(this, state).getPrimitive() + strconcat.getArg2().visit(this, state).getPrimitive());       
+    }
+
+    @Override
     public SMPLString visitSMPLProgram(SIRProgram sp, Environment<Primitive> arg)
             throws SMPLException {
         // TODO Auto-generated method stub

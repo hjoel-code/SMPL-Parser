@@ -66,7 +66,7 @@ scan with {:
 /* Keywords */
 terminal ASSIGN, SIZE, PRINT, PROC, CALL, LAZY, REF;
 terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN, EQV, EQUAL, SUBSTR, ISPAIR;
-terminal CONCAT;
+terminal CONCAT, READ, READINT;
 
 /* Arithmetic operators */ 
 terminal PLUS, MINUS, TIMES, DIV, MOD;
@@ -157,13 +157,13 @@ stmtList                        ::=     stmtList:seq stmt:s {:
 
 
 
-stmt                            ::=     assignment:assign SEMI {:  
-                                            RESULT = assign;
-                                        :} |
+stmt                            ::=     assignment:assign SEMI {: RESULT = assign; :} |
+                                        IFCond:cond SEMI{: RESULT = cond; :} |
                                         PRINT LPAREN smplExp:exp RPAREN SEMI {: RESULT = new PrintStmt(exp); :} |
                                         PRINTLN LPAREN smplExp:exp RPAREN SEMI {: RESULT = new PrintStmt(exp, true); :} |
-                                        smplExp:exp SEMI {: RESULT = new Statement(exp); :} |
-                                        IFCond:cond SEMI {: RESULT = cond; :};
+                                        READINT LPAREN RPAREN SEMI {: RESULT = new SMPLReadInt(); :} |
+                                        READ LPAREN RPAREN SEMI {: RESULT = new SMPLReadStr(); :} |
+                                        smplExp:exp SEMI {: RESULT = new Statement(exp); :};
 
 
 expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
@@ -184,10 +184,20 @@ literals                        ::=     VAR:id {: RESULT = new SIRVar(id); :} |
                                         CAR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CDR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
                                         CDR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
+                                        
                                         SUBSTR LPAREN stringExp:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringExp:string COMMA arithVar:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringExp:string COMMA arithExp:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringExp:string COMMA arithVar:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+
                                         SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringVar:string COMMA arithVar:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        SUBSTR LPAREN stringVar:string COMMA arithVar:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
+                                        
                                         vectorExp:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
                                         vectorVar:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
+                                        
                                         SIZE LPAREN vectorExp:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
                                         SIZE LPAREN vectorVar:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
                                         LIST LPAREN smplExpListE:lst RPAREN {: RESULT = new SIRFunctionExp("list", lst); :} | 
@@ -427,7 +437,11 @@ strExpList                      ::=     strExpList:lst COMMA stringExp:e {:
 stringVar                       ::=     literals:lit {: RESULT = new StringLit(lit); :};
 
 
-stringExp                       ::=     stringTerm:t {: RESULT = t; :};                    
+stringExp                       ::=     stringExp:e1 CONCAT stringTerm:e2 {: RESULT = new StringConcat(e1, e2); :} |
+                                        stringVar:e1 CONCAT stringTerm:e2 {: RESULT = new StringConcat(e1, e2); :} |
+                                        stringExp:e1 CONCAT stringVar:e2 {: RESULT = new StringConcat(e1, e2); :} |
+                                        stringVar:e1 CONCAT stringVar:e2 {: RESULT = new StringConcat(e1, e2); :} |
+                                        stringTerm:t {: RESULT = t; :};                    
 
 
 stringTerm                      ::=     stringFactor:f {: RESULT = f; :};
