@@ -42,5 +42,15 @@ public class ConditionalStatement extends SIRStatement {
     public <S, T> T visit(StatementVisitor<SIRStatement, S, T> v, S state) throws SMPLException {
         return v.visitConditionalStmt(this, state);
     }
+
+    @Override
+    public String toString() {
+        try {
+            return "if " + getPredicate().toString() + " then " + getStmtTrue().toString() + " else " + getStmtFalse().toString();
+        } catch (Exception e) {
+            return "if " + getPredicate().toString() + " then " + getStmtTrue().toString();
+        }
+        
+    }
     
 }

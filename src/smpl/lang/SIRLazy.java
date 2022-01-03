@@ -35,4 +35,10 @@ public class SIRLazy implements SIRObj {
     public Primitive eval(SMPLContext state, ObjectEvaluator eval) throws SMPLException {
         return eval.eval(state, this);
     }
+    
+
+    @Override
+    public String toString() {
+        return "lazy " + obj.toString();
+    }
 }

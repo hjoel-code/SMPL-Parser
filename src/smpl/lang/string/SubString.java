@@ -1,6 +1,5 @@
 package smpl.lang.string;
 
-import smpl.lang.SIRVar;
 import smpl.lang.evaluators.ObjectEvaluator;
 import smpl.lang.visitors.StringVisitor;
 import smpl.sys.SMPLContext;

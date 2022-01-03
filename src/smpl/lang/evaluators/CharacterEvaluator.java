@@ -26,17 +26,19 @@ public class CharacterEvaluator implements CharacterVisitor<CharExp, Environment
 
     @Override
     public SMPLChar visitCharLit(CharLit ch, Environment<Primitive> state) throws SMPLException {
-        System.out.println(ch.getContext());
-        if (ch.getContext().equals("var")) {       
-            return visitASTVar(ch.getVarExp(), state);
-        } else {
-            System.out.println(ch.getRef());
-            if (ch.getRef().equals("#c")) {
-                return new SMPLChar(ch.getChar());
-            } else {
-                return new SMPLChar(ch.getUnicode());
+        if (ch.isExp()) {
+            try {
+                return (SMPLChar) ch.getExp().eval(state.getContext(), eval.getObjectEvaluator());
+            } catch (Exception e) {
+                throw new SMPLException("Expected character expression.");
             }
         }
+
+        if (ch.getRef().equals("#u")) {
+            return new SMPLChar(ch.getUnicode());
+        }
+
+        return new SMPLChar(ch.getChar());
     }
 
     @Override

@@ -29,5 +29,19 @@ public class TupleAssignment extends SIRStatement {
     public <S, T> T visit(StatementVisitor<SIRStatement, S, T> v, S state) throws SMPLException {
         return v.visitTupleAssignment(this, state);
     }
+
+    @Override
+    public String toString() {
+        String out = "";
+
+
+        for (String id : ids) {
+            out += id + " ";
+        }
+
+        out += " = " + getTuple().toString();
+
+        return out;
+    }
     
 }

@@ -39,9 +39,7 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
             } catch (Exception e) {
                 Primitive priv = assignment.getExp().eval(state, eval.getObjectEvaluator());
                 state.getVariableEnvironment().put(assignment.getVar(), priv.getType());
-                state.getVariableEnvironment().print();
                 state.getGlobalEnvironment().put(assignment.getVar(), priv);
-                state.getGlobalEnvironment().print();
             }
 
         } else {
@@ -60,10 +58,8 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
                 Primitive priv = assignment.getExp().eval(state, eval.getObjectEvaluator());
 
                 state.getVariableEnvironment().put(assignment.getVar(), priv.getType());
-                state.getVariableEnvironment().print();
 
                 state.getGlobalEnvironment().put(assignment.getVar(), priv);
-                state.getGlobalEnvironment().print();
 
             }
         }
@@ -104,7 +100,7 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
     @Override
     public Primitive visitTupleAssignment(TupleAssignment assignT, SMPLContext state) throws SMPLException {
 
-        if (assignT.getTuple().isVariable()) {
+        if (assignT.getTuple().isExp()) {
 
             Primitive priv = assignT.getTuple().eval(state, eval.getObjectEvaluator());
 

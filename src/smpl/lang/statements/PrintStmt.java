@@ -33,6 +33,12 @@ public class PrintStmt extends SIRStatement {
         return v.visitPrintStmt(this, state);
     }
 
+
+    @Override
+    public String toString() {
+        return "PRINT ---- " + getExp().toString();
+    }
+
     
 
     

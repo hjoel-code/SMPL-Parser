@@ -39,7 +39,17 @@ public class SMPLProc extends CompoundPrimitive<SMPLProc>{
 
     @Override
     public String getOutput() {
-        return "";
+        String out = "proc(";
+        int len = getParams().size();
+        int count = 0;
+        for (SIRParam param : getParams()) {
+            out += param.getType() + " " + param.getParam();
+            count++;
+            out += count == len ? "" : ","; 
+        }
+        out += ")";
+
+        return out + "{ \n" + getBody().toString() + " }";
     }
     
 }

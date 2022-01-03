@@ -37,6 +37,11 @@ public class SIRBinaryExp<E extends SIRExp<E>> extends SIRExp<E> {
     @Override
     public <S, T> T visit(SIRVisitor<E, S, T> v, S state) throws SMPLException {
         return v.visitASTBinaryExp(this, state);
+    } 
+
+    @Override
+    public String toString() {
+        return getExp1().toString() +  " "  + getOperator() +  " " + getExp2().toString();
     }
 
     

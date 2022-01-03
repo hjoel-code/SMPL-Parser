@@ -15,28 +15,29 @@ import smpl.values.Primitive;
 public class TupleExp extends CompoundExp  {
 
     private String type;
-    private Boolean isVar;
     private ArrayList<SIRObj> tuple;
-    private SIRVar<CompoundExp> varExp;
+    private SIRObj exp;
+    private boolean isExp;
 
     public TupleExp(ArrayList<SIRObj> tuple) {
         this.type = "tuple";
         this.tuple = tuple;
-        this.isVar = false;
+        this.isExp = false;
     }
 
-    public TupleExp(SIRVar<CompoundExp> var) {
-        this.varExp = var;
-        this.isVar = true;
+    public TupleExp(SIRObj exp) {
+        this.type = "tuple";
+        this.exp = exp;
+        this.isExp = true;
 
     }
 
-    public boolean isVariable() {
-        return isVar;
+    public boolean isExp() {
+        return isExp;
     }
 
-    public SIRVar<CompoundExp> getVarExp() {
-        return varExp;
+    public SIRObj getExp() {
+        return exp;
     }
 
     public int getTupleLength() {
@@ -59,10 +60,27 @@ public class TupleExp extends CompoundExp  {
 
     @Override
     public Primitive eval(SMPLContext state, ObjectEvaluator eval) throws SMPLException {
-        if (isVar) {
-            return eval.evalVar(state, varExp);
+        if (isExp()) {
+            return exp.eval(state, eval);
         }
         return eval.eval(state, this);
+    }
+
+    @Override
+    public String toString() {
+        if (isExp()) {
+            return getExp().toString();
+        } 
+
+        String out = "(";
+
+        for (SIRObj obj: getTuple()) {
+            out += obj.toString() + "  ";
+        }
+
+        out += ")";
+
+        return out;
     }
     
 

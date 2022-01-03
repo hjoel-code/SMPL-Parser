@@ -27,6 +27,11 @@ public abstract class BoolExp extends SIRExp<BoolExp> implements SIRObj {
     public <S, T> T visit(SIRVisitor<BoolExp, S, T> v, S state) throws SMPLException {
         return visit((BoolVisitor<BoolExp, S, T>)v, state);
     }
+
+    @Override
+    public String toString() {
+        return "Boolean Expression";
+    }
 }
 
 

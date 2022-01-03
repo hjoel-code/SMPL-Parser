@@ -100,7 +100,6 @@ comment =  {lineComment} | {blockComment}
 
 <YYINITIAL>   "[:"                    { return new Symbol( sym.LBCOLON ); }
 <YYINITIAL>   ":]"                    { return new Symbol( sym.RBCOLON ); }
-<YYINITIAL>   "?"                     { return new Symbol( sym.QUES ); }
 <YYINITIAL>   "@"                     { return new Symbol( sym.CONCAT ); }
 
 
@@ -113,8 +112,9 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   size               { return new Symbol( sym.SIZE ); }
 <YYINITIAL>   print             { return new Symbol( sym.PRINT ); }
 <YYINITIAL>   println           { return new Symbol( sym.PRINTLN ); }
-<YYINITIAL>   eqv               { return new Symbol( sym.EQV ); }
-<YYINITIAL>   equal               { return new Symbol( sym.EQUAL ); }
+<YYINITIAL>   "eqv?"               { return new Symbol( sym.EQV ); }
+<YYINITIAL>   "equal?"               { return new Symbol( sym.EQUAL ); }
+<YYINITIAL>   "pair?"               { return new Symbol( sym.ISPAIR ); }
 <YYINITIAL>   substr               { return new Symbol( sym.SUBSTR ); }
 <YYINITIAL>   lazy               { return new Symbol( sym.LAZY ); }
 <YYINITIAL>   ref               { return new Symbol( sym.REF ); }

@@ -24,4 +24,9 @@ public abstract class CharExp extends SIRExp<CharExp> implements SIRObj{
     public <S, T> T visit(SIRVisitor<CharExp, S, T> v, S state) throws SMPLException {
         return visit((CharacterVisitor<CharExp, S, T>) v, state);
     }
+
+    @Override
+    public String toString() {
+        return "Character Expression";
+    }
 }

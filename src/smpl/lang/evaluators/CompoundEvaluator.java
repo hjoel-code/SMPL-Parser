@@ -66,8 +66,12 @@ public class CompoundEvaluator
     public CompoundPrimitive visitPairExp(PairLit pair, Environment<Primitive> state)
             throws SMPLException {
 
-        if (pair.getContext().equals("var")) {
-            return pair.getVarExp().visit(this, state);
+        if (pair.isExp()) {
+            try {
+                return (SMPLPair) pair.getExp().eval(state.getContext(), eval.getObjectEvaluator());
+            } catch (Exception e) {
+                throw new SMPLException("Expected pair expression");
+            }
         } else {
 
             CompoundPrimitive<SMPLPair> exp1 = (SMPLPair) pair.getObj1().eval(state.getContext(),
@@ -83,8 +87,13 @@ public class CompoundEvaluator
     public CompoundPrimitive visitVectorExp(VectorLit vector, Environment<Primitive> state)
             throws SMPLException {
 
-        if (vector.getContext().equals("var")) {
-            return vector.getVarExp().visit(this, state);
+        if (vector.isExp()) {
+            try {
+                return (SMPLVector) vector.getExp().eval(state.getContext(), eval.getObjectEvaluator());
+            } catch (Exception e) {
+                throw new SMPLException("Expected vector expression.");
+            }
+            
         } else {
             SIRObj[] arr = vector.getVector();
             Primitive[] vecArr = new Primitive[arr.length];

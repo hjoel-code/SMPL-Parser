@@ -51,6 +51,16 @@ public class BoolCalc extends BoolExp {
     public <S, T> T visit(BoolVisitor<BoolExp, S, T> v, S state) throws SMPLException {
         return v.visitBoolCalc(this, state);
     }
+
+
+    @Override
+    public String toString() {
+        if (getCalcType().equals("unary")) {
+            return unary.toString();
+        } else {
+            return binary.toString();
+        }
+    }
     
 
 }
