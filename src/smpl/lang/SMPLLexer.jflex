@@ -118,6 +118,9 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   substr               { return new Symbol( sym.SUBSTR ); }
 <YYINITIAL>   lazy               { return new Symbol( sym.LAZY ); }
 <YYINITIAL>   ref               { return new Symbol( sym.REF ); }
+<YYINITIAL>   read               { return new Symbol( sym.READ ); }
+<YYINITIAL>   readint               { return new Symbol( sym.READINT ); }
+
 
 
 <YYINITIAL>    if                  { return new Symbol(sym.IF);}

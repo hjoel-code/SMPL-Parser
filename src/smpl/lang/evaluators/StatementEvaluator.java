@@ -10,6 +10,7 @@ import smpl.sys.SMPLException;
 import smpl.values.Primitive;
 import smpl.values.type.compound.SMPLTuple;
 import smpl.values.type.simple.*;
+import java.util.Scanner;
 
 public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLContext, Primitive> {
 
@@ -144,6 +145,16 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
         }
 
         throw new SMPLException("Number of variables and values must match");
+    }
+
+    @Override 
+    public Primitive visitSMPLReadInt(SMPLReadInt readInt, SMPLContext state) throws SMPLException {
+        return new SMPLReadExp(new Scanner(System.in).nextInt());
+    }
+
+    @Override 
+    public Primitive visitSMPLReadStr(SMPLReadStr readStr, SMPLContext state) throws SMPLException {
+        return new SMPLString(new Scanner(System.in).nextLine());
     }
 
     @Override

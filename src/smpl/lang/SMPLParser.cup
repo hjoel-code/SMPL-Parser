@@ -66,7 +66,7 @@ scan with {:
 /* Keywords */
 terminal ASSIGN, SIZE, PRINT, PROC, CALL, LAZY, REF;
 terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN, EQV, EQUAL, SUBSTR;
-terminal CONCAT;
+terminal CONCAT, READ, READINT;
 
 /* Arithmetic operators */ 
 terminal PLUS, MINUS, TIMES, DIV, MOD;
@@ -164,6 +164,8 @@ stmt                            ::=     assignment:assign {:
                                         :} |
                                         PRINT LPAREN smplExp:exp RPAREN {: RESULT = new PrintStmt(exp); :} |
                                         PRINTLN LPAREN smplExp:exp RPAREN {: RESULT = new PrintStmt(exp, true); :} |
+                                        READINT LPAREN RPAREN {: RESULT = new SMPLReadInt(); :} |
+                                        READ LPAREN RPAREN {: RESULT = new SMPLReadStr(); :} |
                                         smplExp:exp {: RESULT = new Statement(exp); :};
 
 
