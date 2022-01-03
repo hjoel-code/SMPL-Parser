@@ -3,6 +3,8 @@ package smpl.lang.builtins;
 import smpl.lang.SIRFunctionExp;
 import smpl.lang.SIRObj;
 import smpl.lang.arith.AIRLit;
+import smpl.lang.compound.PairExp;
+import smpl.lang.compound.TupleExp;
 import smpl.lang.evaluators.SMPLEvaluator;
 import smpl.lang.statements.SMPLAssignment;
 import smpl.lang.string.StringLit;
@@ -173,6 +175,211 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
                     if (vectorVals1.length == vectorVals2.length) {
                         for (int i = 0; i < vectorVals1.length; i++) {
                             result = vectorVals1[i].getPrimitive().equals(vectorVals2[i].getPrimitive());
+                            if(result == false){
+                                return new SMPLBool(result);
+                            }
+                        }
+                    }
+
+                    return new SMPLBool(result);
+                } 
+
+                return new SMPLBool(false);
+            }
+    },
+
+    ISGREATER("greater?") {
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
+            throws SMPLException {
+                Boolean result = false;
+
+                Primitive val1 = exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+                Primitive val2 = exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
+
+                if (val1 instanceof SimplePrimitive & val2 instanceof SimplePrimitive) {
+
+                    if (val1.getType() == val2.getType()) {
+                        if (val1.getType() == "arith"){
+                            SMPLArith sp1 = (SMPLArith) val1;
+                            SMPLArith sp2 = (SMPLArith) val2;
+                            return new SMPLBool(sp1.getPrimitive() > sp2.getPrimitive());
+                        } else if (val1.getType() == "char") {
+                            SMPLChar sp1 = (SMPLChar) val1;
+                            SMPLChar sp2 = (SMPLChar) val2;
+                            return new SMPLBool(sp1.getPrimitive().charValue() > sp2.getPrimitive().charValue());
+                        } else if (val1.getType() == "string") {
+                            SMPLString sp1 = (SMPLString) val1;
+                            SMPLString sp2 = (SMPLString) val2;
+                            int comp = sp1.getPrimitive().compareTo(sp2.getPrimitive());
+                            return new SMPLBool(comp > 0);
+                        }
+                    } else {
+                        throw new SMPLException("Values not of same type");
+                    }
+                } 
+
+                else if (val1 instanceof SMPLPair & val2 instanceof SMPLPair) { // pair
+                    SMPLPair pair1 = (SMPLPair) val1.getPrimitive();
+                    SMPLPair pair2 = (SMPLPair) val2.getPrimitive();
+                    
+                    Primitive v1 = pair1.getArg1();
+                    Primitive v2 = pair2.getArg1();
+
+                    if (v1.getType() == v2.getType()) {
+                        if (v1.getType() == "arith"){
+                            SMPLArith sp1 = (SMPLArith) v1;
+                            SMPLArith sp2 = (SMPLArith) v2;
+                            if (sp1.getPrimitive() > sp2.getPrimitive()){
+                                return new SMPLBool(true);
+                            }
+                            else if (sp1.getPrimitive() == sp2.getPrimitive()){
+                                v1 = pair1.getArg2();
+                                v2 = pair2.getArg2();
+                                if (v1.getType() == v2.getType()) {
+                                    if (v1.getType() == "arith"){
+                                        sp1 = (SMPLArith) v1;
+                                        sp2 = (SMPLArith) v2;
+                                        return new SMPLBool(sp1.getPrimitive() > sp2.getPrimitive());
+                                    } else if (v1.getType() == "char") {
+                                        SMPLChar c1 = (SMPLChar) v1;
+                                        SMPLChar c2 = (SMPLChar) v2;
+                                        return new SMPLBool(c1.getPrimitive().charValue() > c2.getPrimitive().charValue());
+                                    } else if (v1.getType() == "string") {
+                                        SMPLString s1 = (SMPLString) v1;
+                                        SMPLString s2 = (SMPLString) v2;
+                                        int comp = s1.getPrimitive().compareTo(s2.getPrimitive());
+                                        return new SMPLBool(comp > 0);
+                                    }
+                                } else {
+                                    throw new SMPLException("Values not of same type");
+                                }
+                            }
+                        } else if (v1.getType() == "char") {
+                            SMPLChar sp1 = (SMPLChar) v1;
+                            SMPLChar sp2 = (SMPLChar) v2;
+                            if(sp1.getPrimitive().charValue() > sp2.getPrimitive().charValue()){
+                                return new SMPLBool(true);
+                            } else if (sp1.getPrimitive().charValue() == sp2.getPrimitive().charValue()) {
+                                v1 = pair1.getArg2();
+                                v2 = pair2.getArg2();
+                                if (v1.getType() == v2.getType()) {
+                                    if (v1.getType() == "arith"){
+                                        SMPLArith a1 = (SMPLArith) v1;
+                                        SMPLArith a2 = (SMPLArith) v2;
+                                        return new SMPLBool(a1.getPrimitive() > a2.getPrimitive());
+                                    } else if (v1.getType() == "char") {
+                                        sp1 = (SMPLChar) v1;
+                                        sp2 = (SMPLChar) v2;
+                                        return new SMPLBool(sp1.getPrimitive().charValue() > sp2.getPrimitive().charValue());
+                                    } else if (v1.getType() == "string") {
+                                        SMPLString s1 = (SMPLString) v1;
+                                        SMPLString s2 = (SMPLString) v2;
+                                        int comp = s1.getPrimitive().compareTo(s2.getPrimitive());
+                                        return new SMPLBool(comp > 0);
+                                    }
+                                } else {
+                                    throw new SMPLException("Values not of same type");
+                                }
+                            }
+                        } else if (v1.getType() == "string") {
+                            SMPLString sp1 = (SMPLString) v1;
+                            SMPLString sp2 = (SMPLString) v2;
+                            int comp = sp1.getPrimitive().compareTo(sp2.getPrimitive());
+                            if(comp > 0) {
+                                return new SMPLBool(true);
+                            } else if (comp < 0) {
+                                v1 = pair1.getArg2();
+                                v2 = pair2.getArg2();
+                                if (v1.getType() == v2.getType()) {
+                                    if (v1.getType() == "arith"){
+                                        SMPLArith a1 = (SMPLArith) v1;
+                                        SMPLArith a2 = (SMPLArith) v2;
+                                        return new SMPLBool(a1.getPrimitive() > a2.getPrimitive());
+                                    } else if (v1.getType() == "char") {
+                                        SMPLChar c1 = (SMPLChar) v1;
+                                        SMPLChar c2 = (SMPLChar) v2;
+                                        return new SMPLBool(c1.getPrimitive().charValue() > c2.getPrimitive().charValue());
+                                    } else if (v1.getType() == "string") {
+                                        sp1 = (SMPLString) v1;
+                                        sp2 = (SMPLString) v2;
+                                        comp = sp1.getPrimitive().compareTo(sp2.getPrimitive());
+                                        return new SMPLBool(comp > 0);
+                                    }
+                                } else {
+                                    throw new SMPLException("Values not of same type");
+                                }
+                            }
+                        }
+                    } else {
+                        throw new SMPLException("Values not of same type");
+                    }
+                }
+
+                else if (val1 instanceof SMPLTuple & val2 instanceof SMPLTuple) { // tuple
+                    result = false;
+
+                    SMPLTuple tuple1 = (SMPLTuple) val1;
+                    SMPLTuple tuple2 = (SMPLTuple) val2;
+
+                    ArrayList<Primitive> tupleVals1 = tuple1.getPrimitive();
+                    ArrayList<Primitive> tupleVals2 = tuple2.getPrimitive();
+                    
+                    for(int vNum = 0; vNum < tupleVals1.size(); vNum++){
+                        Primitive v1 = tupleVals1.get(vNum);
+                        Primitive v2 = tupleVals1.get(vNum);
+                        if (v1.getType() == v2.getType()) {
+                            if (v1.getType() == "arith"){
+                                SMPLArith sp1 = (SMPLArith) v1;
+                                SMPLArith sp2 = (SMPLArith) v2;
+                                if(sp1.getPrimitive() > sp2.getPrimitive()){
+                                    return new SMPLBool(true);
+                                } else if (sp1.getPrimitive() == sp2.getPrimitive()){
+                                    continue;
+                                } else {
+                                    return new SMPLBool(false);
+                                }
+                            } else if (v1.getType() == "char") {
+                                SMPLChar sp1 = (SMPLChar) v1;
+                                SMPLChar sp2 = (SMPLChar) v2;
+                                if(sp1.getPrimitive().charValue() > sp2.getPrimitive().charValue()){
+                                    return new SMPLBool(true);
+                                } else if (sp1.getPrimitive().charValue() == sp2.getPrimitive().charValue()){
+                                    continue;
+                                } else {
+                                    return new SMPLBool(false);
+                                }
+                            } else if (v1.getType() == "string") {
+                                SMPLString sp1 = (SMPLString) v1;
+                                SMPLString sp2 = (SMPLString) v2;
+                                int comp = sp1.getPrimitive().compareTo(sp2.getPrimitive());
+                                if(comp > 0){
+                                    return new SMPLBool(true);
+                                } else if (comp == 0){
+                                    continue;
+                                } else {
+                                    return new SMPLBool(false);
+                                }
+                            }
+                        } else {
+                            throw new SMPLException("Values not of same type");
+                        }
+                    }
+                } 
+
+                else if (val1 instanceof SMPLVector & val2 instanceof SMPLVector) { // vector
+                    result = false;
+
+                    SMPLVector vector1 = (SMPLVector) val1;
+                    SMPLVector vector2 = (SMPLVector) val2;
+
+                    Primitive[] vectorVals1 = vector1.getPrimitive();
+                    Primitive[] vectorVals2 = vector2.getPrimitive();
+
+                    if (vectorVals1.length == vectorVals2.length) {
+                        for (int i = 0; i < vectorVals1.length; i++) {
+                            result = vectorVals1[i].getPrimitive().equals(vectorVals2[i].getPrimitive());
+                            
                         }
                     }
 
@@ -257,6 +464,23 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
                 throw new SMPLException("Index out of bounds");
             } else {
                 return vec.getElement(index);
+            }
+        }
+    },
+
+    REPLACE("replace") {
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
+            SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+            StringLit i = new StringLit(exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator()).getOutput());
+            Integer index = Integer.valueOf(i.getStr());
+            Primitive el = exp.getParam3().eval(state.getContext(), eval.getObjectEvaluator());
+            int len = vec.getPrimitive().length;
+            if(index >= len){
+                throw new SMPLException("Index out of bounds");
+            } else {
+                vec.replaceElement(index, el);
+                return vec;
             }
         }
     },

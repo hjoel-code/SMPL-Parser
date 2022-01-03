@@ -18,6 +18,10 @@ public class SMPLVector extends CompoundPrimitive<Primitive[]>  {
         return arr[index];
     }
 
+    public void replaceElement(int index, Primitive el){
+        arr[index] = el;
+    }
+
     @Override
     public Primitive[] getPrimitive() {
         return arr;

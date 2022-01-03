@@ -65,7 +65,7 @@ scan with {:
 
 /* Keywords */
 terminal ASSIGN, SIZE, PRINT, PROC, CALL;
-terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN, EQV, EQUAL, SUBSTR;
+terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN, EQV, EQUAL, GREATER, SUBSTR;
 terminal CONCAT;
 
 /* Arithmetic operators */ 
@@ -185,7 +185,9 @@ expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         vectorExp:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
                                         vectorVar:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
                                         vectorExp:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
-                                        vectorVar:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :};
+                                        vectorVar:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
+                                        vectorExp:vector LBRACKET arithExp:pos RBRACKET ASSIGN expressions:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
+                                        vectorVar:vector LBRACKET arithExp:pos RBRACKET ASSIGN expressions:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} ;
 
 
 
@@ -364,7 +366,8 @@ boolFactor                      ::=     BOOL:bool {:
 
                                         PAIR QUES LPAREN smplExp:exp RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("pair?", exp)); :} |
                                         EQV QUES LPAREN smplExp:exp1 COMMA smplExp:exp2 RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("eqv?", exp1, exp2)); :} |
-                                        EQUAL QUES LPAREN smplExp:exp1 COMMA smplExp:exp2 RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("equal?", exp1, exp2)); :};
+                                        EQUAL QUES LPAREN smplExp:exp1 COMMA smplExp:exp2 RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("equal?", exp1, exp2)); :} |
+                                        GREATER QUES LPAREN smplExp:exp1 COMMA smplExp:exp2 RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("greater?", exp1, exp2)); :};
 
 
 

@@ -114,6 +114,7 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   println           { return new Symbol( sym.PRINTLN ); }
 <YYINITIAL>   eqv               { return new Symbol( sym.EQV ); }
 <YYINITIAL>   equal               { return new Symbol( sym.EQUAL ); }
+<YYINITIAL>   greater               { return new Symbol( sym.GREATER ); }
 <YYINITIAL>   substr               { return new Symbol( sym.SUBSTR ); }
 
 

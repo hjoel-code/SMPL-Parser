@@ -121,11 +121,6 @@ public class ObjectEvaluator {
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         
-        } else if (type.equals("list")) {
-
-            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
-            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
-        
         } else if (type.equals("vector")) {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
