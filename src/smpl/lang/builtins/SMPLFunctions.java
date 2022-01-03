@@ -327,7 +327,7 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
                     
                     for(int vNum = 0; vNum < tupleVals1.size(); vNum++){
                         Primitive v1 = tupleVals1.get(vNum);
-                        Primitive v2 = tupleVals1.get(vNum);
+                        Primitive v2 = tupleVals2.get(vNum);
                         if (v1.getType() == v2.getType()) {
                             if (v1.getType() == "arith"){
                                 SMPLArith sp1 = (SMPLArith) v1;
