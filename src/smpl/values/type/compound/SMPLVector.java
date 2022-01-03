@@ -4,7 +4,7 @@ import smpl.values.CompoundPrimitive;
 
 import smpl.values.Primitive;
 
-public class SMPLVector extends CompoundPrimitive<SMPLVector>  {
+public class SMPLVector extends CompoundPrimitive<Primitive[]>  {
 
     private Primitive[] arr;
 
@@ -14,17 +14,13 @@ public class SMPLVector extends CompoundPrimitive<SMPLVector>  {
     }
 
 
-    public Primitive[] getVector(){
-        return arr;
-    }
-
     public Primitive getElement(int index){
         return arr[index];
     }
 
     @Override
-    public SMPLVector getPrimitive() {
-        return this;
+    public Primitive[] getPrimitive() {
+        return arr;
     }
     
     @Override

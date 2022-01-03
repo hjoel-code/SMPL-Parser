@@ -82,7 +82,7 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
         public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
             throws SMPLException {
                 SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
-                Primitive[] arr = vec.getVector();
+                Primitive[] arr = vec.getPrimitive();
                 SMPLArith size =(SMPLArith) new SMPLArith(Double.valueOf(arr.length));
                 return size;
             }
@@ -162,7 +162,21 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
                 } 
 
                 else if (val1 instanceof SMPLVector & val2 instanceof SMPLVector) { // vector
-                    // Waiting for vector support
+                    result = false;
+
+                    SMPLVector vector1 = (SMPLVector) val1;
+                    SMPLVector vector2 = (SMPLVector) val2;
+
+                    Primitive[] vectorVals1 = vector1.getPrimitive();
+                    Primitive[] vectorVals2 = vector2.getPrimitive();
+
+                    if (vectorVals1.length == vectorVals2.length) {
+                        for (int i = 0; i < vectorVals1.length; i++) {
+                            result = vectorVals1[i].getPrimitive().equals(vectorVals2[i].getPrimitive());
+                        }
+                    }
+
+                    return new SMPLBool(result);
                 } 
 
                 return new SMPLBool(false);
@@ -238,12 +252,11 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
             StringLit i = new StringLit(exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator()).getOutput());
             Integer index = Integer.valueOf(i.getStr());
-            int len = vec.getVector().length;
+            int len = vec.getPrimitive().length;
             if(index >= len){
                 throw new SMPLException("Index out of bounds");
             } else {
-                Primitive ele = (Primitive) vec.getElement(index);
-                return ele;
+                return vec.getElement(index);
             }
         }
     },
