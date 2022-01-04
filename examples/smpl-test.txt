@@ -187,9 +187,9 @@ println("*** Case Expression Tests ***");
 def x 3;
 def f proc(x)
   case {
-     x < 0: print ("x is negative\n"),
-     x = 0: print ("x is zero\n"),
-     else: print ("x is positive\n")
+     x < 0: print ("x is negative\n");,
+     x = 0: print ("x is zero\n");,
+     else: print ("x is positive\n");
   };
 
 print("Should print x is negative...");
