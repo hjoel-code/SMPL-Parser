@@ -417,3 +417,14 @@ println("It should have printed: 14");
 print("r.area() prints "); println(r.area());
 println("It should have printed: 12");
 */
+
+def x 30;
+def y 60;
+
+def swap proc(ref a, ref b) {
+def tmp a;
+def a b;
+def b tmp; };
+
+swap(x, y);
+
