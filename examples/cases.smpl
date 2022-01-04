@@ -1,0 +1,49 @@
+def x 5;
+
+case {
+  x = 5: 
+    println("Doing Calculation");
+    y := 5;
+    print(y*y);
+    ,
+  x = 1: print("x is 1");
+  ,
+  else: print("i am the else");
+};
+
+def x 1;
+
+case {
+  x = 5: 
+    println("Doing Calculation");
+    y := 5;
+    print(y*y);
+    ,
+  x = 1: print("x is 1");
+  ,
+  else: print("i am the else");
+};
+
+def x 0;
+
+case {
+  x = 5: 
+    println("Doing Calculation");
+    y := 5;
+    print(y*y);
+    ,
+  x = 1: print("x is 1");
+  ,
+  else: print("i am the else");
+};
+
+def x 10;
+
+case {
+  x = 5: 
+    println("Doing Calculation");
+    y := 5;
+    print(y*y);
+    ,
+  x = 1: print("x is 1");
+};
