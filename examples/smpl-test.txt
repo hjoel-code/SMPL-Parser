@@ -81,20 +81,16 @@ println("*** End of Call expression ***");
 // functions are values
 println("*** First class Procedures ***");
 def map proc(f, list)
-/* return a new list, obtained
-   by applying f to each element
-   of list */
-
   if list = #e then #e else pair(f(car(list)), map(f, cdr(list)));
 
 println("Should print [0 1 4 9 16]");
 
 println(map(proc(n) { n * n; }; , list(0,1,2,3,4)));
 
-def iter proc(f, m, n)
+def iter proc(f, m, n) {
   if  m > n
-  then 0
-  else f(m) + iter(f, m + 1, n);
+  then 0;
+  else f(m) + iter(f, m + 1, n); };
 
 println("Should print 55...");
 println(iter(proc(n) n, 1, 10));
