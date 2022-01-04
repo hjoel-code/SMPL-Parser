@@ -47,10 +47,10 @@ public class SMPLParser extends java_cup.runtime.lr_parser {
     "\013\003\000\002\013\003\000\002\013\003\000\002\013" +
     "\003\000\002\013\003\000\002\013\006\000\002\013\006" +
     "\000\002\013\006\000\002\013\006\000\002\013\012\000" +
-    "\002\013\012\000\002\013\006\000\002\013\006\000\002" +
-    "\013\006\000\002\013\006\000\002\013\010\000\002\013" +
-    "\010\000\002\013\005\000\002\013\005\000\002\013\005" +
-    "\000\002\013\005\000\002\015\003\000\002\015\006\000" +
+    "\002\013\012\000\002\013\010\000\002\013\010\000\002" +
+    "\013\005\000\002\013\005\000\002\013\005\000\002\013" +
+    "\005\000\002\013\006\000\002\013\006\000\002\013\006" +
+    "\000\002\013\006\000\002\015\003\000\002\015\006\000" +
     "\002\047\010\000\002\047\007\000\002\060\005\000\002" +
     "\011\005\000\002\011\005\000\002\011\005\000\002\011" +
     "\005\000\002\011\005\000\002\046\005\000\002\046\005" +
@@ -293,16 +293,16 @@ public class SMPLParser extends java_cup.runtime.lr_parser {
     "\057\uff84\060\uff84\063\uff84\064\uff84\001\002\000\040\024" +
     "\uff83\025\uff83\026\uff83\027\uff83\030\uff83\032\uff83\034\uff83" +
     "\035\uff83\036\uff83\037\uff83\041\uff83\057\uff83\060\uff83\063" +
-    "\uff83\064\uff83\001\002\000\020\004\203\032\uffe9\034\uffe9" +
-    "\035\uffe9\036\uffe9\041\uffe9\063\uffe9\001\002\000\056\005" +
+    "\uff83\064\uff83\001\002\000\020\004\203\032\uffe3\034\uffe3" +
+    "\035\uffe3\036\uffe3\041\uffe3\063\uffe3\001\002\000\056\005" +
     "\042\011\014\012\017\013\044\014\052\017\046\020\040" +
     "\021\021\022\053\031\020\033\006\040\063\043\030\046" +
     "\015\047\045\050\205\051\055\052\056\053\024\054\062" +
-    "\055\011\056\032\001\002\000\016\032\uffe5\034\uffe5\035" +
-    "\uffe5\036\uffe5\041\uffe5\063\uffe5\001\002\000\024\023\uff81" +
+    "\055\011\056\032\001\002\000\016\032\uffe9\034\uffe9\035" +
+    "\uffe9\036\uffe9\041\uffe9\063\uffe9\001\002\000\024\023\uff81" +
     "\024\uff9c\025\uff9c\026\uff9c\027\uff9c\030\uff9c\033\uff80\057" +
-    "\uff9c\060\uffc1\001\002\000\016\032\uffe7\034\uffe7\035\uffe7" +
-    "\036\uffe7\041\uffe7\063\uffe7\001\002\000\060\005\042\007" +
+    "\uff9c\060\uffc1\001\002\000\016\032\uffe1\034\uffe1\035\uffe1" +
+    "\036\uffe1\041\uffe1\063\uffe1\001\002\000\060\005\042\007" +
     "\211\011\014\012\017\013\044\014\052\017\046\020\040" +
     "\021\021\022\053\031\020\033\006\040\063\043\030\046" +
     "\015\047\045\050\102\051\055\052\056\053\024\054\062" +
@@ -392,9 +392,9 @@ public class SMPLParser extends java_cup.runtime.lr_parser {
     "\uff7e\034\uff7e\035\uff7e\036\uff7e\041\uff7e\063\uff7e\001\002" +
     "\000\012\013\313\014\052\033\006\050\311\001\002\000" +
     "\016\032\uff81\034\uff81\035\uff81\036\uff81\041\uff81\063\uff81" +
-    "\001\002\000\016\032\uffe1\034\uffe1\035\uffe1\036\uffe1\041" +
-    "\uffe1\063\uffe1\001\002\000\004\031\303\001\002\000\016" +
-    "\032\uffe3\034\uffe3\035\uffe3\036\uffe3\041\uffe3\063\uffe3\001" +
+    "\001\002\000\016\032\uffe5\034\uffe5\035\uffe5\036\uffe5\041" +
+    "\uffe5\063\uffe5\001\002\000\004\031\303\001\002\000\016" +
+    "\032\uffe7\034\uffe7\035\uffe7\036\uffe7\041\uffe7\063\uffe7\001" +
     "\002\000\006\040\063\050\316\001\002\000\004\032\uff80" +
     "\001\002\000\004\032\322\001\002\000\004\032\321\001" +
     "\002\000\032\024\uff93\025\uff93\032\uff93\034\uff93\035\uff93" +
@@ -426,14 +426,14 @@ public class SMPLParser extends java_cup.runtime.lr_parser {
     "\137\046\015\047\045\050\135\052\056\053\024\001\002" +
     "\000\016\024\171\025\172\026\163\027\162\030\161\034" +
     "\345\001\002\000\010\024\144\025\145\034\342\001\002" +
-    "\000\020\004\343\032\uffea\034\uffea\035\uffea\036\uffea\041" +
-    "\uffea\063\uffea\001\002\000\056\005\042\011\014\012\017" +
+    "\000\020\004\343\032\uffe4\034\uffe4\035\uffe4\036\uffe4\041" +
+    "\uffe4\063\uffe4\001\002\000\056\005\042\011\014\012\017" +
     "\013\044\014\052\017\046\020\040\021\021\022\053\031" +
     "\020\033\006\040\063\043\030\046\015\047\045\050\205" +
     "\051\055\052\056\053\024\054\062\055\011\056\032\001" +
-    "\002\000\016\032\uffe6\034\uffe6\035\uffe6\036\uffe6\041\uffe6" +
-    "\063\uffe6\001\002\000\016\032\uffe8\034\uffe8\035\uffe8\036" +
-    "\uffe8\041\uffe8\063\uffe8\001\002\000\022\032\uffbd\034\uffbd" +
+    "\002\000\016\032\uffea\034\uffea\035\uffea\036\uffea\041\uffea" +
+    "\063\uffea\001\002\000\016\032\uffe2\034\uffe2\035\uffe2\036" +
+    "\uffe2\041\uffe2\063\uffe2\001\002\000\022\032\uffbd\034\uffbd" +
     "\035\uffbd\036\uffbd\041\uffbd\060\260\063\uffbd\064\uffbd\001" +
     "\002\000\020\032\uffbf\034\uffbf\035\uffbf\036\uffbf\041\uffbf" +
     "\063\uffbf\064\uffbf\001\002\000\056\005\042\011\014\012" +
@@ -475,9 +475,9 @@ public class SMPLParser extends java_cup.runtime.lr_parser {
     "\043\uffff\045\uffff\046\uffff\047\uffff\050\uffff\051\uffff\052" +
     "\uffff\053\uffff\054\uffff\055\uffff\056\uffff\062\uffff\001\002" +
     "\000\012\013\313\014\052\033\006\050\311\001\002\000" +
-    "\016\032\uffe2\034\uffe2\035\uffe2\036\uffe2\041\uffe2\063\uffe2" +
-    "\001\002\000\016\032\uffe4\034\uffe4\035\uffe4\036\uffe4\041" +
-    "\uffe4\063\uffe4\001\002\000\004\034\u0107\001\002\000\020" +
+    "\016\032\uffe6\034\uffe6\035\uffe6\036\uffe6\041\uffe6\063\uffe6" +
+    "\001\002\000\016\032\uffe8\034\uffe8\035\uffe8\036\uffe8\041" +
+    "\uffe8\063\uffe8\001\002\000\004\034\u0107\001\002\000\020" +
     "\023\uff7c\032\uff7c\034\uff7c\035\uff7c\036\uff7c\041\uff7c\063" +
     "\uff7c\001\002\000\004\002\001\001\002" });
 
@@ -1122,67 +1122,7 @@ class CUP$SMPLParser$actions {
           return CUP$SMPLParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 23: // expressions ::= vectorExp LBRACKET arithExp RBRACKET 
-            {
-              SIRObj RESULT =null;
-		int vectorleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).left;
-		int vectorright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).right;
-		VectorExp vector = (VectorExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).value;
-		int expleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).left;
-		int expright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).right;
-		AIRExp exp = (AIRExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).value;
-		 RESULT = new SIRFunctionExp("ele", vector, exp); 
-              CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("expressions",9, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
-            }
-          return CUP$SMPLParser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 24: // expressions ::= vectorVar LBRACKET arithExp RBRACKET 
-            {
-              SIRObj RESULT =null;
-		int vectorleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).left;
-		int vectorright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).right;
-		CompoundExp vector = (CompoundExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).value;
-		int expleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).left;
-		int expright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).right;
-		AIRExp exp = (AIRExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).value;
-		 RESULT = new SIRFunctionExp("ele", vector, exp); 
-              CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("expressions",9, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
-            }
-          return CUP$SMPLParser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 25: // expressions ::= vectorExp LBRACKET arithVar RBRACKET 
-            {
-              SIRObj RESULT =null;
-		int vectorleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).left;
-		int vectorright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).right;
-		VectorExp vector = (VectorExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).value;
-		int expleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).left;
-		int expright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).right;
-		AIRExp exp = (AIRExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).value;
-		 RESULT = new SIRFunctionExp("ele", vector, exp); 
-              CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("expressions",9, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
-            }
-          return CUP$SMPLParser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 26: // expressions ::= vectorVar LBRACKET arithVar RBRACKET 
-            {
-              SIRObj RESULT =null;
-		int vectorleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).left;
-		int vectorright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).right;
-		CompoundExp vector = (CompoundExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).value;
-		int expleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).left;
-		int expright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).right;
-		AIRExp exp = (AIRExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).value;
-		 RESULT = new SIRFunctionExp("ele", vector, exp); 
-              CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("expressions",9, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
-            }
-          return CUP$SMPLParser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 27: // expressions ::= vectorExp LBRACKET arithExp RBRACKET ASSIGN expressions 
+          case 23: // expressions ::= vectorExp LBRACKET arithExp RBRACKET ASSIGN expressions 
             {
               SIRObj RESULT =null;
 		int vectorleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-5)).left;
@@ -1200,7 +1140,7 @@ class CUP$SMPLParser$actions {
           return CUP$SMPLParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 28: // expressions ::= vectorVar LBRACKET arithExp RBRACKET ASSIGN expressions 
+          case 24: // expressions ::= vectorVar LBRACKET arithExp RBRACKET ASSIGN expressions 
             {
               SIRObj RESULT =null;
 		int vectorleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-5)).left;
@@ -1218,7 +1158,7 @@ class CUP$SMPLParser$actions {
           return CUP$SMPLParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 29: // expressions ::= pairExp CONCAT pairExp 
+          case 25: // expressions ::= pairExp CONCAT pairExp 
             {
               SIRObj RESULT =null;
 		int p1left = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-2)).left;
@@ -1233,7 +1173,7 @@ class CUP$SMPLParser$actions {
           return CUP$SMPLParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 30: // expressions ::= pairVar CONCAT pairExp 
+          case 26: // expressions ::= pairVar CONCAT pairExp 
             {
               SIRObj RESULT =null;
 		int p1left = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-2)).left;
@@ -1248,7 +1188,7 @@ class CUP$SMPLParser$actions {
           return CUP$SMPLParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 31: // expressions ::= pairExp CONCAT pairVar 
+          case 27: // expressions ::= pairExp CONCAT pairVar 
             {
               SIRObj RESULT =null;
 		int p1left = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-2)).left;
@@ -1263,7 +1203,7 @@ class CUP$SMPLParser$actions {
           return CUP$SMPLParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 32: // expressions ::= pairVar CONCAT pairVar 
+          case 28: // expressions ::= pairVar CONCAT pairVar 
             {
               SIRObj RESULT =null;
 		int p1left = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-2)).left;
@@ -1274,6 +1214,66 @@ class CUP$SMPLParser$actions {
 		CompoundExp p2 = (CompoundExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.peek()).value;
 		 RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); 
               CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("expressions",9, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-2)), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
+            }
+          return CUP$SMPLParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 29: // expressions ::= vectorExp LBRACKET arithExp RBRACKET 
+            {
+              SIRObj RESULT =null;
+		int vectorleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).left;
+		int vectorright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).right;
+		VectorExp vector = (VectorExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).value;
+		int expleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).left;
+		int expright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).right;
+		AIRExp exp = (AIRExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).value;
+		 RESULT = new SIRFunctionExp("ele", vector, exp); 
+              CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("expressions",9, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
+            }
+          return CUP$SMPLParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 30: // expressions ::= vectorVar LBRACKET arithExp RBRACKET 
+            {
+              SIRObj RESULT =null;
+		int vectorleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).left;
+		int vectorright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).right;
+		CompoundExp vector = (CompoundExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).value;
+		int expleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).left;
+		int expright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).right;
+		AIRExp exp = (AIRExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).value;
+		 RESULT = new SIRFunctionExp("ele", vector, exp); 
+              CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("expressions",9, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
+            }
+          return CUP$SMPLParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 31: // expressions ::= vectorExp LBRACKET arithVar RBRACKET 
+            {
+              SIRObj RESULT =null;
+		int vectorleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).left;
+		int vectorright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).right;
+		VectorExp vector = (VectorExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).value;
+		int expleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).left;
+		int expright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).right;
+		AIRExp exp = (AIRExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).value;
+		 RESULT = new SIRFunctionExp("ele", vector, exp); 
+              CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("expressions",9, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
+            }
+          return CUP$SMPLParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 32: // expressions ::= vectorVar LBRACKET arithVar RBRACKET 
+            {
+              SIRObj RESULT =null;
+		int vectorleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).left;
+		int vectorright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).right;
+		CompoundExp vector = (CompoundExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)).value;
+		int expleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).left;
+		int expright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).right;
+		AIRExp exp = (AIRExp)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-1)).value;
+		 RESULT = new SIRFunctionExp("ele", vector, exp); 
+              CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("expressions",9, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.elementAt(CUP$SMPLParser$top-3)), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
             }
           return CUP$SMPLParser$result;
 

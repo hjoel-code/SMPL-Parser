@@ -34,7 +34,7 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
     public Primitive visitSMPLAssignment(SMPLAssignment assignment, SMPLContext state) throws SMPLException {
         String type = assignment.getExp().getType();
 
-        if (type.equals("cdr") | type.equals("car") | type.equals("call")) {
+        if (type.equals("cdr") | type.equals("car") | type.equals("call") | type.equals("ele")) {
             Primitive priv = assignment.getExp().eval(state, eval.getObjectEvaluator());
             state.getVariableEnvironment().put(assignment.getVar(), priv.getType());
             state.getVariableEnvironment().print();

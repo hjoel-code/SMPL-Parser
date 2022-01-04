@@ -182,16 +182,16 @@ expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         CDR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
                                         SUBSTR LPAREN stringExp:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
                                         SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
-                                        vectorExp:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
-                                        vectorVar:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
-                                        vectorExp:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
-                                        vectorVar:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
                                         vectorExp:vector LBRACKET arithExp:pos RBRACKET ASSIGN expressions:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
                                         vectorVar:vector LBRACKET arithExp:pos RBRACKET ASSIGN expressions:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
                                         pairExp:p1 CONCAT pairExp:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
                                         pairVar:p1 CONCAT pairExp:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
                                         pairExp:p1 CONCAT pairVar:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
-                                        pairVar:p1 CONCAT pairVar:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :};
+                                        pairVar:p1 CONCAT pairVar:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
+                                        vectorExp:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
+                                        vectorVar:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
+                                        vectorExp:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
+                                        vectorVar:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :};
 
 
 

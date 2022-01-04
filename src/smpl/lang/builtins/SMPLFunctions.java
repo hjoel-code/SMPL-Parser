@@ -80,6 +80,21 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
         }
     },
 
+    NTHELEMENT("ele") {
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
+            SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+            StringLit i = new StringLit(exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator()).getOutput());
+            Integer index = Integer.valueOf(i.getStr());
+            int len = vec.getPrimitive().length;
+            if(index >= len){
+                throw new SMPLException("Index out of bounds");
+            } else {
+                return vec.getElement(index);
+            }
+        }
+    },
+
     SIZE("size") {
         @Override
         public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
@@ -454,20 +469,6 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             }
     },
 
-    NTHELEMENT("ele") {
-        @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
-            SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
-            StringLit i = new StringLit(exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator()).getOutput());
-            Integer index = Integer.valueOf(i.getStr());
-            int len = vec.getPrimitive().length;
-            if(index >= len){
-                throw new SMPLException("Index out of bounds");
-            } else {
-                return vec.getElement(index);
-            }
-        }
-    },
 
     REPLACE("replace") {
         @Override
