@@ -120,7 +120,7 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   ref               { return new Symbol( sym.REF ); }
 <YYINITIAL>   read               { return new Symbol( sym.READ ); }
 <YYINITIAL>   readint               { return new Symbol( sym.READINT ); }
-
+<YYINITIAL>   case               { return new Symbol( sym.CASE ); }
 
 
 <YYINITIAL>    if                  { return new Symbol(sym.IF);}

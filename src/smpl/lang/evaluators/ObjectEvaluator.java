@@ -21,6 +21,7 @@ import smpl.lang.compound.PairLit;
 import smpl.lang.compound.VectorLit;
 import smpl.lang.compound.ProcExp;
 import smpl.lang.compound.TupleExp;
+import smpl.lang.compound.CaseCondExp;
 import smpl.lang.string.StringExp;
 import smpl.sys.SMPLContext;
 import smpl.sys.SMPLException;
@@ -81,6 +82,9 @@ public class ObjectEvaluator {
         } else if (type.equals("lazy")) {
             SIRLazy lazy = (SIRLazy) obj;
             return new SMPLLazy(lazy.getObj(), lazy.getState());
+        } else if (type.equals("case")) {
+            CaseCondExp exp = (CaseCondExp) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         } else {
             throw new SMPLException("Failed to Evaluate input");
         }
@@ -145,6 +149,11 @@ public class ObjectEvaluator {
 
             SMPLLazy lazy = (SMPLLazy) state.getGlobalEnvironment().get(obj.getVar());
             return lazy.getVal(this);
+
+        } else if (type.equals("case")) {
+            
+            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
 
         } else {
             throw new SMPLException("Unbound Variable: " + obj.getVar());

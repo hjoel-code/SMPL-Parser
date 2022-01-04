@@ -12,6 +12,9 @@ import smpl.sys.SMPLException;
 import smpl.values.type.compound.*;
 import smpl.values.CompoundPrimitive;
 import smpl.values.Primitive;
+import smpl.lang.bool.BoolExp;
+import smpl.values.SMPLResults;
+
 
 public class CompoundEvaluator
         implements CompoundVisitor<CompoundExp, Environment<Primitive>, CompoundPrimitive> {
@@ -119,6 +122,22 @@ public class CompoundEvaluator
     @Override
     public CompoundPrimitive visitProcExp(ProcExp proc, Environment<Primitive> state) throws SMPLException {
         return new SMPLProc(proc.getParams(), proc.getBody(), state.getContext().extendEnvironment());
+    }
+
+    @Override
+    public CompoundPrimitive visitCaseCondExp(CaseCondExp cCond, Environment<Primitive> state) throws SMPLException {
+        ArrayList<SMPLSingleCase> cases = cCond.getCases();
+
+        for (int i = 0; i < cases.size(); i++) {
+            SMPLSingleCase sCase = cases.get(i);
+            Boolean predicate = sCase.getPredicate().visit(eval.getBoolEval(), state.getContext().getGlobalEnvironment()).getPrimitive();
+
+            if (predicate) {
+                return new SMPLSingleCase(eval.visitStmtSequence(sCase.getConsequence(), state.getContext()));
+            } 
+        }
+
+        return new SMPLSingleCase(new SMPLResults());
     }
 
 }

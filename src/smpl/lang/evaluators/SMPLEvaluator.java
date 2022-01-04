@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import smpl.lang.*;
 import smpl.lang.statements.SIRStatement;
+import smpl.lang.statements.Statement;
 import smpl.lang.visitors.SIRVisitor;
 import smpl.sys.SMPLException;
 import smpl.values.SMPLResults;
