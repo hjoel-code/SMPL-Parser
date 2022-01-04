@@ -40,13 +40,8 @@ public class AIRLit extends AIRExp {
     public AIRLit(SIRFunctionExp<AIRExp> func) {
       super();
       this.func = func;
-      this.context = "";
     }
 
-
-    public SIRVar<AIRExp> getVarExp() {
-        return varExp;
-    }
     public SIRObj getExp() {
         return exp;
     }

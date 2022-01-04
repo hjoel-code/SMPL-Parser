@@ -99,6 +99,22 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
     }
 
     @Override
+    public Primitive visitForStmt(ForStatement stmt, SMPLContext state) throws SMPLException {
+        SMPLArith minimum = stmt.getLow().visit(eval.getArithEval(), state.getGlobalEnvironment());
+        SMPLArith maximum = stmt.getHigh().visit(eval.getArithEval(), state.getGlobalEnvironment());
+        int num = minimum.getPrimitive().intValue();
+        int max = maximum.getPrimitive().intValue();
+        
+        Primitive s = Primitive.DEFAULT;
+        while (num < max) {
+            s = stmt.getSeq().visit(eval.get, state);
+            num++;
+        }
+
+        return s;
+    }
+
+    @Override
     public Primitive visitTupleAssignment(TupleAssignment assignT, SMPLContext state) throws SMPLException {
 
         if (assignT.getTuple().isExp()) {

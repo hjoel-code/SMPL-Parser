@@ -9,6 +9,7 @@ public interface StatementVisitor<E extends SIRExp<E>, S, T> extends SIRVisitor<
     public T visitPrintStmt(PrintStmt printStmt, S state) throws SMPLException;
     public T visitStatement(Statement stmt, S state) throws SMPLException;
     public T visitConditionalStmt(ConditionalStatement stmt, S state) throws SMPLException;
+    public T visitForStmt(ForStatement stmt, S state) throws SMPLException;
     public T visitTupleAssignment(TupleAssignment assignT, S state) throws SMPLException;
     public T visitSMPLReadInt(SMPLReadInt readInt, S state) throws SMPLException;
     public T visitSMPLReadStr(SMPLReadStr readStr, S state) throws SMPLException;

@@ -128,6 +128,9 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>    if                  { return new Symbol(sym.IF);}
 <YYINITIAL>    then              { return new Symbol(sym.THEN);}
 <YYINITIAL>    else              { return new Symbol(sym.ELSE);}
+<YYINITIAL>    for                  { return new Symbol(sym.FOR);}
+<YYINITIAL>    in              { return new Symbol(sym.IN);}
+<YYINITIAL>    range              { return new Symbol(sym.RANGE);}
 <YYINITIAL>    def                { return new Symbol(sym.DEF);}
 <YYINITIAL>    proc              { return new Symbol(sym.PROC);}
 

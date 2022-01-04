@@ -176,8 +176,8 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
                 result = false;
                 SMPLVector vec1 = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
                 SMPLVector vec2 = (SMPLVector) exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
-                Primitive[] arr1 = vec1.getVector();
-                Primitive[] arr2 = vec2.getVector();
+                Primitive[] arr1 = vec1.getPrimitive();
+                Primitive[] arr2 = vec2.getPrimitive();
                 
                 if (arr1.length == arr2.length) {
                     for(int i = 0; i < arr1.length; i++){
@@ -208,6 +208,7 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
 
                 return new SMPLBool(false);
             }
+            return new SMPLBool(false);
         }
     },
 
@@ -463,8 +464,8 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             SMPLProc proc = (SMPLProc) priv;
             ArrayList<Primitive> subLst = new ArrayList<>();
             for (int x = 0; x < length; x++) {
-                AIRLit val = new AIRLit(Double.valueOf(x), proc.getParams().get(0));
-                SMPLAssignment assign = new SMPLAssignment(proc.getParams().get(0), val);
+                AIRLit val = new AIRLit(Double.valueOf(x), proc.getParams().get(0).getParam());
+                SMPLAssignment assign = new SMPLAssignment(proc.getParams().get(0).getParam(), val);
                 assign.visit(eval.getStmtEval(), proc.getContext());
                 subLst.add(proc.getBody().visit(eval, proc.getContext()).getPrimitive());
             }
