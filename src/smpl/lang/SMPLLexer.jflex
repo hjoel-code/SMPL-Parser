@@ -112,9 +112,11 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   size               { return new Symbol( sym.SIZE ); }
 <YYINITIAL>   print             { return new Symbol( sym.PRINT ); }
 <YYINITIAL>   println           { return new Symbol( sym.PRINTLN ); }
+<YYINITIAL>   "greater?"               { return new Symbol( sym.GREATER ); }
 <YYINITIAL>   "eqv?"               { return new Symbol( sym.EQV ); }
 <YYINITIAL>   "equal?"               { return new Symbol( sym.EQUAL ); }
 <YYINITIAL>   "pair?"               { return new Symbol( sym.ISPAIR ); }
+
 <YYINITIAL>   substr               { return new Symbol( sym.SUBSTR ); }
 <YYINITIAL>   lazy               { return new Symbol( sym.LAZY ); }
 <YYINITIAL>   ref               { return new Symbol( sym.REF ); }
@@ -126,6 +128,9 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>    if                  { return new Symbol(sym.IF);}
 <YYINITIAL>    then              { return new Symbol(sym.THEN);}
 <YYINITIAL>    else              { return new Symbol(sym.ELSE);}
+<YYINITIAL>    for                  { return new Symbol(sym.FOR);}
+<YYINITIAL>    in              { return new Symbol(sym.IN);}
+<YYINITIAL>    range              { return new Symbol(sym.RANGE);}
 <YYINITIAL>    def                { return new Symbol(sym.DEF);}
 <YYINITIAL>    proc              { return new Symbol(sym.PROC);}
 

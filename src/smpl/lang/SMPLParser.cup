@@ -66,7 +66,7 @@ scan with {:
 
 /* Keywords */
 terminal ASSIGN, SIZE, PRINT, PROC, CALL, LAZY, REF;
-terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN, EQV, EQUAL, SUBSTR, ISPAIR;
+terminal CAR, CDR, PAIR, LIST, DEF, PRINTLN, EQV, EQUAL, GREATER, SUBSTR, ISPAIR;
 terminal CONCAT, READ, READINT, CASE;
 
 /* Arithmetic operators */ 
@@ -94,7 +94,7 @@ terminal String EMPTY;
 /* Non terminals */
 
 /* *** Logic extensions (in support of IF) *** */
-terminal IF, ELSE, THEN;
+terminal IF, ELSE, THEN, FOR, IN, RANGE;
 
 // place your extensions here, if you do this problem
 
@@ -129,13 +129,16 @@ non terminal ArrayList<SIRObj> smplExpList, smplExpListE, tupleExpList;
 non terminal ArrayList<SMPLSingleCase> caseList;
 
 non terminal ConditionalStatement IFCond;
+non terminal ForStatement FORLoop;
 non terminal BoolExp boolVar, predicate;
 non terminal AIRExp arithVar;
 non terminal StringExp stringVar;
 non terminal CharExp charVar;
 non terminal CompoundExp pairVar;
 non terminal CompoundExp vectorVar;
+non terminal CompoundExp subvectorVar;
 non terminal TupleExp tupleExp;
+non terminal SubvectorExp subvecExp;
 non terminal SMPLSingleCase singleCase;
 
 
@@ -161,6 +164,7 @@ stmtList                        ::=     stmtList:seq stmt:s {:
 
 stmt                            ::=     assignment:assign SEMI {: RESULT = assign; :} |
                                         IFCond:cond SEMI{: RESULT = cond; :} |
+                                        FORLoop:f SEMI{: RESULT = f; :} |
                                         PRINT LPAREN smplExp:exp RPAREN SEMI {: RESULT = new PrintStmt(exp); :} |
                                         PRINTLN LPAREN smplExp:exp RPAREN SEMI {: RESULT = new PrintStmt(exp, true); :} |
                                         READINT LPAREN RPAREN SEMI {: RESULT = new SMPLReadInt(); :} |
@@ -175,14 +179,22 @@ expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         charExp:chExp {: RESULT = chExp; :} |
                                         boolExp:bExp {: RESULT = bExp; :} | 
                                         tupleExp:tuple {: RESULT = tuple; :} |
-                                        caseCondExp:cCond {: RESULT = cCond; :};
+                                        subvecExp:svExp {: RESULT = svExp; :} |
+                                        caseCondExp:cCond {: RESULT = cCond; :} |
+                                        vectorExp:vector LBRACKET arithExp:pos RBRACKET ASSIGN smplExp:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
+                                        vectorVar:vector LBRACKET arithExp:pos RBRACKET ASSIGN smplExp:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
+                                        vectorVar:vector LBRACKET arithVar:pos RBRACKET ASSIGN smplExp:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
+                                        vectorExp:vector LBRACKET arithVar:pos RBRACKET ASSIGN smplExp:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
+                                        pairExp:p1 CONCAT pairExp:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
+                                        pairVar:p1 CONCAT pairExp:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
+                                        pairExp:p1 CONCAT pairVar:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
+                                        pairVar:p1 CONCAT pairVar:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :};
 
 
 
 literals                        ::=     VAR:id {: RESULT = new SIRVar(id); :} |
                                         VAR:id LPAREN smplExpListE:exp RPAREN {: RESULT = new SIRFunctionExp("call", new SIRVar(id), exp); :} |
                                         CALL LPAREN VAR:id COMMA smplExp RPAREN |
-
                                         CAR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CAR LPAREN pairVar:pair RPAREN {: RESULT = new SIRFunctionExp("car", pair); :} |
                                         CDR LPAREN pairExp:pair RPAREN {: RESULT = new SIRFunctionExp("cdr", pair); :} |
@@ -192,19 +204,14 @@ literals                        ::=     VAR:id {: RESULT = new SIRVar(id); :} |
                                         SUBSTR LPAREN stringExp:string COMMA arithVar:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
                                         SUBSTR LPAREN stringExp:string COMMA arithExp:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
                                         SUBSTR LPAREN stringExp:string COMMA arithVar:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
-
                                         SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
                                         SUBSTR LPAREN stringVar:string COMMA arithVar:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
                                         SUBSTR LPAREN stringVar:string COMMA arithExp:exp1 COMMA arithVar:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
                                         SUBSTR LPAREN stringVar:string COMMA arithVar:exp1 COMMA arithExp:exp2  RPAREN {: RESULT = new SubString(string, exp1, exp2); :} |
-                                        
                                         vectorExp:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
                                         vectorVar:vector LBRACKET arithExp:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
-                                        
-                                        SIZE LPAREN vectorExp:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
-                                        SIZE LPAREN vectorVar:vector RPAREN {: RESULT = new SIRFunctionExp("size", vector); :} |
-                                        LIST LPAREN smplExpListE:lst RPAREN {: RESULT = new SIRFunctionExp("list", lst); :} | 
-                                        LBRACKET smplExpListE:lst RBRACKET {: RESULT = new SIRFunctionExp("list", lst); :};
+                                        vectorExp:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
+                                        vectorVar:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :};
 
 
 // IF Statement
@@ -216,6 +223,10 @@ IFCond                          ::=     IF boolExp:bool THEN stmt:s1 ELSE stmt:s
                                             RESULT = new ConditionalStatement(bool, s);
                                         :}; 
 
+FORLoop			::=	FOR VAR:id IN RANGE LPAREN arithExp:low COMMA arithExp:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
+FOR VAR:id IN RANGE LPAREN arithExp:low COMMA arithVar:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
+FOR VAR:id IN RANGE LPAREN arithVar:low COMMA arithExp:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
+FOR VAR:id IN RANGE LPAREN arithVar:low COMMA arithVar:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :};
 
 caseCondExp                     ::=     CASE LCURL caseList:cLst RCURL {: RESULT = new CaseCondExp(cLst); :};
 
@@ -287,6 +298,12 @@ smplExp                         ::=     expressions:expr {: RESULT = expr; :} |
 
 procDefn                        ::=     PROC LPAREN paramListE:params RPAREN LCURL program:body RCURL {: RESULT = new ProcExp(params, body); :} |
                                         PROC paramExp:param program:body  {: RESULT = new ProcExp(param, body); :}; 
+
+
+subvecExp			::= arithExp:exp COLON procDefn:proc {:
+					RESULT = new SubvectorExp(new SIRFunctionExp("subvector", exp, proc)); :};
+
+                                        
 
 // Parameter List for Function Definitions
 
@@ -361,6 +378,10 @@ boolExp                         ::=     boolTerm:bool1 LOGIC:op boolExp:bool2 {:
                                             RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, bool1, bool2)); 
                                         :} |
 
+                                        boolVar:bool1 LOGIC:op boolVar:bool2 {: 
+                                            RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, bool1, bool2)); 
+                                        :} |
+
                                         NOT boolVar:bool {: 
                                             RESULT = new BoolCalc(new SIRUnaryExp<BoolExp>("not", bool));
                                         :} |
@@ -393,6 +414,7 @@ boolFactor                      ::=     BOOL:bool {:
 
                                         LPAREN boolExp:bool RPAREN {: RESULT = bool; :} |
 
+                                        GREATER LPAREN smplExp:exp1 COMMA smplExp:exp2 RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("greater?", exp1, exp2)); :} |
                                         ISPAIR LPAREN smplExp:exp RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("pair?", exp)); :} |
                                         EQV LPAREN smplExp:exp1 COMMA smplExp:exp2 RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("eqv?", exp1, exp2)); :} |
                                         EQUAL LPAREN smplExp:exp1 COMMA smplExp:exp2 RPAREN {: RESULT = new BoolFunction(new SIRFunctionExp("equal?", exp1, exp2)); :};
@@ -454,11 +476,7 @@ strExpList                      ::=     strExpList:lst COMMA stringExp:e {:
 stringVar                       ::=     literals:lit {: RESULT = new StringLit(lit); :};
 
 
-stringExp                       ::=     stringExp:e1 CONCAT stringTerm:e2 {: RESULT = new StringConcat(e1, e2); :} |
-                                        stringVar:e1 CONCAT stringTerm:e2 {: RESULT = new StringConcat(e1, e2); :} |
-                                        stringExp:e1 CONCAT stringVar:e2 {: RESULT = new StringConcat(e1, e2); :} |
-                                        stringVar:e1 CONCAT stringVar:e2 {: RESULT = new StringConcat(e1, e2); :} |
-                                        stringTerm:t {: RESULT = t; :};                    
+stringExp                       ::=     stringTerm:t {: RESULT = t; :};                    
 
 
 stringTerm                      ::=     stringFactor:f {: RESULT = f; :};
@@ -510,7 +528,6 @@ arithExp                        ::=     arithExp:e PLUS arithTerm:t {:
                                         arithExp:e MINUS arithVar:t {: 
                                             SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("-", e, t);
                                             RESULT = new ArithCalc(calc); :} |
-
                                         arithVar:e PLUS arithVar:t {: 
                                             SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("+", e, t);
                                             RESULT = new ArithCalc(calc); :} |
@@ -518,7 +535,10 @@ arithExp                        ::=     arithExp:e PLUS arithTerm:t {:
                                             SIRBinaryExp<AIRExp> calc = new SIRBinaryExp<AIRExp>("-", e, t);
                                             RESULT = new ArithCalc(calc); :} |
 
-                                        arithTerm:t {: RESULT = t; :};
+                                        arithTerm:t {: RESULT = t; :} |
+                                        
+                                        SIZE LPAREN vectorExp:vector RPAREN {: RESULT = new AIRFunction(new SIRFunctionExp("size", vector)); :} |
+                                        SIZE LPAREN vectorVar:vector RPAREN {: RESULT = new AIRFunction(new SIRFunctionExp("size", vector)); :};
 
 
 arithTerm                       ::=     arithTerm:t TIMES arithFactor:f {: 
@@ -580,15 +600,18 @@ pairVar                         ::=     literals:lit {: RESULT = new PairLit(lit
 
 vectorVar                       ::=     literals:lit {: RESULT = new VectorLit(lit); :};
 
+subvectorVar                         ::=     VAR:var {: RESULT = new SubvectorLit(new SIRVar<CompoundExp>(var)); :};
+
 
 pairExp                         ::=     PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
                                             RESULT = new PairExp(new SIRFunctionExp("pair", e1, e2) );
-                                        :};
-
-
-vectorExp		            	::=	    LBCOLON smplExpListE:lst RBCOLON {:
-                                        SIRObj[] result = new SIRObj[lst.size()];
-                                        result = lst.toArray(result);
-                                        RESULT = new VectorExp(new SIRFunctionExp("vector", result)); :};
+                                        :} |
+                                        LIST LPAREN smplExpListE:lst RPAREN {: RESULT = new PairExp(new SIRFunctionExp("list", lst)); :} | 
+                                        LBRACKET smplExpListE:lst RBRACKET {: RESULT = new PairExp(new SIRFunctionExp("list", lst)); :};
+                                        
+vectorExp			::=	LBCOLON smplExpListE:lst RBCOLON {:
+						SIRObj[] result = new SIRObj[lst.size()];
+						result = lst.toArray(result);
+						RESULT = new VectorExp(new SIRFunctionExp("vector", result)); :};
 
 empty                           ::=     ;

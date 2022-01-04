@@ -1,7 +1,13 @@
 package smpl.values.type.compound;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import smpl.values.CompoundPrimitive;
 import smpl.values.Primitive;
+import smpl.values.type.simple.SMPLEmptyList;
+
+import java.util.Collections.*;
 
 public class SMPLPair extends CompoundPrimitive<SMPLPair> {
     
@@ -12,6 +18,17 @@ public class SMPLPair extends CompoundPrimitive<SMPLPair> {
         super("pair");
         this.arg1 = arg1;
         this.arg2 = arg2;
+    }
+
+    public SMPLPair(ArrayList<Primitive> vals){
+        super("pair");
+        this.arg1 = vals.get(0);
+        vals.remove(0);
+        if (vals.isEmpty()) {
+            this.arg2 = new SMPLEmptyList();
+        } else {
+            this.arg2 = new SMPLPair(vals);
+        }
     }
     
     public Primitive getArg1() {

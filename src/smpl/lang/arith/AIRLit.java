@@ -5,11 +5,13 @@ import smpl.values.type.simple.SMPLArith;
 import smpl.lang.SIRObj;
 import smpl.lang.evaluators.ObjectEvaluator;
 import smpl.lang.visitors.*;
+import smpl.lang.SIRFunctionExp;
 
 public class AIRLit extends AIRExp {
 
     double value;
     String rep;
+    private SIRFunctionExp<AIRExp> func;
 
     SIRObj exp;
     private boolean isExp;
@@ -34,6 +36,11 @@ public class AIRLit extends AIRExp {
       this.exp = exp;
     }
 
+
+    public AIRLit(SIRFunctionExp<AIRExp> func) {
+      super();
+      this.func = func;
+    }
 
     public SIRObj getExp() {
         return exp;

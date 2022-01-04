@@ -1,0 +1,12 @@
+low := 1;
+high := 5;
+v := 3;
+def test proc(v, low, high) {
+	x := 1;
+	for x in range(low, high) {
+		x := x + 1;
+		print(x);
+	};
+};
+
+test(v, low, high);

@@ -21,6 +21,7 @@ import smpl.lang.compound.PairLit;
 import smpl.lang.compound.VectorLit;
 import smpl.lang.compound.ProcExp;
 import smpl.lang.compound.TupleExp;
+import smpl.lang.compound.SubvectorLit;
 import smpl.lang.compound.CaseCondExp;
 import smpl.lang.string.StringExp;
 import smpl.sys.SMPLContext;
@@ -77,6 +78,9 @@ public class ObjectEvaluator {
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         } else if (type.equals("proc")) {
             ProcExp exp = (ProcExp) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        }  else if (type.equals("subvector")) {
+            SubvectorLit exp = (SubvectorLit) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         } else if (type.equals("lazy")) {
             SIRLazy lazy = (SIRLazy) obj;
@@ -137,6 +141,11 @@ public class ObjectEvaluator {
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
 
+        } else if (type.equals("subvector")) {
+
+            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        
         } else if (type.equals("ref")) {
 
             SMPLRef ref = (SMPLRef) state.getGlobalEnvironment().get(obj.getVar());

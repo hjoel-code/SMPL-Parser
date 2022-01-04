@@ -24,7 +24,7 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
 
         String type = assignment.getExp().getType();
 
-        if (type.equals("cdr") | type.equals("car") | type.equals("call") | type.equals("var")) {
+        if (type.equals("cdr") | type.equals("car") | type.equals("call") | type.equals("var") | type.equals("ele")) {
             try {
                 String priv = state.getVariableEnvironment().get(assignment.getVar());
                 
@@ -95,6 +95,22 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
         }
 
         return Primitive.DEFAULT;
+    }
+
+    @Override
+    public Primitive visitForStmt(ForStatement stmt, SMPLContext state) throws SMPLException {
+        SMPLArith minimum = stmt.getLow().visit(eval.getArithEval(), state.getGlobalEnvironment());
+        SMPLArith maximum = stmt.getHigh().visit(eval.getArithEval(), state.getGlobalEnvironment());
+        int num = minimum.getPrimitive().intValue();
+        int max = maximum.getPrimitive().intValue();
+        
+        Primitive s = Primitive.DEFAULT;
+        while (num < max) {
+            s = stmt.getSeq().visit(eval, state);
+            num++;
+        }
+
+        return s;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package smpl.lang.compound;
 
+
 import smpl.lang.SIRFunctionExp;
 import smpl.lang.evaluators.ObjectEvaluator;
 import smpl.lang.visitors.CompoundVisitor;
@@ -7,19 +8,23 @@ import smpl.sys.SMPLContext;
 import smpl.sys.SMPLException;
 import smpl.values.Primitive;
 
-public class VectorExp extends CompoundExp {
-    private String type;
-    private SIRFunctionExp<CompoundExp> func;
 
-    public VectorExp(SIRFunctionExp<CompoundExp> func) {
-        this.type = "vector";
+
+public class SubvectorExp extends CompoundExp  {
+
+    private String type;
+    SIRFunctionExp<CompoundExp> func;
+
+    public SubvectorExp(SIRFunctionExp<CompoundExp> func) {
+        this.type = "subvector";
         this.func = func;
     }
+
 
     public SIRFunctionExp<CompoundExp> getFunc() {
         return func;
     }
-
+    
     @Override
     public String getType() {
         return type;
@@ -37,4 +42,5 @@ public class VectorExp extends CompoundExp {
         return eval.evalSIRFunction(state, func);
     }
     
+
 }
