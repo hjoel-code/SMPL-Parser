@@ -1,0 +1,27 @@
+def partition proc(v, low, high) {
+	i := low - 1;
+	pivot := v[high];
+	
+	for x in range(low, high){
+		low := low + 1;
+		if greater?(pivot + 1, v[low]) then i := i + 1;;
+		if greater?(pivot + 1, v[low]) then a := v[i];;
+		if greater?(pivot + 1, v[low]) then b := v[low];; 
+		if greater?(pivot + 1, v[low]) then v[i] := b;; 
+		if greater?(pivot + 1, v[low]) then v[low] := a;;
+	};
+	c := v[i + 1];
+	d := v[high];
+	v[i + 1] := d;
+	v[high] := c;
+	i + i;
+};
+	
+def quickSort proc(v, low, high) {
+	pi := 1;
+	if size(v) = 1 then v;;
+	if greater?(high, low) then p := partition(v, low, high);;
+	if greater?(high, low) then quickSort(v, low, p - 1);;
+	if greater?(high, low) then quickSort(v, p + 1, low);;
+	
+};

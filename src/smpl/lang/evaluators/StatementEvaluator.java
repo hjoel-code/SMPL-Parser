@@ -107,7 +107,7 @@ public class StatementEvaluator implements StatementVisitor<SIRProgram, SMPLCont
         
         Primitive s = Primitive.DEFAULT;
         while (num < max) {
-            s = stmt.getSeq().visit(eval.get, state);
+            s = stmt.getSeq().visit(eval, state);
             num++;
         }
 

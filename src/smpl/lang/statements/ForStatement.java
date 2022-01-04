@@ -5,6 +5,7 @@ import smpl.lang.bool.BoolExp;
 import smpl.lang.arith.AIRExp;
 import smpl.lang.visitors.StatementVisitor;
 import smpl.sys.SMPLException;
+import smpl.lang.SIRSequence;
 
 public class ForStatement extends SIRStatement {
 
@@ -32,7 +33,7 @@ public class ForStatement extends SIRStatement {
         return high;
     }
 
-    public SIRStatement getSeq() {
+    public SIRSequence getSeq() {
         return seq;
     }
 

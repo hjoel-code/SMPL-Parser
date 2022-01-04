@@ -181,8 +181,10 @@ expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         tupleExp:tuple {: RESULT = tuple; :} |
                                         subvecExp:svExp {: RESULT = svExp; :} |
                                         caseCondExp:cCond {: RESULT = cCond; :} |
-                                        vectorExp:vector LBRACKET arithExp:pos RBRACKET ASSIGN expressions:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
-                                        vectorVar:vector LBRACKET arithExp:pos RBRACKET ASSIGN expressions:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
+                                        vectorExp:vector LBRACKET arithExp:pos RBRACKET ASSIGN smplExp:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
+                                        vectorVar:vector LBRACKET arithExp:pos RBRACKET ASSIGN smplExp:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
+                                        vectorVar:vector LBRACKET arithVar:pos RBRACKET ASSIGN smplExp:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
+                                        vectorExp:vector LBRACKET arithVar:pos RBRACKET ASSIGN smplExp:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
                                         pairExp:p1 CONCAT pairExp:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
                                         pairVar:p1 CONCAT pairExp:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
                                         pairExp:p1 CONCAT pairVar:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
@@ -221,7 +223,10 @@ IFCond                          ::=     IF boolExp:bool THEN stmt:s1 ELSE stmt:s
                                             RESULT = new ConditionalStatement(bool, s);
                                         :}; 
 
-FORLoop			::=	FOR VAR:id IN RANGE LPAREN arithExp:low COMMA arithExp:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :};
+FORLoop			::=	FOR VAR:id IN RANGE LPAREN arithExp:low COMMA arithExp:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
+FOR VAR:id IN RANGE LPAREN arithExp:low COMMA arithVar:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
+FOR VAR:id IN RANGE LPAREN arithVar:low COMMA arithExp:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
+FOR VAR:id IN RANGE LPAREN arithVar:low COMMA arithVar:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :};
 
 caseCondExp                     ::=     CASE LCURL caseList:cLst RCURL {: RESULT = new CaseCondExp(cLst); :};
 
@@ -370,6 +375,10 @@ boolExp                         ::=     boolTerm:bool1 LOGIC:op boolExp:bool2 {:
                                         :} |
 
                                         boolTerm:bool1 LOGIC:op boolVar:bool2 {: 
+                                            RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, bool1, bool2)); 
+                                        :} |
+
+                                        boolVar:bool1 LOGIC:op boolVar:bool2 {: 
                                             RESULT = new BoolCalc(new SIRBinaryExp<BoolExp>(op, bool1, bool2)); 
                                         :} |
 
