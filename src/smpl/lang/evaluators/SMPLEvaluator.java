@@ -4,35 +4,37 @@ import java.util.ArrayList;
 
 import smpl.lang.*;
 import smpl.lang.statements.SIRStatement;
+import smpl.lang.statements.Statement;
 import smpl.lang.visitors.SIRVisitor;
 import smpl.sys.SMPLException;
-import smpl.values.Primitive;
-import smpl.values.type.simple.SMPLString;
+import smpl.values.SMPLResults;
 import smpl.sys.SMPLContext;
 
-public class SMPLEvaluator implements SIRVisitor<SIRProgram, SMPLContext, Primitive> {
+public class SMPLEvaluator implements SIRVisitor<SIRProgram, SMPLContext, SMPLResults> {
 
     // Evaluators
     private ArithEvaluator arithEval;
     private BoolEvaluator boolEval;
     private StringEvaluator strEval;
+    private EmptyListEvaluator emptyListEval;
     private CompoundEvaluator compoundEval;
     private StatementEvaluator stmtEval;
     private ObjectEvaluator objEval;
     private CharacterEvaluator charEval;
 
-    private Primitive lastResult;
+    private SMPLResults lastResult;
 
     public SMPLEvaluator() {
         arithEval = new ArithEvaluator(this);
         boolEval = new BoolEvaluator(this);
         strEval = new StringEvaluator(this);
+        emptyListEval = new EmptyListEvaluator(this);
         compoundEval = new CompoundEvaluator(this);
         stmtEval = new StatementEvaluator(this);
         objEval = new ObjectEvaluator(this);
         charEval = new CharacterEvaluator(this);
 
-        lastResult = Primitive.DEFAULT;
+        lastResult = SMPLResults.DEFAULT;
     }
 
     public ArithEvaluator getArithEval() {
@@ -45,6 +47,10 @@ public class SMPLEvaluator implements SIRVisitor<SIRProgram, SMPLContext, Primit
 
     public StringEvaluator getStrEval() {
         return strEval;
+    }
+
+    public EmptyListEvaluator getEmptyListEval() {
+        return emptyListEval;
     }
 
     public CompoundEvaluator getCompoundEval() {
@@ -69,52 +75,51 @@ public class SMPLEvaluator implements SIRVisitor<SIRProgram, SMPLContext, Primit
 
 
     @Override
-    public Primitive visitSMPLProgram(SIRProgram sp, SMPLContext arg) throws SMPLException {
+    public SMPLResults visitSMPLProgram(SIRProgram sp, SMPLContext arg) throws SMPLException {
         SIRSequence seq = sp.getSeq();
         return seq.visit(this, arg);
     }
 
     @Override
-    public Primitive visitStmtSequence(SIRSequence seq, SMPLContext state)
+    public SMPLResults visitStmtSequence(SIRSequence seq, SMPLContext state)
             throws SMPLException {
 
         ArrayList<SIRStatement> stmts = seq.getStatements();
-        SMPLString result = (SMPLString) lastResult;
+        SMPLResults result = new SMPLResults();
 
 
         for (SIRStatement stmt : stmts) {
-            String str = stmt.visit(getStmtEval(), state).toString();
-            result = new SMPLString(str);
+            result.addPrimitive(stmt.visit(getStmtEval(), state));
         }
 
         lastResult = result;
         return result;
     }
 
-    public Primitive getResult() {
+    public SMPLResults getResult() {
         return lastResult;
     }
 
     @Override
-    public Primitive visitASTVar(SIRVar<SIRProgram> var, SMPLContext state) throws SMPLException {
+    public SMPLResults visitASTVar(SIRVar<SIRProgram> var, SMPLContext state) throws SMPLException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Primitive visitASTBinaryExp(SIRBinaryExp biExp, SMPLContext state) throws SMPLException {
+    public SMPLResults visitASTBinaryExp(SIRBinaryExp<SIRProgram> biExp, SMPLContext state) throws SMPLException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Primitive visitASTUnaryExp(SIRUnaryExp urExp, SMPLContext state) throws SMPLException {
+    public SMPLResults visitASTUnaryExp(SIRUnaryExp<SIRProgram> urExp, SMPLContext state) throws SMPLException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Primitive visitSIRFunction(SIRFunctionExp<SIRProgram> func, SMPLContext state) throws SMPLException {
+    public SMPLResults visitSIRFunction(SIRFunctionExp<SIRProgram> func, SMPLContext state) throws SMPLException {
         // TODO Auto-generated method stub
         return null;
     }

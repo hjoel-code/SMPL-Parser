@@ -43,4 +43,9 @@ public class SIRVar<E extends SIRExp<E>> extends SIRExp<E> implements SIRObj {
        return eval.evalVar(state, this);
     }
 
+    @Override
+    public String toString() {
+        return getVar();
+    }
+
 }

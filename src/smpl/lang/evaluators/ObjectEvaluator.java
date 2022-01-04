@@ -1,7 +1,4 @@
 
-
-
-
 package smpl.lang.evaluators;
 
 import smpl.lang.SIRVar;
@@ -9,19 +6,28 @@ import smpl.lang.SIRVar;
 import java.util.HashMap;
 
 import smpl.lang.SIRFunctionExp;
+import smpl.lang.SIRLazy;
 import smpl.lang.SIRObj;
+import smpl.lang.SIRRef;
 import smpl.lang.arith.AIRExp;
 import smpl.lang.bool.BoolExp;
 import smpl.lang.builtins.SMPLFunctions;
 import smpl.lang.chars.CharExp;
 import smpl.lang.chars.CharLit;
+import smpl.lang.emptyList.EmptyListExp;
+import smpl.lang.emptyList.EmptyListLit;
 import smpl.lang.compound.CompoundExp;
 import smpl.lang.compound.PairLit;
+import smpl.lang.compound.VectorLit;
+import smpl.lang.compound.ProcExp;
 import smpl.lang.compound.TupleExp;
+import smpl.lang.compound.CaseCondExp;
 import smpl.lang.string.StringExp;
 import smpl.sys.SMPLContext;
 import smpl.sys.SMPLException;
 import smpl.values.Primitive;
+import smpl.values.type.simple.SMPLLazy;
+import smpl.values.type.simple.SMPLRef;
 
 public class ObjectEvaluator {
 
@@ -41,9 +47,8 @@ public class ObjectEvaluator {
         return eval;
     }
 
+    public Primitive eval(SMPLContext state, SIRObj obj) throws SMPLException {
 
-    public Primitive eval(SMPLContext state, SIRObj obj) throws SMPLException    {
-        
         String type = obj.getType();
 
         if (type.equals("arith")) {
@@ -58,22 +63,35 @@ public class ObjectEvaluator {
         } else if (type.equals("char")) {
             CharLit exp = (CharLit) obj;
             return exp.visit(eval.getCharEval(), state.getGlobalEnvironment());
+        } else if (type.equals("elist")) {
+            EmptyListLit exp = (EmptyListLit) obj;
+            return exp.visit(eval.getEmptyListEval(), state.getGlobalEnvironment());
         } else if (type.equals("pair")) {
             PairLit exp = (PairLit) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        } else if (type.equals("vector")) {
+            VectorLit exp = (VectorLit) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         } else if (type.equals("tuple")) {
             TupleExp exp = (TupleExp) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        } else if (type.equals("proc")) {
+            ProcExp exp = (ProcExp) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        } else if (type.equals("lazy")) {
+            SIRLazy lazy = (SIRLazy) obj;
+            return new SMPLLazy(lazy.getObj(), lazy.getState());
+        } else if (type.equals("case")) {
+            CaseCondExp exp = (CaseCondExp) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
         } else {
             throw new SMPLException("Failed to Evaluate input");
         }
     }
 
-
     public Primitive evalVar(SMPLContext state, SIRVar obj) throws SMPLException {
 
         String type = state.getVariableEnvironment().get(obj.getVar());
-
         if (type.equals("arith")) {
 
             SIRVar<AIRExp> exp = (SIRVar<AIRExp>) obj;
@@ -94,7 +112,17 @@ public class ObjectEvaluator {
             SIRVar<CharExp> exp = (SIRVar<CharExp>) obj;
             return exp.visit(eval.getCharEval(), state.getGlobalEnvironment());
 
+        } else if (type.equals("elist")) {
+
+            SIRVar<EmptyListExp> exp = (SIRVar<EmptyListExp>) obj;
+            return exp.visit(eval.getEmptyListEval(), state.getGlobalEnvironment());
+
         } else if (type.equals("pair")) {
+
+            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+        
+        } else if (type.equals("vector")) {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
@@ -103,12 +131,31 @@ public class ObjectEvaluator {
 
             SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
             return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
-        
+
+        } else if (type.equals("proc")) {
+
+            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+
+        } else if (type.equals("ref")) {
+
+            SMPLRef ref = (SMPLRef) state.getGlobalEnvironment().get(obj.getVar());
+            return ref.getReference();
+
+        } else if (type.equals("lazy")) {
+
+            SMPLLazy lazy = (SMPLLazy) state.getGlobalEnvironment().get(obj.getVar());
+            return lazy.getVal(this);
+
+        } else if (type.equals("case")) {
+            
+            SIRVar<CompoundExp> exp = (SIRVar<CompoundExp>) obj;
+            return exp.visit(eval.getCompoundEval(), state.getGlobalEnvironment());
+
         } else {
             throw new SMPLException("Unbound Variable: " + obj.getVar());
         }
     }
-
 
     public Primitive evalSIRFunction(SMPLContext state, SIRFunctionExp obj) throws SMPLException {
         String symbol = obj.getSymbol();
@@ -116,15 +163,8 @@ public class ObjectEvaluator {
         return cont.apply(eval, state.getGlobalEnvironment(), obj);
     }
 
-
-    public Primitive evalTuple(SMPLContext state, TupleExp tuple) {
-        
-        return null;
+    public Primitive evalParamRef(SMPLContext state, SIRRef ref) throws SMPLException {
+        SIRVar var = (SIRVar) ref.getObj();
+        return new SMPLRef(var.getVar(), ref.getState());
     }
 }
-
-
-
-
-
-

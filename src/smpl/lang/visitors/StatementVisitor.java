@@ -1,7 +1,5 @@
 package smpl.lang.visitors;
 
-
-
 import smpl.lang.SIRExp;
 import smpl.lang.statements.*;
 import smpl.sys.SMPLException;
@@ -12,4 +10,6 @@ public interface StatementVisitor<E extends SIRExp<E>, S, T> extends SIRVisitor<
     public T visitStatement(Statement stmt, S state) throws SMPLException;
     public T visitConditionalStmt(ConditionalStatement stmt, S state) throws SMPLException;
     public T visitTupleAssignment(TupleAssignment assignT, S state) throws SMPLException;
+    public T visitSMPLReadInt(SMPLReadInt readInt, S state) throws SMPLException;
+    public T visitSMPLReadStr(SMPLReadStr readStr, S state) throws SMPLException;
 }

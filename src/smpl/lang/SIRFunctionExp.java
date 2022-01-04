@@ -1,5 +1,7 @@
 package smpl.lang;
 
+import java.util.ArrayList;
+
 import smpl.lang.evaluators.ObjectEvaluator;
 import smpl.lang.visitors.SIRVisitor;
 import smpl.sys.SMPLContext;
@@ -15,6 +17,10 @@ public class SIRFunctionExp<E extends SIRExp<E>> extends SIRExp<E> implements SI
     private SIRObj param1;
     private SIRObj param2;
     private SIRObj param3;
+    private SIRObj[] paramArr;
+
+
+    private ArrayList<SIRObj> params;
 
 
 
@@ -39,6 +45,22 @@ public class SIRFunctionExp<E extends SIRExp<E>> extends SIRExp<E> implements SI
         this.symbol = symbol;
     }
 
+    public SIRFunctionExp(String symbol, SIRObj param1, ArrayList<SIRObj> params) {
+        this.param1 = param1;
+        this.params = params;
+        this.symbol = symbol;
+    }
+
+    public SIRFunctionExp(String symbol, SIRObj[] paramArr){
+        this.paramArr = paramArr;
+        this.symbol = symbol;
+    }
+
+    public SIRFunctionExp(String symbol, ArrayList<SIRObj> params){
+        this.params = params;
+        this.symbol = symbol;
+    }
+
     public SIRObj getParam1() {
         return param1;
     }
@@ -53,6 +75,14 @@ public class SIRFunctionExp<E extends SIRExp<E>> extends SIRExp<E> implements SI
 
     public String getSymbol() {
         return symbol;
+    }
+
+    public ArrayList<SIRObj> getParams() {
+        return params;
+    }
+
+    public SIRObj[] getParamArr() {
+        return paramArr;
     }
 
 
@@ -71,6 +101,12 @@ public class SIRFunctionExp<E extends SIRExp<E>> extends SIRExp<E> implements SI
     @Override
     public Primitive eval(SMPLContext state, ObjectEvaluator eval) throws SMPLException {
         return eval.evalSIRFunction(state, this);
+    }
+
+
+    @Override
+    public String toString() {
+        return getSymbol();
     }
 
 

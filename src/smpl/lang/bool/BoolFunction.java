@@ -31,4 +31,9 @@ public class BoolFunction extends BoolExp{
         return eval.evalSIRFunction(state, func);
     }
 
+    @Override
+    public String toString() {
+        return func.toString();
+    }
+
 }

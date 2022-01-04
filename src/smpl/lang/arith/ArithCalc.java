@@ -51,6 +51,15 @@ public class ArithCalc extends AIRExp {
     public <S, T> T visit(AIRVisitor<AIRExp, S, T> v, S state) throws SMPLException {
         return v.visitArithCalc(this, state);
     }
+
+    @Override
+    public String toString() {
+        if (getCalcType().equals("unary")) {
+            return unary.toString();
+        } else {
+            return binary.toString();
+        }
+    }
     
 
 }

@@ -92,7 +92,7 @@ public class SMPLRepl {
                 Primitive result;
                 result = commands.visit(interp, env);
                 if (result.getPrimitive() != null) {
-                    System.out.println("\n" + result.getPrimitive());
+                    System.out.println("\n" + result.getOutput());
                 } else {
                     System.out.println("\nNo result");
                 }

@@ -16,6 +16,11 @@ public class SMPLString extends SimplePrimitive<String> {
         return str;
     }
 
+    @Override 
+    public String getRep() {
+        return "string";
+    }
+
     @Override
     public String getOutput() {
         return str;
