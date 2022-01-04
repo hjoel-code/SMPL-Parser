@@ -187,7 +187,11 @@ expressions                     ::=     pairExp:pair {: RESULT = pair; :} |
                                         vectorExp:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
                                         vectorVar:vector LBRACKET arithVar:exp RBRACKET {: RESULT = new SIRFunctionExp("ele", vector, exp); :} |
                                         vectorExp:vector LBRACKET arithExp:pos RBRACKET ASSIGN expressions:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
-                                        vectorVar:vector LBRACKET arithExp:pos RBRACKET ASSIGN expressions:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} ;
+                                        vectorVar:vector LBRACKET arithExp:pos RBRACKET ASSIGN expressions:exp {: RESULT = new SIRFunctionExp("replace", vector, pos, exp);:} |
+                                        pairExp:p1 CONCAT pairExp:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
+                                        pairVar:p1 CONCAT pairExp:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
+                                        pairExp:p1 CONCAT pairVar:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :} |
+                                        pairVar:p1 CONCAT pairVar:p2 {: RESULT = new PairExp(new SIRFunctionExp("concat", p1, p2)); :};
 
 
 

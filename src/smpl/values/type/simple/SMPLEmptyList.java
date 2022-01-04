@@ -1,5 +1,6 @@
 package smpl.values.type.simple;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Collections.*;
 
@@ -12,7 +13,8 @@ public class SMPLEmptyList extends SimplePrimitive<List<Primitive>> {
     private List<Primitive> emptyLst;
 
     public SMPLEmptyList() {
-        super("list");
+        super("elist");
+        this.emptyLst = Collections.emptyList();
     }
 
     public SMPLEmptyList(List<Primitive> emptyLst) {

@@ -14,6 +14,7 @@ import smpl.values.type.compound.*;
 import smpl.values.type.simple.*;
 import smpl.values.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collections;
 
 public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Environment<Primitive>> {
@@ -499,6 +500,32 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
             else{
                 return new SMPLPair(eVal, new SMPLEmptyList(Collections.emptyList()));
             }
+        }
+
+    },
+    
+    CONCAT("concat"){
+        @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
+            SMPLPair lst1 = (SMPLPair) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+            SMPLPair lst2 = (SMPLPair) exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
+            ArrayList<Primitive> newLstVals = new ArrayList<>();
+            List<Primitive> e = Collections.emptyList();
+            while(lst1.getArg2() instanceof SMPLPair){
+                newLstVals.add(lst1.getArg1());
+                if (lst1.getArg2().getPrimitive() != e) {
+                    lst1 = (SMPLPair) lst1.getArg2();
+                }
+            }
+            newLstVals.add(lst1.getArg1());
+            while(lst2.getArg2() instanceof SMPLPair){
+                newLstVals.add(lst2.getArg1());
+                if (lst2.getArg2().getPrimitive() != e) {
+                    lst2 = (SMPLPair) lst2.getArg2();
+                }
+            }
+            newLstVals.add(lst2.getArg1());
+            return new SMPLPair(newLstVals);
         }
 
     };
