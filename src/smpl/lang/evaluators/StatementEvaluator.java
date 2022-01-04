@@ -2,23 +2,10 @@ package smpl.lang.evaluators;
 
 import java.util.ArrayList;
 
-import smpl.lang.SIRBinaryExp;
-import smpl.lang.SIRFunctionExp;
-import smpl.lang.SIRObj;
-import smpl.lang.SIRUnaryExp;
-import smpl.lang.SIRVar;
-import smpl.lang.SIRProgram;
-import smpl.lang.SIRSequence;
-import smpl.lang.statements.ConditionalStatement;
-import smpl.lang.statements.PrintStmt;
-import smpl.lang.statements.SMPLAssignment;
-import smpl.lang.statements.Statement;
-import smpl.lang.statements.TupleAssignment;
-import smpl.lang.statements.SIRStatement;
-import smpl.lang.statements.SIRSingleStmt;
+import smpl.lang.*;
+import smpl.lang.statements.*;
 import smpl.lang.visitors.StatementVisitor;
-import smpl.sys.SMPLContext;
-import smpl.sys.SMPLException;
+import smpl.sys.*;
 import smpl.values.Primitive;
 import smpl.values.type.compound.SMPLTuple;
 
