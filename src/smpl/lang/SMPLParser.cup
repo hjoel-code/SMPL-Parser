@@ -223,10 +223,10 @@ IFCond                          ::=     IF boolExp:bool THEN stmt:s1 ELSE stmt:s
                                             RESULT = new ConditionalStatement(bool, s);
                                         :}; 
 
-FORLoop			::=	FOR VAR:id IN RANGE LPAREN arithExp:low COMMA arithExp:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
-FOR VAR:id IN RANGE LPAREN arithExp:low COMMA arithVar:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
-FOR VAR:id IN RANGE LPAREN arithVar:low COMMA arithExp:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
-FOR VAR:id IN RANGE LPAREN arithVar:low COMMA arithVar:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :};
+FORLoop			                ::=	    FOR VAR:id IN RANGE LPAREN arithExp:low COMMA arithExp:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
+                                        FOR VAR:id IN RANGE LPAREN arithExp:low COMMA arithVar:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
+                                        FOR VAR:id IN RANGE LPAREN arithVar:low COMMA arithExp:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :} |
+                                        FOR VAR:id IN RANGE LPAREN arithVar:low COMMA arithVar:high RPAREN LCURL stmtList:s RCURL {: RESULT = new ForStatement(id, low, high, s); :};
 
 caseCondExp                     ::=     CASE LCURL caseList:cLst RCURL {: RESULT = new CaseCondExp(cLst); :};
 
@@ -296,12 +296,11 @@ smplExp                         ::=     expressions:expr {: RESULT = expr; :} |
                                         literals:lit {: RESULT = lit; :};
 
 
-procDefn                        ::=     PROC LPAREN paramListE:params RPAREN LCURL program:body RCURL {: RESULT = new ProcExp(params, body); :} |
-                                        PROC paramExp:param program:body  {: RESULT = new ProcExp(param, body); :}; 
+procDefn                        ::=     PROC LPAREN paramExp:param RPAREN program:body  {: RESULT = new ProcExp(param, body); :}; 
 
 
-subvecExp			::= arithExp:exp COLON procDefn:proc {:
-					RESULT = new SubvectorExp(new SIRFunctionExp("subvector", exp, proc)); :};
+subvecExp			            ::=     arithExp:exp COLON procDefn:proc {:
+					                    RESULT = new SubvectorExp(new SIRFunctionExp("subvector", exp, proc)); :};
 
                                         
 
