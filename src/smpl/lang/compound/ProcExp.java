@@ -52,5 +52,20 @@ public class ProcExp extends CompoundExp {
     public <S, T> T visit(CompoundVisitor<CompoundExp, S, T> v, S state) throws SMPLException {
         return v.visitProcExp(this, state);
     }
+
+    @Override
+    public String toString() {
+        
+        String out = "(";
+
+        for (SIRParam param : getParams()) {
+            out += param.toString();
+            out += " ";
+        }
+
+        out += ") { " + getBody().toString() + " }";
+
+        return out;
+    }
     
 }

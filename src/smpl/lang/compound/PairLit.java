@@ -15,22 +15,22 @@ public class PairLit extends CompoundExp {
 
     private SIRObj obj1;
     private SIRObj obj2;
-    private String context;
     private final String type;
-    private SIRVar<CompoundExp> varExp;
+    private SIRObj exp;
+    private boolean isExp;
 
-    public PairLit(SIRVar<CompoundExp> var) {
+    public PairLit(SIRObj exp) {
         this.type = "pair";
-        this.context = "var";
-        this.varExp = var;
+        this.isExp = true;
+        this.exp = exp;
     }
 
-    public String getContext() {
-        return context;
+    public boolean isExp() {
+        return isExp;
     }
 
-    public SIRVar<CompoundExp> getVarExp() {
-        return varExp;
+    public SIRObj getExp() {
+        return exp;
     }
 
     public SIRObj getObj1() {
@@ -53,6 +53,11 @@ public class PairLit extends CompoundExp {
     @Override
     public <S, T> T visit(CompoundVisitor<CompoundExp, S, T> v, S state) throws SMPLException {
         return v.visitPairExp(this, state);
+    }
+
+    @Override
+    public String toString() {
+        return getExp().toString();
     }
 
     

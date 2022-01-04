@@ -18,158 +18,141 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Environment<Primitive>> {
-    
+
     // Add Implementaion for all functions that return boolean expressons
-    
+
     ISPAIR("pair?") {
         @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
-            Primitive priv = exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
-            if (priv.getType().equals("pair")) {
-                return new SMPLBool(true);
-            } else {
-                return new SMPLBool(false);
-            }
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            Primitive priv=exp.getParam1().eval(state.getContext(),eval.getObjectEvaluator());if(priv.getType().equals("pair")){return new SMPLBool(true);}else{return new SMPLBool(false);}
         }
     },
 
     PAIR("pair") {
         @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
-            return new SMPLPair(exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator()), exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator()));
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            return new SMPLPair(exp.getParam1().eval(state.getContext(),eval.getObjectEvaluator()),exp.getParam2().eval(state.getContext(),eval.getObjectEvaluator()));
         }
     },
 
     CAR("car") {
         @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException  {
-            SMPLPair pair = (SMPLPair) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
-            return pair.getArg1();
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            SMPLPair pair=(SMPLPair)exp.getParam1().eval(state.getContext(),eval.getObjectEvaluator());return pair.getArg1();
         }
     },
 
     CDR("cdr") {
         @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
-            SMPLPair pair = (SMPLPair) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
-            return pair.getArg2();
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            SMPLPair pair=(SMPLPair)exp.getParam1().eval(state.getContext(),eval.getObjectEvaluator());return pair.getArg2();
         }
     },
-    
+
     VECTOR("vector") {
         @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
-            SIRObj[] arr = exp.getParamArr();
-            Primitive[] vecArr = new Primitive[arr.length];
-            for(int i = 0; i < arr.length; i++){
-                Primitive eleEval = arr[i].eval(state.getContext(), eval.getObjectEvaluator());
-                vecArr[i] = eleEval;
-            }
-            return new SMPLVector(vecArr);
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            SIRObj[]arr=exp.getParamArr();Primitive[]vecArr=new Primitive[arr.length];for(int i=0;i<arr.length;i++){Primitive eleEval=arr[i].eval(state.getContext(),eval.getObjectEvaluator());vecArr[i]=eleEval;}return new SMPLVector(vecArr);
         }
     },
 
     SIZE("size") {
         @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
-            throws SMPLException {
-                SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
-                Primitive[] arr = vec.getVector();
-                SMPLArith size = new SMPLArith(Double.valueOf(arr.length));
-                return size;
-            }
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            SMPLVector vec=(SMPLVector)exp.getParam1().eval(state.getContext(),eval.getObjectEvaluator());Primitive[]arr=vec.getVector();SMPLArith size=new SMPLArith(Double.valueOf(arr.length));return size;
+        }
     },
 
-    /* 
-    * Evaluates if exps are both SimplePrimitive and of same value
-    * and if both exps are aliases of same compound object.
-    */
+    /*
+     * Evaluates if exps are both SimplePrimitive and of same value
+     * and if both exps are aliases of same compound object.
+     */
     ISEQV("eqv?") {
         @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
-            throws SMPLException {
-                Primitive val1 = exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
-                Primitive val2 = exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            Primitive val1=exp.getParam1().eval(state.getContext(),eval.getObjectEvaluator());Primitive val2=exp.getParam2().eval(state.getContext(),eval.getObjectEvaluator());
 
-                if (val1 instanceof SimplePrimitive & val2 instanceof SimplePrimitive) {
-                    SimplePrimitive sp1 = (SimplePrimitive) val1;
-                    SimplePrimitive sp2 = (SimplePrimitive) val2;
+    if(val1 instanceof SimplePrimitive&val2 instanceof SimplePrimitive){SimplePrimitive sp1=(SimplePrimitive)val1;SimplePrimitive sp2=(SimplePrimitive)val2;
 
-                    if (sp1.getRep() == sp2.getRep()) {
-                        return new SMPLBool(val1.getPrimitive().equals(val2.getPrimitive()));
-                    }
-                }
+    if(sp1.getRep()==sp2.getRep()){return new SMPLBool(val1.getPrimitive().equals(val2.getPrimitive()));}}
 
-                return new SMPLBool(val1 == val2);
-            }
+    return new SMPLBool(val1==val2);
+        }
     },
 
     ISEQUAL("equal?") {
-        @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) 
-            throws SMPLException {
-                Boolean result = false;
+    @Override
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            Boolean result = false;
 
-                Primitive val1 = exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
-                Primitive val2 = exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
+            Primitive val1 = exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+            Primitive val2 = exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
 
-                // is simple, so just return if they are of the same value
-                if (val1 instanceof SimplePrimitive & val2 instanceof SimplePrimitive) {
-                    SimplePrimitive sp1 = (SimplePrimitive) val1;
-                    SimplePrimitive sp2 = (SimplePrimitive) val2;
+            // is simple, so just return if they are of the same value
+            if (val1 instanceof SimplePrimitive & val2 instanceof SimplePrimitive) {
+                SimplePrimitive sp1 = (SimplePrimitive) val1;
+                SimplePrimitive sp2 = (SimplePrimitive) val2;
 
-                    return new SMPLBool(val1.getPrimitive().equals(val2.getPrimitive()));
-                } 
+                return new SMPLBool(val1.getPrimitive().equals(val2.getPrimitive()));
+            } 
 
-                // is compound and check everything elemtents inside compound are structually equivalent
+            // is compound and check everything elemtents inside compound are structually equivalent
 
-                else if (val1 instanceof SMPLPair & val2 instanceof SMPLPair) { // pair
-                    SMPLPair pair1 = (SMPLPair) val1.getPrimitive();
-                    SMPLPair pair2 = (SMPLPair) val2.getPrimitive();
-                    
-                    result = (pair1.getArg1().getPrimitive().equals(pair2.getArg1().getPrimitive()));   
-                    result = (pair1.getArg2().getPrimitive().equals(pair2.getArg2().getPrimitive()));   
+            else if (val1 instanceof SMPLPair & val2 instanceof SMPLPair) { // pair
+                SMPLPair pair1 = (SMPLPair) val1.getPrimitive();
+                SMPLPair pair2 = (SMPLPair) val2.getPrimitive();
+                
+                result = (pair1.getArg1().getPrimitive().equals(pair2.getArg1().getPrimitive()));   
+                result = (pair1.getArg2().getPrimitive().equals(pair2.getArg2().getPrimitive()));   
 
-                    return new SMPLBool(result);
+                return new SMPLBool(result);
+            }
+
+            else if (val1 instanceof SMPLTuple & val2 instanceof SMPLTuple) { // tuple
+                result = false;
+
+                SMPLTuple tuple1 = (SMPLTuple) val1;
+                SMPLTuple tuple2 = (SMPLTuple) val2;
+
+                ArrayList<Primitive> tupleVals1 = tuple1.getPrimitive();
+                ArrayList<Primitive> tupleVals2 = tuple2.getPrimitive();
+
+                if (tupleVals1.size() == tupleVals2.size()) {
+                    for (int i = 0; i < tupleVals1.size(); i++) {
+                        result = tupleVals1.get(i).getPrimitive().equals(tupleVals2.get(i).getPrimitive());
+                    }
                 }
 
-                else if (val1 instanceof SMPLTuple & val2 instanceof SMPLTuple) { // tuple
-                    result = false;
+                return new SMPLBool(result);
+            } 
 
-                    SMPLTuple tuple1 = (SMPLTuple) val1;
-                    SMPLTuple tuple2 = (SMPLTuple) val2;
-
-                    ArrayList<Primitive> tupleVals1 = tuple1.getPrimitive();
-                    ArrayList<Primitive> tupleVals2 = tuple2.getPrimitive();
-
-                    if (tupleVals1.size() == tupleVals2.size()) {
-                        for (int i = 0; i < tupleVals1.size(); i++) {
-                            result = tupleVals1.get(i).getPrimitive().equals(tupleVals2.get(i).getPrimitive());
-                        }
+            else if (val1 instanceof SMPLVector & val2 instanceof SMPLVector) { // vector
+                result = false;
+                SMPLVector vec1 = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+                SMPLVector vec2 = (SMPLVector) exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
+                Primitive[] arr1 = vec1.getVector();
+                Primitive[] arr2 = vec2.getVector();
+                
+                if (arr1.length == arr2.length) {
+                    for(int i = 0; i < arr1.length; i++){
+                        result = arr1[i].getPrimitive().equals(arr2[i].getPrimitive());
                     }
+                }
 
-                    return new SMPLBool(result);
-                } 
+                return new SMPLBool(result);
 
-                else if (val1 instanceof SMPLVector & val2 instanceof SMPLVector) { // vector
-                    result = false;
-                    SMPLVector vec1 = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
-                    SMPLVector vec2 = (SMPLVector) exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator());
-                    Primitive[] arr1 = vec1.getVector();
-                    Primitive[] arr2 = vec2.getVector();
-                    
-                    if (arr1.length == arr2.length) {
-                        for(int i = 0; i < arr1.length; i++){
-                            result = arr1[i].getPrimitive().equals(arr2[i].getPrimitive());
-                        }
-                    }
+            } 
 
-                    return new SMPLBool(result);
-
-                } 
-
-                return new SMPLBool(false);
-            }
+            return new SMPLBool(false);
+        }
     },
 
     CALL("call") {
@@ -177,91 +160,52 @@ public enum SMPLFunctions implements SIRFunctions<Primitive, SMPLEvaluator, Envi
         @Override
         public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
                 throws SMPLException {
-            Primitive priv = exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
+            Primitive priv=exp.getParam1().eval(state.getContext(),eval.getObjectEvaluator());
 
-            if (priv.getType().equals("proc")) {
-                SMPLProc proc = (SMPLProc) priv;
-                int lenParams = proc.getParams().size();
-                int lenArgs = exp.getParams().size();
+    if(priv.getType().equals("proc")){SMPLProc proc=(SMPLProc)priv;int lenParams=proc.getParams().size();int lenArgs=exp.getParams().size();
 
+    if(lenParams>lenArgs){throw new SMPLException("Expected more arguments");}else if(lenArgs>lenParams){throw new SMPLException("Waiting on list Implementation");}else{
 
-                if (lenParams > lenArgs) {
-                    throw new SMPLException("Expected more arguments");
-                } else if (lenArgs > lenParams) {
-                    throw new SMPLException("Waiting on list Implementation");
-                } else {
-                    SMPLContext context = proc.getContext().extendEnvironment();
+    SMPLContext procContext=proc.getContext().extendEnvironment();
 
-                    for (int index = 0; index < lenParams; index++) {
-                        SIRParam param = proc.getParams().get(index);
-                        SIRObj arg = (SIRObj) exp.getParams().get(index);
-                        System.out.println(param.getType());
-                        if (param.getType().equals("lazy")) {
+    for(int index=0;index<lenParams;index++){
 
-                            SMPLAssignment assign = new SMPLAssignment(param.getParam(), new SIRLazy(arg, state.getContext()));
-                            assign.visit(eval.getStmtEval(), context);
-                        
-                        } else if (param.getType().equals("ref")) {
+    SIRParam param=proc.getParams().get(index);SIRObj arg=(SIRObj)exp.getParams().get(index);
 
-                            if (arg.getType().equals("var")) {
-                                SMPLAssignment assign = new SMPLAssignment(param.getParam(), new SIRRef(arg, state.getContext()));
-                                assign.visit(eval.getStmtEval(), context);
-                            } else {
-                                throw new SMPLException("Expected a variable reference; " + arg.getType() + " was given.");
-                            }
-                            
+    if(param.getType().equals("lazy")){
 
-                        } else {
+    SMPLAssignment assign=new SMPLAssignment(param.getParam(),new SIRLazy(arg,state.getContext()));assign.visit(eval.getStmtEval(),procContext);
 
-                            SMPLAssignment assign = new SMPLAssignment(param.getParam(), arg);
-                            assign.visit(eval.getStmtEval(), context);
-                        
-                        }
-                    }
+    }else if(param.getType().equals("ref")){
 
+    if(arg.getType().equals("var")){SMPLAssignment assign=new SMPLAssignment(param.getParam(),new SIRRef(arg,state.getContext()));assign.visit(eval.getStmtEval(),procContext);}else{throw new SMPLException("Expected a variable reference; "+arg.getType()+" was given.");}
 
-                    return proc.getBody().visit(eval, context).getPrimitive();
-                }
+    }else{
 
+    SMPLAssignment assign=new SMPLAssignment(param.getParam(),arg);assign.visit(eval.getStmtEval(),procContext);
 
+    }}
 
-            } else {
-                throw new SMPLException("Expected a procedure, but " + priv.getType() + " was given.");
-            }
+    return proc.getBody().visit(eval,procContext).getPrimitive();}
+
+    }else{throw new SMPLException("Expected a procedure, but "+priv.getType()+" was given.");}
         }
 
     },
 
     NTHELEMENT("ele") {
         @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
-            SMPLVector vec = (SMPLVector) exp.getParam1().eval(state.getContext(), eval.getObjectEvaluator());
-            StringLit i = new StringLit(exp.getParam2().eval(state.getContext(), eval.getObjectEvaluator()).getOutput());
-            Primitive[] arr = vec.getVector();
-            Integer index = Integer.valueOf(i.getStr());
-            if(index > arr.length){
-                throw new SMPLException("Index out of bounds");
-            } else {
-                Primitive ele = arr[index];
-                return ele;
-            }
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            SMPLVector vec=(SMPLVector)exp.getParam1().eval(state.getContext(),eval.getObjectEvaluator());StringLit i=new StringLit(exp.getParam2().eval(state.getContext(),eval.getObjectEvaluator()).getOutput());Primitive[]arr=vec.getVector();Integer index=Integer.valueOf(i.getStr());if(index>arr.length){throw new SMPLException("Index out of bounds");}else{Primitive ele=arr[index];return ele;}
         }
     },
-    
-    LIST("list"){
+
+    LIST("list") {
         @Override
-        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp) throws SMPLException {
-            ArrayList<SIRObj> vals = exp.getParams();
-            Primitive eVal = vals.get(0).eval(state.getContext(), eval.getObjectEvaluator());
-            int len = vals.size();
-            if(len > 1){
-                vals.remove(0);
-                SIRFunctionExp newExp = new SIRFunctionExp(exp.getSymbol(), vals);
-                return new SMPLPair(eVal, this.apply(eval, state, newExp));
-            }
-            else{
-                return new SMPLPair(eVal, new SMPLEmptyList(Collections.emptyList()));
-            }
+        public Primitive apply(SMPLEvaluator eval, Environment<Primitive> state, SIRFunctionExp exp)
+                throws SMPLException {
+            ArrayList<SIRObj>vals=exp.getParams();Primitive eVal=vals.get(0).eval(state.getContext(),eval.getObjectEvaluator());int len=vals.size();if(len>1){vals.remove(0);SIRFunctionExp newExp=new SIRFunctionExp(exp.getSymbol(),vals);return new SMPLPair(eVal,this.apply(eval,state,newExp));}else{return new SMPLPair(eVal,new SMPLEmptyList(Collections.emptyList()));}
         }
 
     };

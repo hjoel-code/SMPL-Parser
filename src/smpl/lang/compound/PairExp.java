@@ -38,5 +38,10 @@ public class PairExp extends CompoundExp {
     public Primitive eval(SMPLContext state, ObjectEvaluator eval) throws SMPLException {
         return eval.evalSIRFunction(state, func);
     }
+
+    @Override
+    public String toString() {
+        return func.toString();
+    }
     
 }

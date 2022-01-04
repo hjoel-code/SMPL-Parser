@@ -50,7 +50,6 @@ public class ObjectEvaluator {
     public Primitive eval(SMPLContext state, SIRObj obj) throws SMPLException {
 
         String type = obj.getType();
-        System.out.println("EVAL: " + type);
 
         if (type.equals("arith")) {
             AIRExp exp = (AIRExp) obj;
@@ -93,8 +92,6 @@ public class ObjectEvaluator {
     public Primitive evalVar(SMPLContext state, SIRVar obj) throws SMPLException {
 
         String type = state.getVariableEnvironment().get(obj.getVar());
-        System.out.println("VAR: " + type);
-
         if (type.equals("arith")) {
 
             SIRVar<AIRExp> exp = (SIRVar<AIRExp>) obj;

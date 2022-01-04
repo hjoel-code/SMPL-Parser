@@ -35,4 +35,9 @@ public class SIRRef implements SIRObj {
     public Primitive eval(SMPLContext state, ObjectEvaluator eval) throws SMPLException {
         return eval.evalParamRef(state, this);
     }
+
+    @Override
+    public String toString() {
+        return "ref " + obj.toString();
+    }
 }

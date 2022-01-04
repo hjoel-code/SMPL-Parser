@@ -44,8 +44,13 @@ public class ArithEvaluator implements AIRVisitor<AIRExp, Environment<Primitive>
     @Override
     public SMPLArith visitAIRExpInt(AIRLit exp, Environment<Primitive> state)
             throws SMPLException {
-        if (exp.getContext().equals("var")) {
-            return visitASTVar(exp.getVarExp(), state);
+        if (exp.isExp()) {
+            try {
+                return (SMPLArith) exp.getExp().eval(state.getContext(), eval.getObjectEvaluator());
+            } catch (Exception e) {
+                throw new SMPLException("Expected arithmetic expression.");
+            }
+            
         } else {
             return new SMPLArith(exp.getVal(), exp.getRep());
         }
@@ -59,7 +64,6 @@ public class ArithEvaluator implements AIRVisitor<AIRExp, Environment<Primitive>
 
         double leftArg = (double) exp.getExp1().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
         double rightArg = (double) exp.getExp2().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
-
         return new SMPLArith(op.apply(leftArg, rightArg));
 
     }

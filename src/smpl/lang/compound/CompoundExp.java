@@ -15,5 +15,10 @@ public abstract class CompoundExp extends SIRExp<CompoundExp> implements SIRObj 
     public <S, T> T visit(SIRVisitor<CompoundExp, S, T> v, S state) throws SMPLException {
         return visit( (CompoundVisitor<CompoundExp, S, T>) v, state);
     }
+
+    @Override
+    public String toString() {
+        return "SMPL Compound Expression";
+    }
     
 }

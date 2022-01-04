@@ -25,4 +25,9 @@ public abstract class AIRExp extends SIRExp<AIRExp> implements SIRObj {
     return visit((AIRVisitor<AIRExp, S, T>) v, state);
   }
 
+  @Override
+  public String toString() {
+      return "Arithmetic Expression";
+  }
+
 }

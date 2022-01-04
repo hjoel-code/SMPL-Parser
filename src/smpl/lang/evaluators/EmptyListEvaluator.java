@@ -3,7 +3,7 @@ package smpl.lang.evaluators;
 import java.util.Collections;
 import java.util.HashMap;
 
-import smpl.lang.builtins.SMPLFunctions;
+
 import smpl.lang.visitors.EmptyListVisitor;
 import smpl.sys.Environment;
 import smpl.sys.SMPLException;
@@ -13,11 +13,9 @@ import smpl.lang.SIRUnaryExp;
 import smpl.lang.SIRVar;
 import smpl.lang.SIRProgram;
 import smpl.lang.SIRSequence;
-import smpl.lang.arith.AIRExp;
 import smpl.lang.emptyList.*;
 import smpl.values.Primitive;
 import smpl.values.type.simple.*;
-import java.util.Collections.*;
 import java.util.List;
 
 public class EmptyListEvaluator implements EmptyListVisitor<EmptyListExp, Environment<Primitive>, SMPLEmptyList> {
@@ -38,8 +36,12 @@ public class EmptyListEvaluator implements EmptyListVisitor<EmptyListExp, Enviro
     @Override
     public SMPLEmptyList visitEmptyListLit(EmptyListLit lst, Environment<Primitive> state)
             throws SMPLException {
-                if (lst.getContext().equals("var")) {
-                    return lst.getVarExp().visit(this, state);
+                if (lst.isExp()) {
+                    try {
+                        return (SMPLEmptyList) lst.getExp().eval(state.getContext(), eval.getObjectEvaluator());
+                    } catch (Exception e) {
+                        throw new SMPLException("Expected empty list expression.");
+                    }
                 } else {
                     List<Primitive> newLst = Collections.emptyList();
                     return new SMPLEmptyList(newLst);

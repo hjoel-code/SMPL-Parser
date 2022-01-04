@@ -52,5 +52,16 @@ public class SIRSequence extends SIRExp<SIRProgram> {
         return v.visitStmtSequence(this, state);
     }
 
+    @Override
+    public String toString() {
+        String out = "";
+
+        for (SIRStatement stmt : getStatements()) {
+          out += stmt.toString() + "\n";
+        }
+
+        return out;
+    }
+
   }
 

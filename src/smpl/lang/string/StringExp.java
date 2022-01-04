@@ -25,4 +25,9 @@ public abstract class StringExp extends SIRExp<StringExp> implements SIRObj {
         return visit( (StringVisitor<StringExp, S, T>) v, state);
     }
 
+    @Override
+    public String toString() {
+        return "String Expression";
+    }
+
 }

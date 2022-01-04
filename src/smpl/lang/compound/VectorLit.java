@@ -2,7 +2,6 @@ package smpl.lang.compound;
 
 
 
-import smpl.lang.SIRVar;
 import smpl.lang.SIRObj;
 import smpl.lang.evaluators.ObjectEvaluator;
 import smpl.lang.visitors.*;
@@ -14,22 +13,23 @@ import smpl.values.type.compound.SMPLVector;
 public class VectorLit extends CompoundExp {
 
     private SIRObj[] arr;
-    private String context;
+    private Boolean isExp;
     private final String type;
-    private SIRVar<CompoundExp> varExp;
+    private SIRObj exp;
 
-    public VectorLit(SIRVar<CompoundExp> var) {
+    public VectorLit(SIRObj exp) {
         this.type = "vector";
-        this.context = "var";
-        this.varExp = var;
+        this.isExp = true;
+        this.exp = exp;
     }
 
-    public String getContext() {
-        return context;
+    public SIRObj getExp() {
+        return exp;
     }
+    
 
-    public SIRVar<CompoundExp> getVarExp() {
-        return varExp;
+    public Boolean isExp() {
+        return isExp;
     }
 
     public SIRObj[] getVector() {
@@ -42,7 +42,12 @@ public class VectorLit extends CompoundExp {
 
     @Override
     public SMPLVector eval(SMPLContext state, ObjectEvaluator eval) throws SMPLException {
-        return  (SMPLVector) eval.eval(state, this);
+        try {
+            return  (SMPLVector) eval.eval(state, this);
+        } catch (Exception e) {
+            throw new SMPLException("Expected an vector expression.");
+        }
+        
     }
 
     @Override

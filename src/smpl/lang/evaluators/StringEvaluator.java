@@ -21,7 +21,15 @@ public class StringEvaluator implements StringVisitor<StringExp, Environment<Pri
     @Override
     public SMPLString visitStringLit(StringLit str, Environment<Primitive> state)
             throws SMPLException {
-        return str.getContext().equals("var") ? str.getVarExp().visit(this, state) : new SMPLString(str.getStr());
+        if (str.isExp()) {
+            try {
+                return (SMPLString) str.getExp().eval(state.getContext(), eval.getObjectEvaluator());
+            } catch (Exception e) {
+                throw new SMPLException("Expected string expression.");
+            }
+        }
+
+        return new SMPLString(str.getStr());
     }
 
     @Override 

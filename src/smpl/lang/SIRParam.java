@@ -20,5 +20,10 @@ public class SIRParam {
     public String getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return getType() +  " " + getParam();
+    }
     
 }

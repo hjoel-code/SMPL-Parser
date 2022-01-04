@@ -37,6 +37,7 @@ public class SMPLEnvironment implements SMPLContext {
     public SMPLEnvironment  cloneEnvironment() {
         SMPLEnvironment context = new SMPLEnvironment();
         context.globalEnvironment = this.globalEnvironment;
+        context.variableEnvironment = this.variableEnvironment;
         return context;
     }
 

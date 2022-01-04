@@ -104,5 +104,11 @@ public class SIRFunctionExp<E extends SIRExp<E>> extends SIRExp<E> implements SI
     }
 
 
+    @Override
+    public String toString() {
+        return getSymbol();
+    }
+
+
 
 }

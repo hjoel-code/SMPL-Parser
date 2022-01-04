@@ -60,7 +60,6 @@ public class BoolEvaluator implements BoolVisitor<BoolExp, Environment<Primitive
             throws SMPLException {
 
         String type = biExp.getExp1().getType();
-        System.out.println(type);
 
         if (type.equals("arith")) {
 
@@ -91,7 +90,6 @@ public class BoolEvaluator implements BoolVisitor<BoolExp, Environment<Primitive
             throws SMPLException {
 
         String type = urExp.getExp().getType();
-        System.out.println(type);
 
         if (type.equals("arith")) {
 
@@ -118,8 +116,15 @@ public class BoolEvaluator implements BoolVisitor<BoolExp, Environment<Primitive
     @Override
     public SMPLBool visitBoolLit(BoolLit exp, Environment<Primitive> state)
             throws SMPLException {
-        return exp.getContext().equals("var") ? exp.getVarExp().visit(this, state)
-                : new SMPLBool(exp.getBool());
+        if (exp.isExp()) {
+            try {
+                return (SMPLBool) exp.getExp().eval(state.getContext(), eval.getObjectEvaluator());
+            } catch (Exception e) {
+                throw new SMPLException("Expected boolean expression.");
+            }
+        }
+
+        return new SMPLBool(exp.getBool());
     }
 
     @Override

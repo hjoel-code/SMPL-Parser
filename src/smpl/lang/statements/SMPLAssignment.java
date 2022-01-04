@@ -31,5 +31,9 @@ public class SMPLAssignment extends SIRStatement {
         return v.visitSMPLAssignment(this, state);
     }
 
+    @Override
+    public String toString() {
+        return getVar() + " = " + getExp().toString();
+    }
     
 }
