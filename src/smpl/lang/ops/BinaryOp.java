@@ -6,6 +6,8 @@
 
 package smpl.lang.ops;
 
+import smpl.sys.SMPLException;
+
 /**
  * An interface to capture the behaviour of a generic binary operator.
  * @author Daniel Coore <daniel.coore@uwimona.edu.jm>
@@ -14,5 +16,5 @@ package smpl.lang.ops;
  */
 public interface BinaryOp<E, T> {
     public String getSymbol();
-    public T apply(E leftArg, E rightArg);
+    public T apply(E leftArg, E rightArg) throws SMPLException;
 }

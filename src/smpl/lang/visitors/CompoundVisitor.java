@@ -7,6 +7,7 @@ import smpl.lang.compound.VectorLit;
 import smpl.lang.compound.ProcExp;
 import smpl.lang.compound.TupleExp;
 import smpl.lang.compound.SubvectorLit;
+import smpl.lang.compound.CaseCondExp;
 
 public interface CompoundVisitor<E extends SIRExp<E>, S, T> extends SIRVisitor<E,S,T>  {
     
@@ -16,4 +17,5 @@ public interface CompoundVisitor<E extends SIRExp<E>, S, T> extends SIRVisitor<E
     public T visitVectorExp(VectorLit vector, S state) throws SMPLException;
     public T visitSubvectorExp(SubvectorLit subvector, S state) throws SMPLException;
     
+    public T visitCaseCondExp(CaseCondExp caseC, S state) throws SMPLException;
 }

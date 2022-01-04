@@ -57,7 +57,8 @@ ws = ({cc}|[\t" "])
 
 num = [0-9]
 alpha = [A-Za-z_]
-alphanum = ({alpha}|{num})
+symbols = ["#""+""/""-""?""!""."]
+alphanum = ({alpha}|{num}|{symbols})
 binary = [0*1*]*[1*0*]*
 hex = [0-9a-fA-F]
 
@@ -99,7 +100,6 @@ comment =  {lineComment} | {blockComment}
 
 <YYINITIAL>   "[:"                    { return new Symbol( sym.LBCOLON ); }
 <YYINITIAL>   ":]"                    { return new Symbol( sym.RBCOLON ); }
-<YYINITIAL>   "?"                     { return new Symbol( sym.QUES ); }
 <YYINITIAL>   "@"                     { return new Symbol( sym.CONCAT ); }
 
 
@@ -112,11 +112,17 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   size               { return new Symbol( sym.SIZE ); }
 <YYINITIAL>   print             { return new Symbol( sym.PRINT ); }
 <YYINITIAL>   println           { return new Symbol( sym.PRINTLN ); }
-<YYINITIAL>   eqv               { return new Symbol( sym.EQV ); }
-<YYINITIAL>   equal               { return new Symbol( sym.EQUAL ); }
-<YYINITIAL>   greater               { return new Symbol( sym.GREATER ); }
-<YYINITIAL>   substr               { return new Symbol( sym.SUBSTR ); }
+<YYINITIAL>   "greater?"               { return new Symbol( sym.GREATER ); }
+<YYINITIAL>   "eqv?"               { return new Symbol( sym.EQV ); }
+<YYINITIAL>   "equal?"               { return new Symbol( sym.EQUAL ); }
+<YYINITIAL>   "pair?"               { return new Symbol( sym.ISPAIR ); }
 
+<YYINITIAL>   substr               { return new Symbol( sym.SUBSTR ); }
+<YYINITIAL>   lazy               { return new Symbol( sym.LAZY ); }
+<YYINITIAL>   ref               { return new Symbol( sym.REF ); }
+<YYINITIAL>   read               { return new Symbol( sym.READ ); }
+<YYINITIAL>   readint               { return new Symbol( sym.READINT ); }
+<YYINITIAL>   case               { return new Symbol( sym.CASE ); }
 
 
 <YYINITIAL>    if                  { return new Symbol(sym.IF);}
@@ -140,8 +146,6 @@ comment =  {lineComment} | {blockComment}
 <YYINITIAL>   not                       { return new Symbol(sym.NOT); }
 
 
-
-<YYINITIAL>   {alpha}+{alphanum}*     { return new Symbol(sym.VAR, yytext()); }
 <YYINITIAL>   ("+"|"-")?{num}+                  { return new Symbol(sym.INTEGER, Integer.valueOf(yytext())); }
 <YYINITIAL>   ("+"|"-")?{num}+"."{num}+         { return new Symbol( sym.REAL, Double.valueOf(yytext()) ); }
 <YYINITIAL>   "#t" | "#f"             { return new Symbol( sym.BOOL, yytext()); }
@@ -164,7 +168,7 @@ comment =  {lineComment} | {blockComment}
 
           
 
-<YYINITIAL>   {alpha}+{alphanum}*     { return new Symbol(sym.VAR, yytext()); }
+<YYINITIAL>   {num}+{alpha}{alphanum}*|{alpha}{alphanum}*     { return new Symbol(sym.VAR, yytext()); }
 
 
 <YYINITIAL>    "#c"                   { yybegin(CHAR); }
@@ -183,7 +187,5 @@ comment =  {lineComment} | {blockComment}
 
 <YYINITIAL>    \"                     { yybegin(STRING); }
 <YYINITIAL>     .                     { throw new java.io.IOException("Unrecognised character: " + yytext()); }
-<STRING>       [^\"]*                 { return new Symbol(sym.STRING, yytext()); }
 <STRING>       \"                     { yybegin(YYINITIAL); }
-
-
+<STRING>       [^\"]*                 { return new Symbol(sym.STRING, yytext()); }

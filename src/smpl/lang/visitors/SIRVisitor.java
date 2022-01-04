@@ -21,5 +21,4 @@ public interface SIRVisitor<E extends SIRExp<E>, S, T>  {
 
 
     public T visitSIRFunction(SIRFunctionExp<E> func, S state) throws SMPLException;
-
 }

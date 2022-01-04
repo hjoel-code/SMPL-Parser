@@ -21,7 +21,15 @@ public class StringEvaluator implements StringVisitor<StringExp, Environment<Pri
     @Override
     public SMPLString visitStringLit(StringLit str, Environment<Primitive> state)
             throws SMPLException {
-        return str.getContext().equals("var") ? str.getVarExp().visit(this, state) : new SMPLString(str.getStr());
+        if (str.isExp()) {
+            try {
+                return (SMPLString) str.getExp().eval(state.getContext(), eval.getObjectEvaluator());
+            } catch (Exception e) {
+                throw new SMPLException("Expected string expression.");
+            }
+        }
+
+        return new SMPLString(str.getStr());
     }
 
     @Override 
@@ -49,6 +57,12 @@ public class StringEvaluator implements StringVisitor<StringExp, Environment<Pri
  
 
         throw new SMPLException("start index must be less than string length and end must be less or equal to the length");
+    }
+
+    @Override
+    public SMPLString visitStringConcat(StringConcat strconcat, Environment<Primitive> state) 
+        throws SMPLException {
+        return new SMPLString(strconcat.getArg1().visit(this, state).getPrimitive() + strconcat.getArg2().visit(this, state).getPrimitive());       
     }
 
     @Override

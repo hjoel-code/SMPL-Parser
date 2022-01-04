@@ -6,6 +6,8 @@
 
 package smpl.lang.ops;
 
+import smpl.sys.SMPLException;
+
 /**
  *
  * @author Daniel Coore <daniel.coore@uwimona.edu.jm>
@@ -25,8 +27,13 @@ public enum BinOpArith implements BinaryOp<Double, Double> {
     },
     DIV("/") {
         @Override
-        public Double apply(Double leftArg, Double rightArg) {
-            return leftArg / rightArg;
+        public Double apply(Double leftArg, Double rightArg) throws SMPLException {
+            if (rightArg != 0) {
+                return leftArg / rightArg;
+            } else {
+                throw new SMPLException(String.valueOf(leftArg) + "/" + String.valueOf(rightArg) + " is undefined.");
+            }
+            
         }
     },
     MUL("*") {

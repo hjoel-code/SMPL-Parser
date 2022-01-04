@@ -12,6 +12,9 @@ import smpl.sys.SMPLException;
 import smpl.values.type.compound.*;
 import smpl.values.CompoundPrimitive;
 import smpl.values.Primitive;
+import smpl.lang.bool.BoolExp;
+import smpl.values.SMPLResults;
+
 
 public class CompoundEvaluator
         implements CompoundVisitor<CompoundExp, Environment<Primitive>, CompoundPrimitive> {
@@ -66,8 +69,12 @@ public class CompoundEvaluator
     public CompoundPrimitive visitPairExp(PairLit pair, Environment<Primitive> state)
             throws SMPLException {
 
-        if (pair.getContext().equals("var")) {
-            return pair.getVarExp().visit(this, state);
+        if (pair.isExp()) {
+            try {
+                return (SMPLPair) pair.getExp().eval(state.getContext(), eval.getObjectEvaluator());
+            } catch (Exception e) {
+                throw new SMPLException("Expected pair expression");
+            }
         } else {
 
             CompoundPrimitive<SMPLPair> exp1 = (SMPLPair) pair.getObj1().eval(state.getContext(),
@@ -83,8 +90,13 @@ public class CompoundEvaluator
     public CompoundPrimitive visitVectorExp(VectorLit vector, Environment<Primitive> state)
             throws SMPLException {
 
-        if (vector.getContext().equals("var")) {
-            return vector.getVarExp().visit(this, state);
+        if (vector.isExp()) {
+            try {
+                return (SMPLVector) vector.getExp().eval(state.getContext(), eval.getObjectEvaluator());
+            } catch (Exception e) {
+                throw new SMPLException("Expected vector expression.");
+            }
+            
         } else {
             SIRObj[] arr = vector.getVector();
             ArrayList<Primitive> vecLst = new ArrayList<>();
@@ -141,6 +153,22 @@ public class CompoundEvaluator
     @Override
     public CompoundPrimitive visitProcExp(ProcExp proc, Environment<Primitive> state) throws SMPLException {
         return new SMPLProc(proc.getParams(), proc.getBody(), state.getContext().extendEnvironment());
+    }
+
+    @Override
+    public CompoundPrimitive visitCaseCondExp(CaseCondExp cCond, Environment<Primitive> state) throws SMPLException {
+        ArrayList<SMPLSingleCase> cases = cCond.getCases();
+
+        for (int i = 0; i < cases.size(); i++) {
+            SMPLSingleCase sCase = cases.get(i);
+            Boolean predicate = sCase.getPredicate().visit(eval.getBoolEval(), state.getContext().getGlobalEnvironment()).getPrimitive();
+
+            if (predicate) {
+                return new SMPLSingleCase(eval.visitStmtSequence(sCase.getConsequence(), state.getContext()));
+            } 
+        }
+
+        return new SMPLSingleCase(new SMPLResults());
     }
 
 }

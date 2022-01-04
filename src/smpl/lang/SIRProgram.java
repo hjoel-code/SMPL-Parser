@@ -40,4 +40,9 @@ public class SIRProgram extends SIRExp<SIRProgram> {
             return null;
         }
     }
+
+    @Override
+    public String toString() {
+        return stmts.toString();
+    }
 }   

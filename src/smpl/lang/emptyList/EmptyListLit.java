@@ -13,29 +13,28 @@ import smpl.lang.visitors.EmptyListVisitor;
 public class EmptyListLit extends EmptyListExp{
 
     private List<SIRObj> emptyLst;
-    private SIRVar<EmptyListExp> varExp;
-    private String context;
+    private boolean isExp;
+    private SIRObj exp;
 
 
     public EmptyListLit() {
         super();
         this.emptyLst = Collections.emptyList();
-        this.context = "";
+        this.isExp = false;
     }
 
-    public EmptyListLit(SIRVar<EmptyListExp> var) {
+    public EmptyListLit(SIRObj exp) {
         super();
-        this.varExp = var;
-        this.context = "var";
+        this.exp = exp;
+        this.isExp = true;
     }
 
-    public String getContext() {
-        return context;
+    public SIRObj getExp() {
+        return exp;
     }
 
-
-    public SIRVar<EmptyListExp> getVarExp() {
-        return varExp;
+    public boolean isExp() {
+        return isExp;
     }
 
     public List<SIRObj> getList() {

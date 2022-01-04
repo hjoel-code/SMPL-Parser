@@ -19,7 +19,9 @@ How to compile and run
 ```
  2.   Compile from src folder with:
 ```
-  $ javac -classpath ".:/usr/share/java/cup.jar" smpl/*/*.java 
+  $ javac -classpath ".:/usr/share/java/cup.jar" smpl/*/*.java
+  $ javac -classpath ".:/usr/share/java/cup.jar" smpl/lang/*/*.java
+  $ javac -classpath ".:/usr/share/java/cup.jar" smpl/values/type/*/*.java
 ```
 3. Run from the src folder with: 
 ```

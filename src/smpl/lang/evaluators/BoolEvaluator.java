@@ -60,32 +60,27 @@ public class BoolEvaluator implements BoolVisitor<BoolExp, Environment<Primitive
             throws SMPLException {
 
         String type = biExp.getExp1().getType();
-        System.out.println(type);
 
         if (type.equals("arith")) {
 
             String opName = biExp.getOperator();
             BinOpBool op = boolOps.get(opName);
 
-            AIRExp leftExp = (AIRExp) biExp.getExp1();
-            AIRExp rightExp = (AIRExp) biExp.getExp2();
-
-            double leftArg = leftExp.visit(eval.getArithEval(), state).getPrimitive();
-            double rightArg = rightExp.visit(eval.getArithEval(), state).getPrimitive();
+            double leftArg = (double) biExp.getExp1().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
+            double rightArg = (double) biExp.getExp2().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
 
             return new SMPLBool(op.apply(leftArg, rightArg));
+
+            
 
         } else {
 
             String opName = biExp.getOperator();
             BinOpLogic op = logicOps.get(opName);
 
-            BoolExp leftExp = (BoolExp) biExp.getExp1();
-            BoolExp rightExp = (BoolExp) biExp.getExp2();
-
-            boolean leftArg = leftExp.visit(this, state).getPrimitive();
-            boolean rightArg = rightExp.visit(this, state).getPrimitive();
-
+            boolean leftArg = (boolean) biExp.getExp1().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
+            boolean rightArg = (boolean) biExp.getExp2().eval(state.getContext(), eval.getObjectEvaluator()).getPrimitive();
+            
             return new SMPLBool(op.apply(leftArg, rightArg));
         }
     }
@@ -95,7 +90,6 @@ public class BoolEvaluator implements BoolVisitor<BoolExp, Environment<Primitive
             throws SMPLException {
 
         String type = urExp.getExp().getType();
-        System.out.println(type);
 
         if (type.equals("arith")) {
 
@@ -122,8 +116,15 @@ public class BoolEvaluator implements BoolVisitor<BoolExp, Environment<Primitive
     @Override
     public SMPLBool visitBoolLit(BoolLit exp, Environment<Primitive> state)
             throws SMPLException {
-        return exp.getContext().equals("var") ? exp.getVarExp().visit(this, state)
-                : new SMPLBool(exp.getBool());
+        if (exp.isExp()) {
+            try {
+                return (SMPLBool) exp.getExp().eval(state.getContext(), eval.getObjectEvaluator());
+            } catch (Exception e) {
+                throw new SMPLException("Expected boolean expression.");
+            }
+        }
+
+        return new SMPLBool(exp.getBool());
     }
 
     @Override

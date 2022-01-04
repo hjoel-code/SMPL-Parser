@@ -1,5 +1,6 @@
 package smpl.lang.string;
 
+import smpl.lang.SIRVar;
 import smpl.lang.evaluators.ObjectEvaluator;
 import smpl.lang.visitors.StringVisitor;
 import smpl.sys.SMPLContext;
@@ -7,26 +8,20 @@ import smpl.sys.SMPLException;
 import smpl.values.type.simple.SMPLString;
 import smpl.lang.arith.AIRExp;
 
-public class SubString extends StringExp {
-private StringExp string;
-  private AIRExp arg1, arg2;
+public class StringConcat extends StringExp {
+private StringExp string1, string2;
 
-  public SubString(StringExp string, AIRExp arg1, AIRExp arg2) {
-    this.string = string;
-    this.arg1 = arg1;
-    this.arg2 = arg2;
+  public StringConcat(StringExp string1, StringExp string2) {
+    this.string1 = string1;
+    this.string2 = string2;
   }
 
-  public StringExp getString() {
-    return string;
+  public StringExp getArg1() {
+    return string1;
   }
 
-  public AIRExp getArg1() {
-    return arg1;
-  }
-
-  public AIRExp getArg2() {
-    return arg2;
+  public StringExp getArg2() {
+    return string2;
   }
 
   @Override
@@ -36,6 +31,6 @@ private StringExp string;
 
   @Override
   public <S, T> T visit(StringVisitor<StringExp, S, T> v, S state) throws SMPLException {
-      return v.visitSubString(this, state);
+      return v.visitStringConcat(this, state);
   }
 }

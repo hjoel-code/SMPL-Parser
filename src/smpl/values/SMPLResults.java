@@ -16,6 +16,7 @@ public class SMPLResults extends Primitive<Primitive> {
     }
 
     public void addPrimitive(Primitive result) {
+        System.out.print(result);
         this.results.add(result);
     }
 

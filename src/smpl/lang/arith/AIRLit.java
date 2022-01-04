@@ -2,7 +2,7 @@ package smpl.lang.arith;
 
 import smpl.sys.*;
 import smpl.values.type.simple.SMPLArith;
-import smpl.lang.SIRVar;
+import smpl.lang.SIRObj;
 import smpl.lang.evaluators.ObjectEvaluator;
 import smpl.lang.visitors.*;
 import smpl.lang.SIRFunctionExp;
@@ -10,30 +10,30 @@ import smpl.lang.SIRFunctionExp;
 public class AIRLit extends AIRExp {
 
     double value;
-    String context;
     String rep;
     private SIRFunctionExp<AIRExp> func;
 
-    SIRVar<AIRExp> varExp;
+    SIRObj exp;
+    private boolean isExp;
 
     public AIRLit(Double v, String rep) {
       super();
       value = v;
       this.rep = rep;
-      this.context = "";
+      this.isExp = false;
     }
 
     public AIRLit(Integer v, String rep) {
       super();
       value = Double.valueOf(v);
       this.rep = rep;
-      this.context = "";
+      this.isExp = false;
     }
 
-    public AIRLit(SIRVar<AIRExp> v) {
+    public AIRLit(SIRObj exp) {
       super();
-      this.context = "var";
-      this.varExp = v;
+      this.isExp = true;
+      this.exp = exp;
     }
 
 
@@ -47,9 +47,12 @@ public class AIRLit extends AIRExp {
     public SIRVar<AIRExp> getVarExp() {
         return varExp;
     }
+    public SIRObj getExp() {
+        return exp;
+    }
 
-    public String getContext() {
-        return context;
+    public boolean isExp() {
+        return isExp;
     }
 
     public String getRep() {
@@ -62,11 +65,29 @@ public class AIRLit extends AIRExp {
 
     @Override
     public SMPLArith eval(SMPLContext state, ObjectEvaluator eval) throws SMPLException {
-        return (SMPLArith) eval.eval(state, this);
+        if (isExp()) {
+          try {
+            return (SMPLArith) getExp().eval(state, eval);
+          } catch (SMPLException e) {
+            throw new SMPLException(e.getMessage());
+          } catch (Exception e) {
+            throw new SMPLException("Expected Arithmetic Expression");
+          }
+        }
+        return visit(eval.getEval().getArithEval(), state.getGlobalEnvironment());
     }
     
 
     public <S, T> T visit(AIRVisitor<AIRExp, S, T> v, S arg) throws SMPLException {
         return v.visitAIRExpInt(this, arg);
+    }
+
+    @Override
+    public String toString() {
+        if (isExp()) {
+          return getExp().toString();
+        } else {
+          return String.valueOf(value) + " " + getRep();
+        }
     }
 }
